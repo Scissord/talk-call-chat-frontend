@@ -16,28 +16,35 @@ export function AuthProvider(props) {
   useEffect(() => {
     // update the auth status
     if (localStorage.getItem("user")) {
-      let user = JSON.parse(localStorage.getItem("user"))
+      const user = JSON.parse(localStorage.getItem("user"))
       localStorage.setItem("user", JSON.stringify(user))
       setUser(user)
-    }
-  }, [])
+    };
+    if (localStorage.getItem("token")) {
+      const token = JSON.parse(localStorage.getItem("token"));
+      localStorage.setItem("token", JSON.stringify(token))
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    };
+  }, []);
 
   const signin = async ({ token, user }) => {
     if (user && token) {
-      const userData = { ...user, token }
+      const userData = { ...user }
       localStorage.setItem("user", JSON.stringify(userData))
+      localStorage.setItem("token", JSON.stringify(token))
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
       setUser(userData)
       return (window.location = "/")
     }
-  }
+  };
 
   const signout = () => {
     localStorage.removeItem("user")
+    localStorage.removeItem("token")
     delete axios.defaults.headers.common["Authorization"]
     setUser(null)
     return (window.location = "/signin")
-  }
+  };
 
   const data = {
     auth: {
@@ -45,7 +52,7 @@ export function AuthProvider(props) {
       signout,
     },
     user,
-  }
+  };
 
   return <AuthContext.Provider value={data} {...props} />
 }

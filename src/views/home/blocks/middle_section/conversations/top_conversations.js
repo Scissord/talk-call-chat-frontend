@@ -9,23 +9,23 @@ const TopConversations = ({ type, setType, setCurrentPage, setConversations }) =
     if(type !== t) {
       setConversations([]);
     }
-    setType(t) 
+    setType(t)
   };
 
   return (
     <div className='w-full min-h-[6vh] flex items-center select-none border-b border-slate-300'>
-      <div 
-        onClick={() => handleChangeType(0)} 
+      <div
+        onClick={() => handleChangeType(false)}
         className={`
-          h-full w-1/2 flex items-center 
-          justify-center cursor-pointer border-r border-slate-300 
-          ${type === 0 && context.colorMode.theme === 0 && 'bg-gray-300'} 
-          ${type === 0 && context.colorMode.theme === 1 && 'bg-[#404d69]'} 
+          h-full w-1/2 flex items-center
+          justify-center cursor-pointer border-r border-slate-300
+          ${type === false && context.colorMode.theme === 0 && 'bg-gray-300'}
+          ${type === false && context.colorMode.theme === 1 && 'bg-[#404d69]'}
         `}
       >
-        <p 
+        <p
           className={`
-            font-semibold text-[13px] 
+            font-semibold text-[13px]
             ${context.colorMode.theme === 0 ? 'text-black' : 'text-white'}
           `}
         >
@@ -33,17 +33,17 @@ const TopConversations = ({ type, setType, setCurrentPage, setConversations }) =
         </p>
       </div>
       <div
-        onClick={() => handleChangeType(1)} 
+        onClick={() => handleChangeType(true)}
         className={`
-          h-full w-1/2 flex items-center 
+          h-full w-1/2 flex items-center
           justify-center cursor-pointer
-          ${type === 1 && context.colorMode.theme === 0 && 'bg-gray-300'} 
-          ${type === 1 && context.colorMode.theme === 1 && 'bg-[#404d69]'} 
+          ${type === true && context.colorMode.theme === 0 && 'bg-gray-300'}
+          ${type === true && context.colorMode.theme === 1 && 'bg-[#404d69]'}
         `}
       >
-        <p 
+        <p
           className={`
-            font-semibold text-[13px] 
+            font-semibold text-[13px]
             ${context.colorMode.theme === 0 ? 'text-black' : 'text-white'}
           `}
         >

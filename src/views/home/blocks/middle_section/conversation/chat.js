@@ -1,5 +1,5 @@
 import { useSocketContext } from "contexts/socket";
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { ChatAudio } from "components/lib";
 
 const Chat = ({ conversation, setConversation, activeConversation }) => {
@@ -31,36 +31,44 @@ const Chat = ({ conversation, setConversation, activeConversation }) => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  
+
   return (
     <div className='w-full h-full flex flex-col gap-3 overflow-y-auto px-6 py-6'>
       {conversation?.length > 0 && conversation?.map((message) => (
         <div
           key={message.id}
-          className={`flex items-end gap-2 ${!message.message_incoming ? 'flex-row-reverse' : 'flex-row'}`}
+          className={`flex items-end gap-2 ${!message.incoming ? 'flex-row-reverse' : 'flex-row'}`}
         >
-          <img src={message.sender_avatar ?? 'assets/avatar-default.svg'} alt='avatar' className='h-10 w-10 rounded-full border border-slate-300'/>
-          <div 
+          <img src={message.avatar ?? 'assets/avatar-default.svg'} alt='avatar' className='h-10 w-10 rounded-full border border-slate-300'/>
+          <div
             className={`
               inline-block min-w-[10px] max-w-[50%]
-              ${message.message_incoming && !message.attachment_url && 'rounded-r-xl rounded-tl-xl bg-[#fff] text-black px-3 py-3'}
-              ${!message.message_incoming && !message.attachment_url && 'rounded-l-xl rounded-tr-xl bg-[#0086FF] text-white px-3 py-3'}
+              ${message.incoming && !message.attachment_url && 'rounded-r-xl rounded-tl-xl bg-gray-200 text-black px-3 py-3'}
+              ${!message.incoming && !message.attachment_url && 'rounded-l-xl rounded-tr-xl bg-[#0086FF] text-white px-3 py-3'}
             `}
           >
-            {message.message_type === "message" && <>{message.message_text}</>}
-            {message.message_type === "photo" && 
-              <img
-                src={
-                  message.attachment_url ? (
-                    !message.message_incoming ?
-                      'http://31.128.41.42:8000/v1/' + message.attachment_url 
-                      : message.attachment_url
-                  ) : 'assets/no-image.jpg'
-                } 
-                alt={`message_${message.id}`} 
-                className='w-fit min-h-16 max-h-40 rounded-lg'
-              />}
-            {(message.message_type === "doc" || message.message_type === 'audio') && <ChatAudio src={message.attachment_url} />}
+            <p>{message?.text}</p>
+            {message?.attachments?.map((attachment) => (
+              <Fragment key={attachment.id}>
+                {attachment.type === 'photo' && <img
+                  src={attachment.url}
+                  alt={message.url}
+                  className='w-fit min-h-16 max-h-40 rounded-lg'
+                />}
+                {attachment.type === 'doc' && <a
+                  href={attachment.url}
+                  alt={message.url}
+                  target="_blank"
+                  className='hover:text-blue-500'
+                >
+                  Скачать
+                </a>}
+                {attachment.type === 'audio' && <ChatAudio
+                  src={attachment.url}
+                />}
+              </Fragment>
+            ))}
+
           </div>
         </div>
       ))}

@@ -4,9 +4,9 @@ import { ViewContext } from 'contexts/view'
 import React, { useContext, useEffect, useRef } from 'react'
 
 const MiddleConversations = (props) => {
-  const { 
-    conversations, 
-    activeConversation, handleChatClick, 
+  const {
+    conversations,
+    activeConversation, handleChatClick,
     setConversations, setCurrentPage,
     currentPage
   } = props;
@@ -47,12 +47,12 @@ const MiddleConversations = (props) => {
   const handleRaiseConversation = () => {
     setConversations((prevConversations) => {
       const existIndex = prevConversations.findIndex((c) => c.customer_id === raiseConversation.customer_id);
-  
+
       if (existIndex !== -1) {
         const existingConversation = prevConversations[existIndex];
         existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter || 0);
         prevConversations.splice(existIndex, 1);
-  
+
         return [existingConversation, ...prevConversations];
       } else {
         return [{ ...raiseConversation, counter: raiseConversation.counter || 0 }, ...prevConversations];
@@ -63,43 +63,34 @@ const MiddleConversations = (props) => {
   return (
     <div ref={containerRef} className='flex-grow overflow-y-auto'>
       {conversations.length > 0 && conversations.map((conversation, i) => (
-        <div 
-          key={conversation.customer_id} 
-          onClick={() => handleChatClick(conversation)} 
+        <div
+          key={conversation.customer_id}
+          onClick={() => handleChatClick(conversation)}
           className={`relative select-none
-            cursor-pointer flex items-center gap-2 px-5 py-3 
+            cursor-pointer flex items-center gap-2 px-5 py-3
             ${context.colorMode.theme === 0 && 'hover:bg-gray-300'}
             ${context.colorMode.theme === 1 && 'hover:bg-[#2d3f65]'}
             ${activeConversation.customer_id === conversation.customer_id && context.colorMode.theme === 0 && 'bg-gray-300'}
             ${activeConversation.customer_id === conversation.customer_id && context.colorMode.theme === 1 && 'bg-[#2d3f65]'}
           `}
         >
-          {activeConversation.customer_id === conversation.customer_id && 
+          {activeConversation.customer_id === conversation.customer_id &&
             <div className='absolute left-0 h-full w-1 bg-[#0086FF]'/>
           }
           <div className="relative inline-block">
-            <img 
-              src={conversation.customer_photo ?? 'assets/avatar-default.svg'} 
+            <img
+              src={conversation.avatar ?? 'assets/avatar-default.svg'}
               className='border border-slate-300 rounded-full w-10 h-10'
             />
-            {/* {onlineUsers.includes(conversation.customer_id) ? (
-              <div
-                className="absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full bg-[#47cf73]"
-              />
-            ) : (
-              <img
-                className="absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full bg-[#b3b5b8]"
-              />
-            )} */}
           </div>
-    
+
           <div className='flex flex-col'>
             <p className={`font-semibold text-[15px] ${context.colorMode.theme === 0 ? 'text-black' : 'text-white'}`}>
-              {conversation.leadvertex_id}
+              {conversation.name}
             </p>
-            <div className='flex items-center overflow-hidden gap-1'> 
+            <div className='flex items-center overflow-hidden gap-1'>
               <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
-                {conversation.customer_good}
+                {conversation.phone}
               </p>
               {/* <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
                 {conversation?.lastMessage.length > 35 ? `${conversation?.lastMessage.slice(0, 35)}...` : conversation?.lastMessage}
@@ -113,7 +104,7 @@ const MiddleConversations = (props) => {
               <div className='absolute top-2 right-2 overflow-hidden'>
                 <p className='flex items-center justify-center text-[12px] w-5 h-5 bg-red-500 rounded-full text-white'>{conversation?.counter > 100 ? "99+" : conversation?.counter}</p>
               </div>
-            )} 
+            )}
           </div>
         </div>
       ))}

@@ -5,37 +5,37 @@ import { useSocketContext } from 'contexts/socket';
 
 const Conversations = (props) => {
   const {
-    activeConversation, setActiveConversation, 
-    type, setType, conversations, setConversations, 
+    activeConversation, setActiveConversation,
+    type, setType, conversations, setConversations,
     fetchConversation, setCurrentPage,
-    currentPage, setAudio
+    currentPage, setFile
   } = props;
 
   const { raisedConversations, setRaisedConversations } = useSocketContext();
 
   const handleChatClick = (conversation) => {
-    if (raisedConversations && raisedConversations.length > 0) {
-      setConversations((prevConversations) => {
-        return prevConversations.map((c) => {
-          const exist = raisedConversations.find((raisedConv) => raisedConv.customer_id === c.customer_id);
-          if (exist && c.customer_id === conversation.customer_id) {
-            return { ...c, counter: null };
-          }
-          return c;
-        });
-      });
-  
-      const newRaisedConversations = raisedConversations.filter(
-        (raisedConv) => raisedConv.customer_id !== conversation.customer_id
-      );
-      setRaisedConversations(newRaisedConversations);
-    }
-  
+    // if (raisedConversations && raisedConversations.length > 0) {
+    //   setConversations((prevConversations) => {
+    //     return prevConversations.map((c) => {
+    //       const exist = raisedConversations.find((raisedConv) => raisedConv.customer_id === c.customer_id);
+    //       if (exist && c.customer_id === conversation.customer_id) {
+    //         return { ...c, counter: null };
+    //       }
+    //       return c;
+    //     });
+    //   });
+
+    //   const newRaisedConversations = raisedConversations.filter(
+    //     (raisedConv) => raisedConv.customer_id !== conversation.customer_id
+    //   );
+    //   setRaisedConversations(newRaisedConversations);
+    // }
+
     setActiveConversation(conversation);
-    fetchConversation(conversation.customer_id);
-    setAudio(null);
+    fetchConversation(conversation.id);
+    setFile(null);
   };
-  
+
 
   return (
     <div className='flex flex-col h-full w-full sm:w-1/4 overflow-y-auto border-r border-slate-300 relative'>
@@ -47,13 +47,13 @@ const Conversations = (props) => {
       />
       <MiddleConversations
         conversations={conversations}
-        activeConversation={activeConversation} 
+        activeConversation={activeConversation}
         handleChatClick={handleChatClick}
         setConversations={setConversations}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
-      <FloatingButton 
+      <FloatingButton
         setConversations={setConversations}
       />
     </div>

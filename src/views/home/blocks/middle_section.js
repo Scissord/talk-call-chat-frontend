@@ -12,16 +12,19 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 
-  const [activeConversation, setActiveConversation] = useState({ customer_id: null, customer_good: "", customer_phone: "", leadvertex_id: null });
-  
+  const [activeConversation, setActiveConversation] = useState({
+    customer_id: null,
+    customer_good: "",
+    customer_phone: "",
+    leadvertex_id: null
+  });
+
   const [conversation, setConversation] = useState([]);
-  const [type, setType] = useState(0);
+  const [type, setType] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [message, setMessage] = useState('');
 
   const [file, setFile] = useState(null);
-  const [audio, setAudio] = useState(null);
-  const [rAudio, setRAudio] = useState(null);
 
   useEffect(() => {
     fetchConversations();
@@ -29,10 +32,9 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
 
   const fetchConversations = async () => {
     const params = {
-      manager_id: auth.user.id,
-      customers_type: type,
-      page: currentPage,
       limit: limit,
+      page: currentPage,
+      type,
     }
 
     if(search !== "") {
@@ -41,66 +43,55 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
 
     await axios({
       method: 'GET',
-      url: `v1/get_conversations`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.user.token}`
-      },
+      url: `/conversations`,
       params: {
         ...params
       }
     })
-      .then((res) => { 
+      .then((res) => {
         if(search !== "") {
-          setConversations([...res.data.customers]);
+          setConversations([...res.data.conversations]);
         } else {
-          setConversations(prev => [...prev, ...res.data.customers]);
+          setConversations(prev => [...prev, ...res.data.conversations]);
         }
       })
-      .catch((err) => { 
+      .catch((err) => {
         context.notification.show(err.response.data.detail, "error")
       })
   };
 
-  const fetchConversation = async (customer_id) => {
+  const fetchConversation = async (conversation_id) => {
     await axios({
       method: 'GET',
-      url: `v1/get_chat_history/${customer_id}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.user.token}`
-      }
+      url: `/messages/${conversation_id}`,
     })
       .then((res) => setConversation(res.data.messages))
       .catch((err) => context.notification.show(err.response.data.detail, "error"))
   };
 
   const handleSendMessage = async (e) => {
-    if( !validate() ) return;
-    const lead_id = conversation.reverse().find((c) => c.message_incoming === true && c.lead_id)?.lead_id
-    if(!lead_id) return;
+    if( !validateSendMessage() ) return;
+    // const lead_id = conversation.reverse().find((c) => c.message_incoming === true && c.lead_id)?.lead_id
+    // if(!lead_id) return;
 
     const forms = new FormData();
-    
-		forms.append('message', message);
-    forms.append('sender', auth.user.manager_name);
-    forms.append('customer_phone', activeConversation.customer_phone);
-    forms.append('lead_id', lead_id);
 
-    if(rAudio) {
-      forms.append('files', rAudio);
-    }
-    
+    console.log(activeConversation);
+
+		forms.append('message', message);
+    // forms.append('sender', auth.user.manager_name);
+    // forms.append('customer_phone', activeConversation.customer_phone);
+    // forms.append('lead_id', lead_id);
+
     if(file) {
       forms.append('files', file);
-    }
+    };
 
     await axios({
       method: "POST",
-      url: `/v1/send_message`,
+      url: `message/${activeConversation.id}`,
       headers: {
         "Content-Type": "multipart/form-data",
-        'Authorization': `Bearer ${auth.user.token}`
       },
       data: forms
     })
@@ -110,51 +101,49 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
         setConversation(newConversation);
         setMessage('');
         setFile(null);
-        setAudio(null);
-        setRAudio(null);
       })
       .catch((err) => {
         context.notification.show(err.response.data.detail, "error")
       })
   };
 
-  const validate = () => {
-    if(file === null && rAudio === null && message.length === 0) {
+  const validateSendMessage = () => {
+    if(file === null && message.length === 0) {
       context.notification.show('Пустое сообщение', "error")
       return false
     }
-    
+
     return true;
   };
 
   return (
     <div className='flex flex-col sm:flex-row h-[88vh]'>
-      <Conversations 
+      <Conversations
         setCurrentPage={setCurrentPage}
         fetchConversation={fetchConversation}
         type={type}
         setType={setType}
         conversations={conversations}
         setConversations={setConversations}
-        activeConversation={activeConversation} 
+        activeConversation={activeConversation}
         setActiveConversation={setActiveConversation}
-        setAudio={setAudio}
+        setFile={setFile}
       />
       <Conversation
+        setConversations={setConversations}
+        setCurrentPage={setCurrentPage}
         conversation={conversation}
         setConversation={setConversation}
         fetchConversations={fetchConversations}
         activeConversation={activeConversation}
+        setActiveConversation={setActiveConversation}
         message={message}
         setMessage={setMessage}
         file={file}
         setFile={setFile}
-        audio={audio}
-        setAudio={setAudio}
-        setRAudio={setRAudio}
         handleSendMessage={handleSendMessage}
       />
-      <ConversationInfo 
+      <ConversationInfo
         activeConversation={activeConversation}
         message={message}
         setMessage={setMessage}

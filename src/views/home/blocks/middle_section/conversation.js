@@ -4,52 +4,52 @@ import ChatFooter from './conversation/chat_footer';
 import { useContext } from 'react';
 import { ViewContext } from 'contexts/view';
 
-const Conversation = ({ 
-  conversation, 
-  setConversation, 
-  fetchConversations, 
+const Conversation = ({
+  conversation,
+  setConversation,
+  fetchConversations,
   activeConversation,
+  setActiveConversation,
   message,
   setMessage,
   file,
   setFile,
-  audio,
-  setAudio,
-  setRAudio,
-  handleSendMessage
+  handleSendMessage,
+  setConversations,
+  setCurrentPage
 }) => {
   const context = useContext(ViewContext);
-  
+
   return (
     <div className='flex flex-col justify-between sm:w-1/2 overflow-y-auto'>
       {activeConversation.customer_id ? (
         <>
           <ChatTitle
-            isFavorite={conversation.isFavorite} 
+            isFavorite={activeConversation.isFavorite}
             activeConversation={activeConversation}
+            setActiveConversation={setActiveConversation}
             title={activeConversation.customer_good}
             fetchConversations={fetchConversations}
+            setConversations={setConversations}
+            setCurrentPage={setCurrentPage}
           />
           <Chat
             conversation={conversation}
             setConversation={setConversation}
             activeConversation={activeConversation}
           />
-          <ChatFooter 
+          <ChatFooter
             file={file}
             setFile={setFile}
             message={message}
             setMessage={setMessage}
-            audio={audio}
-            setAudio={setAudio}
-            setRAudio={setRAudio}
             handleSendMessage={handleSendMessage}
           />
         </>
       ) : (
         <div className='h-full flex flex-col items-center justify-center pb-10'>
-          <p 
-            className={` 
+          <p
+            className={`
               font-bold text-2xl
               ${context.colorMode.theme === 0 && 'text-black'}
               ${context.colorMode.theme === 1 && 'text-white'}

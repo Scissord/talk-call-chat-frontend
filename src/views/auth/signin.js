@@ -13,12 +13,12 @@ export default function Signin() {
   const context = useContext(ViewContext)
 
   const [user, setUser] = useState({
-    login: "",
+    name: "",
     password: "",
   })
 
   const handleSignIn = async () => {
-    if(user.login.length < 4) {
+    if(user.name.length < 4) {
       context.notification.show('Длина логина должна быть >= 4 символов', "error");
       return;
     }
@@ -27,19 +27,19 @@ export default function Signin() {
       context.notification.show('Длина пароля должна быть >= 4 символов', "error");
       return;
     }
-    
+
     await axios({
       method: "POST",
-      url: "/v1/login",
+      url: "/auth/login",
       data: user,
     })
       .then((res) => {
-        const { manager, access_token } = res.data
+        const { user, token } = res.data
         context.notification.show("Успешно!", "success")
-        auth.auth.signin({ user: manager, token: access_token })
+        auth.auth.signin({ user, token })
       })
       .catch((err) => {
-        context.notification.show(err.response.data.detail, "error")
+        context.notification.show(err.response.data.message, "error")
       })
   }
 
@@ -60,8 +60,13 @@ export default function Signin() {
             type="text"
             className={style.input}
             placeholder="Введите логин..."
-            value={user?.login || ""}
-            onChange={(e) => setUser({ ...user, login: e.target.value })}
+            value={user?.name || ""}
+            // onKeyDown={(e) => {
+            //   if (e.key === "Enter") {
+            //     handleSignIn()
+            //   }
+            // }}
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -72,6 +77,11 @@ export default function Signin() {
             className={style.input}
             value={user?.password || ""}
             placeholder="Введите пароль..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSignIn()
+              }
+            }}
             onChange={(e) => setUser({ ...user, password: e.target.value })}
           />
         </div>

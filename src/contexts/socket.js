@@ -56,14 +56,14 @@ export const SocketContextProvider = ({ children }) => {
               leadvertex_id: data.leadvertex_id,
               counter: 1
             }
-            setRaiseConversation(obj);    
+            setRaiseConversation(obj);
             setRaisedConversations((prev) => [...prev, obj])
           }
         };
       }
     }
 
-    connect();
+    // connect();
 
     return () => {
       if(newSocket) {
@@ -73,7 +73,7 @@ export const SocketContextProvider = ({ children }) => {
   }, [])
 
   return (
-    <SocketContext.Provider 
+    <SocketContext.Provider
       value={{
         newMessage,
         raiseConversation,
