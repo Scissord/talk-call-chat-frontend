@@ -23,8 +23,12 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
   const [type, setType] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [message, setMessage] = useState('');
+  const [isMessageSending, setIsMessageSending] = useState(false);
 
   const [file, setFile] = useState(null);
+  const [audio, setAudio] = useState(null);
+  const [rAudio, setRAudio] = useState(null);
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     fetchConversations();
@@ -35,18 +39,19 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
       limit: limit,
       page: currentPage,
       type,
-    }
+    };
 
     if(search !== "") {
       params.search = search;
-    }
+    };
 
     await axios({
       method: 'GET',
       url: `/conversations`,
       params: {
         ...params
-      }
+      },
+      // withCredentials: true
     })
       .then((res) => {
         if(search !== "") {
@@ -71,25 +76,34 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
 
   const handleSendMessage = async (e) => {
     if( !validateSendMessage() ) return;
-    // const lead_id = conversation.reverse().find((c) => c.message_incoming === true && c.lead_id)?.lead_id
-    // if(!lead_id) return;
+    setIsMessageSending(true);
 
     const forms = new FormData();
 
-    console.log(activeConversation);
+    forms.append('customer_id', activeConversation.customer_id);
+    if(message) {
+      forms.append('message', message);
+      forms.append('type', "textMessage");
+    }
 
-		forms.append('message', message);
-    // forms.append('sender', auth.user.manager_name);
-    // forms.append('customer_phone', activeConversation.customer_phone);
-    // forms.append('lead_id', lead_id);
+    if(rAudio) {
+      forms.append('files', rAudio);
+      forms.append('type', "fileMessage");
+    };
 
     if(file) {
       forms.append('files', file);
+      forms.append('type', "fileMessage");
+    };
+
+    if(location) {
+      forms.append('location', location);
+      forms.append('type', "locationMessage");
     };
 
     await axios({
       method: "POST",
-      url: `message/${activeConversation.id}`,
+      url: `/messages/${activeConversation.id}`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -101,6 +115,7 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
         setConversation(newConversation);
         setMessage('');
         setFile(null);
+        setIsMessageSending(false);
       })
       .catch((err) => {
         context.notification.show(err.response.data.detail, "error")
@@ -108,10 +123,11 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
   };
 
   const validateSendMessage = () => {
-    if(file === null && message.length === 0) {
-      context.notification.show('Пустое сообщение', "error")
-      return false
-    }
+    console.log(message.length);
+    if(file === null && message.length === 0 && rAudio === null) {
+      context.notification.show('Пустое сообщение', "error");
+      return false;
+    };
 
     return true;
   };
@@ -142,6 +158,11 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
         file={file}
         setFile={setFile}
         handleSendMessage={handleSendMessage}
+        audio={audio}
+        setAudio={setAudio}
+        rAudio={rAudio}
+        setRAudio={setRAudio}
+        isMessageSending={isMessageSending}
       />
       <ConversationInfo
         activeConversation={activeConversation}

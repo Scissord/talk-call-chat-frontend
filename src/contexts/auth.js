@@ -1,7 +1,7 @@
 import axios from "axios"
 import { createContext, useEffect, useState } from "react"
-import Settings from "../data/settings.json"
 import { Navigate } from "react-router-dom"
+import Settings from "../utils/settings.json"
 
 // auth context
 export const AuthContext = createContext()
@@ -20,19 +20,32 @@ export function AuthProvider(props) {
       localStorage.setItem("user", JSON.stringify(user))
       setUser(user)
     };
-    if (localStorage.getItem("token")) {
-      const token = JSON.parse(localStorage.getItem("token"));
-      localStorage.setItem("token", JSON.stringify(token))
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    if (localStorage.getItem("accessToken") && localStorage.getItem("accessTokenEndTime")) {
+      const accessToken = JSON.parse(localStorage.getItem("accessToken"));
+      const accessTokenEndTime = JSON.parse(localStorage.getItem("accessTokenEndTime"));
+      localStorage.setItem("accessToken", JSON.stringify(accessToken));
+      localStorage.setItem("accessTokenEndTime", JSON.stringify(accessTokenEndTime))
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    };
+    if (localStorage.getItem("refreshToken") && localStorage.getItem("refreshTokenEndTime")) {
+      const refreshToken = JSON.parse(localStorage.getItem("refreshToken"));
+      const refreshTokenEndTime = JSON.parse(localStorage.getItem("refreshTokenEndTime"));
+      localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
+      localStorage.setItem("refreshTokenEndTime", JSON.stringify(refreshTokenEndTime))
+      axios.defaults.headers.common["X-Refresh-Token"] = `Bearer ${refreshToken}`;
     };
   }, []);
 
-  const signin = async ({ token, user }) => {
-    if (user && token) {
+  const signin = async (user, accessToken, accessTokenEndTime, refreshToken, refreshTokenEndTime) => {
+    if (user && accessToken && refreshToken && refreshTokenEndTime) {
       const userData = { ...user }
       localStorage.setItem("user", JSON.stringify(userData))
-      localStorage.setItem("token", JSON.stringify(token))
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+      localStorage.setItem("accessToken", JSON.stringify(accessToken))
+      localStorage.setItem("accessTokenEndTime", JSON.stringify(accessTokenEndTime))
+      localStorage.setItem("refreshToken", JSON.stringify(refreshToken))
+      localStorage.setItem("refreshTokenEndTime", JSON.stringify(refreshTokenEndTime))
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`
+      axios.defaults.headers.common["X-Refresh-Token"] = `Bearer ${refreshToken}`;
       setUser(userData)
       return (window.location = "/")
     }
@@ -40,7 +53,8 @@ export function AuthProvider(props) {
 
   const signout = () => {
     localStorage.removeItem("user")
-    localStorage.removeItem("token")
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("accessTokenEndTime")
     delete axios.defaults.headers.common["Authorization"]
     setUser(null)
     return (window.location = "/signin")

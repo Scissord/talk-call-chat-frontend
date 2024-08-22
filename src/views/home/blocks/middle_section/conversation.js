@@ -16,7 +16,12 @@ const Conversation = ({
   setFile,
   handleSendMessage,
   setConversations,
-  setCurrentPage
+  setCurrentPage,
+  audio,
+  setAudio,
+  rAudio,
+  setRAudio,
+  isMessageSending
 }) => {
   const context = useContext(ViewContext);
 
@@ -44,6 +49,11 @@ const Conversation = ({
             message={message}
             setMessage={setMessage}
             handleSendMessage={handleSendMessage}
+            audio={audio}
+            setAudio={setAudio}
+            rAudio={rAudio}
+            setRAudio={setRAudio}
+            isMessageSending={isMessageSending}
           />
         </>
       ) : (

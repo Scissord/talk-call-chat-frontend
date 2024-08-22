@@ -32,6 +32,11 @@ const Chat = ({ conversation, setConversation, activeConversation }) => {
     }
   };
 
+  const openGoogleMaps = (lat, lon) => {
+    const url = `https://www.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className='w-full h-full flex flex-col gap-3 overflow-y-auto px-6 py-6'>
       {conversation?.length > 0 && conversation?.map((message) => (
@@ -50,21 +55,42 @@ const Chat = ({ conversation, setConversation, activeConversation }) => {
             <p>{message?.text}</p>
             {message?.attachments?.map((attachment) => (
               <Fragment key={attachment.id}>
-                {attachment.type === 'photo' && <img
-                  src={attachment.url}
-                  alt={message.url}
+                {attachment.contentType === 'image/jpeg' && <img
+                  src={attachment.link}
+                  alt={attachment.link}
                   className='w-fit min-h-16 max-h-40 rounded-lg'
                 />}
-                {attachment.type === 'doc' && <a
-                  href={attachment.url}
-                  alt={message.url}
-                  target="_blank"
-                  className='hover:text-blue-500'
+
+                {attachment.contentType === 'application/pdf' && <div
+                className="flex items-center gap-2"
                 >
-                  Скачать
-                </a>}
-                {attachment.type === 'audio' && <ChatAudio
-                  src={attachment.url}
+                  <img className="w-8 h-8" src="assets/doc.png"/>
+                  <a
+                    href={attachment.link}
+                    alt={message.url}
+                    target="_blank"
+                    className='hover:text-blue-500'
+                  >
+                    Скачать
+                  </a>
+                </div>}
+
+                {attachment.contentType === 'audio/ogg; codecs=opus' || attachment.contentType ===  'audio/ogg' && <ChatAudio
+                  src={attachment.link}
+                />}
+
+                {attachment.contentType === 'locationMessage' && <img
+                  src={`data:image/jpeg;base64,${attachment.thumb}`}
+                  alt={attachment.link}
+                  onClick={() => openGoogleMaps(attachment.lat, attachment.lon)}
+                  className='rounded-lg cursor-pointer'
+                />}
+
+                {attachment.contentType === 'video/mp4' && <video
+                  src={attachment.link}
+                  alt={attachment.link}
+                  className='rounded-lg cursor-pointer'
+                  controls
                 />}
               </Fragment>
             ))}

@@ -13,8 +13,8 @@ export default function Signin() {
   const context = useContext(ViewContext)
 
   const [user, setUser] = useState({
-    name: "",
-    password: "",
+    name: "medetaliev0504@gmail.com",
+    password: "SBAstore12@",
   })
 
   const handleSignIn = async () => {
@@ -34,9 +34,21 @@ export default function Signin() {
       data: user,
     })
       .then((res) => {
-        const { user, token } = res.data
+        const {
+          user,
+          accessToken,
+          accessTokenEndTime,
+          refreshToken,
+          refreshTokenEndTime
+        } = res.data;
         context.notification.show("Успешно!", "success")
-        auth.auth.signin({ user, token })
+        auth.auth.signin(
+          user,
+          accessToken,
+          accessTokenEndTime,
+          refreshToken,
+          refreshTokenEndTime
+        );
       })
       .catch((err) => {
         context.notification.show(err.response.data.message, "error")
