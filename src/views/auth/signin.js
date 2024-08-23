@@ -34,21 +34,9 @@ export default function Signin() {
       data: user,
     })
       .then((res) => {
-        const {
-          user,
-          accessToken,
-          accessTokenEndTime,
-          refreshToken,
-          refreshTokenEndTime
-        } = res.data;
+        const { user, token } = res.data;
         context.notification.show("Успешно!", "success")
-        auth.auth.signin(
-          user,
-          accessToken,
-          accessTokenEndTime,
-          refreshToken,
-          refreshTokenEndTime
-        );
+        auth.auth.signin( user, token );
       })
       .catch((err) => {
         context.notification.show(err.response.data.message, "error")

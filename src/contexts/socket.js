@@ -16,22 +16,22 @@ export const SocketContextProvider = ({ children }) => {
   const [raiseConversation, setRaiseConversation] = useState(null);
   const [raisedConversations, setRaisedConversations] = useState([]);
 
-  useEffect(() => {
-    if(auth.user.id) {
-      const socket = io("http://31.128.41.42:8080", {
-        query: {
-          user_id: auth.user.id,
-        },
-      });
-      setSocket(socket);
-      return () => socket.close();
-    } else {
-      if(socket) {
-        socket.close();
-        setSocket(null);
-      };
-    };
-  }, []);
+  // useEffect(() => {
+  //   if(auth?.user?.id) {
+  //     const socket = io("http://31.128.41.42:8080", {
+  //       query: {
+  //         user_id: auth.user.id,
+  //       },
+  //     });
+  //     setSocket(socket);
+  //     return () => socket.close();
+  //   } else {
+  //     if(socket) {
+  //       socket.close();
+  //       setSocket(null);
+  //     };
+  //   };
+  // }, [auth?.user?.id]);
 
   return (
     <SocketContext.Provider
