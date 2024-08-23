@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/62.90b9c7d3.chunk.js","mappings":"uLAEA,MAMA,EANeA,KAEXC,EAAAA,EAAAA,KAAA,OAAAC,SAAK,U","sources":["views/create/index.js"],"sourcesContent":["import React from 'react'\n\nconst Create = () => {\n  return (\n    <div>Create</div>\n  )\n}\n\nexport default Create;\n"],"names":["Create","_jsx","children"],"sourceRoot":""}
