@@ -13,8 +13,8 @@ export default function Signin() {
   const context = useContext(ViewContext)
 
   const [user, setUser] = useState({
-    name: "medetaliev0504@gmail.com",
-    password: "SBAstore12@",
+    name: "",
+    password: "",
   })
 
   const handleSignIn = async () => {
