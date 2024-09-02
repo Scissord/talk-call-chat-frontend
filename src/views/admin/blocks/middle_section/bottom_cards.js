@@ -15,7 +15,7 @@ const css = {
 }
 
 const cards = [
-  { 
+  {
     icon: <svg
             viewBox="0 0 640 512"
             fill="currentColor"
@@ -28,7 +28,7 @@ const cards = [
     description: '200',
     time: "Updated now"
   },
-  { 
+  {
     icon: <svg
             viewBox="0 0 640 512"
             fill="currentColor"
@@ -41,7 +41,7 @@ const cards = [
     description: '200',
     time: "Updated now"
   },
-  { 
+  {
     icon: <svg
             viewBox="0 0 640 512"
             fill="currentColor"
@@ -60,25 +60,6 @@ const BottomCards = () => {
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 
-  const [umnicoIntegrations, setUmnicoIntegrations] = useState([]);
-
-  useEffect(() => {
-    fetchGetUmnicoIntegrations();
-  }, [])
-
-  const fetchGetUmnicoIntegrations = async () => {
-    await axios({
-      method: 'GET',
-      url: `v1/get_umnico_integrations`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.user.token}`
-      }
-    })
-      .then((res) => setUmnicoIntegrations([...res.data.integrations]))
-      .catch((err) => context.notification.show(err.response.data.detail, "error"))
-  };
-
   return (
     <div className='sm:h-[26vh] bg-green-200 flex items-center flex-col sm:flex-row gap-6 sm:gap-12 px-6 py-6'>
       {cards.map((card, i) => (
@@ -91,9 +72,9 @@ const BottomCards = () => {
           />
         </Fragment>
       ))}
-      <UmnicoIntegrationsCard
+      {/* <UmnicoIntegrationsCard
         integrations={umnicoIntegrations}
-      />
+      /> */}
     </div>
   )
 }

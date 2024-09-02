@@ -5,7 +5,7 @@ import { useSocketContext } from 'contexts/socket';
 
 const Conversations = (props) => {
   const {
-    activeConversation, setActiveConversation,
+    activeCustomer, setActiveCustomer,
     type, setType, conversations, setConversations,
     fetchConversation, setCurrentPage,
     currentPage, setFile
@@ -13,7 +13,7 @@ const Conversations = (props) => {
 
   const { raisedConversations, setRaisedConversations } = useSocketContext();
 
-  const handleChatClick = (conversation) => {
+  const handleChatClick = (customer) => {
     // if (raisedConversations && raisedConversations.length > 0) {
     //   setConversations((prevConversations) => {
     //     return prevConversations.map((c) => {
@@ -31,11 +31,10 @@ const Conversations = (props) => {
     //   setRaisedConversations(newRaisedConversations);
     // }
 
-    setActiveConversation(conversation);
-    fetchConversation(conversation.id);
+    setActiveCustomer(customer);
+    fetchConversation(customer.id);
     setFile(null);
   };
-
 
   return (
     <div className='flex flex-col h-full w-full sm:w-1/4 overflow-y-auto border-r border-slate-300 relative'>
@@ -47,7 +46,7 @@ const Conversations = (props) => {
       />
       <MiddleConversations
         conversations={conversations}
-        activeConversation={activeConversation}
+        activeCustomer={activeCustomer}
         handleChatClick={handleChatClick}
         setConversations={setConversations}
         currentPage={currentPage}

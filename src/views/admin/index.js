@@ -8,6 +8,6 @@ const Admin = () => {
       <MiddleSection/>
     </div>
   )
-}
+};
 
-export default Admin
+export default Admin;

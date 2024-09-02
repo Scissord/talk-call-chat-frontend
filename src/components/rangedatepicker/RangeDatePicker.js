@@ -22,7 +22,6 @@ export function RangeDatePicker(props) {
   }
 
   useEffect(() => {
-    console.log(moment(props.startDate))
     setStartDate(props.startDate ? moment(props.startDate) : null)
     setEndDate(props.endDate ? moment(props.endDate) : null)
   }, [props.startDate, props.endDate])

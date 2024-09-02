@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { useContext, useEffect, useState, useRef } from 'react';
+import { AuthContext } from 'contexts/auth';
+import { ViewContext } from 'contexts/view';
 import Conversations from './middle_section/conversations';
 import Conversation from './middle_section/conversation';
 import ConversationInfo from './middle_section/conversation_info';
-import { AuthContext } from 'contexts/auth';
-import { ViewContext } from 'contexts/view';
 
 const limit = 20;
 
@@ -12,15 +12,16 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 
-  const [activeConversation, setActiveConversation] = useState({
-    customer_id: null,
+  const [activeCustomer, setActiveCustomer] = useState({
+    id: null,
     customer_good: "",
     customer_phone: "",
     leadvertex_id: null
   });
 
   const [conversation, setConversation] = useState([]);
-  const [type, setType] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [type, setType] = useState(0);
   const [conversations, setConversations] = useState([]);
   const [message, setMessage] = useState('');
   const [isMessageSending, setIsMessageSending] = useState(false);
@@ -47,17 +48,16 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
 
     await axios({
       method: 'GET',
-      url: `/conversations`,
+      url: `/customers`,
       params: {
         ...params
       },
-      // withCredentials: true
     })
       .then((res) => {
         if(search !== "") {
-          setConversations([...res.data.conversations]);
+          setConversations([...res.data.customers]);
         } else {
-          setConversations(prev => [...prev, ...res.data.conversations]);
+          setConversations(prev => [...prev, ...res.data.customers]);
         }
       })
       .catch((err) => {
@@ -65,12 +65,15 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
       })
   };
 
-  const fetchConversation = async (conversation_id) => {
+  const fetchConversation = async (customer_id) => {
     await axios({
       method: 'GET',
-      url: `/messages/${conversation_id}`,
+      url: `/messages/${customer_id}`,
     })
-      .then((res) => setConversation(res.data.messages))
+      .then((res) => {
+        setConversation(res.data.messages)
+        setIsFavorite(res.data.isFavorite)
+      })
       .catch((err) => context.notification.show(err.response.data.detail, "error"))
   };
 
@@ -80,7 +83,7 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
 
     const forms = new FormData();
 
-    forms.append('customer_id', activeConversation.customer_id);
+    forms.append('customer_id', activeCustomer.id);
     if(message) {
       forms.append('message', message);
       forms.append('type', "textMessage");
@@ -103,7 +106,7 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
 
     await axios({
       method: "POST",
-      url: `/messages/${activeConversation.id}`,
+      url: `/messages`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -123,7 +126,6 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
   };
 
   const validateSendMessage = () => {
-    console.log(message.length);
     if(file === null && message.length === 0 && rAudio === null) {
       context.notification.show('Пустое сообщение', "error");
       return false;
@@ -141,18 +143,19 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
         setType={setType}
         conversations={conversations}
         setConversations={setConversations}
-        activeConversation={activeConversation}
-        setActiveConversation={setActiveConversation}
+        activeCustomer={activeCustomer}
+        setActiveCustomer={setActiveCustomer}
         setFile={setFile}
       />
       <Conversation
+        isFavorite={isFavorite}
         setConversations={setConversations}
         setCurrentPage={setCurrentPage}
         conversation={conversation}
         setConversation={setConversation}
         fetchConversations={fetchConversations}
-        activeConversation={activeConversation}
-        setActiveConversation={setActiveConversation}
+        activeCustomer={activeCustomer}
+        setActiveCustomer={setActiveCustomer}
         message={message}
         setMessage={setMessage}
         file={file}
@@ -165,9 +168,9 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
         isMessageSending={isMessageSending}
       />
       <ConversationInfo
-        activeConversation={activeConversation}
-        message={message}
+        activeCustomer={activeCustomer}
         setMessage={setMessage}
+        setFile={setFile}
       />
     </div>
   )

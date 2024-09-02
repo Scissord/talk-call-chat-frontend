@@ -1,11 +1,11 @@
+import axios from 'axios';
 import { AuthContext } from 'contexts/auth';
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import TopCards from './top_cards';
-import MiddleCards from './middle_cards';
-import BottomCards from './bottom_cards';
-import axios from 'axios';
 import { ViewContext } from 'contexts/view';
+import TopCards from './middle_section/top_cards';
+import MiddleCards from './middle_section/middle_cards';
+import BottomCards from './middle_section/bottom_cards';
 
 const MiddleSection = () => {
   const navigate = useNavigate();
@@ -21,19 +21,10 @@ const MiddleSection = () => {
   const fetchUsers = async () => {
     await axios({
       method: 'GET',
-      url: `v1/get_managers`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${auth.user.token}`
-      }
+      url: `/users`,
     })
       .then((res) => {
-        const mappedUsers = res.data.managers.map(manager => ({
-          ...manager,
-          id: manager.manager_id,
-          name: manager.login
-        }));
-        setUsers(mappedUsers);
+        setUsers(res.data.users);
       })
       .catch((err) => context.notification.show(err.response.data.detail, "error"))
   };

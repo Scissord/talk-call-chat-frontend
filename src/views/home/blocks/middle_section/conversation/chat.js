@@ -2,7 +2,7 @@ import { useSocketContext } from "contexts/socket";
 import { Fragment, useEffect, useRef } from "react";
 import Message from "./chat/message";
 
-const Chat = ({ conversation, setConversation, activeConversation }) => {
+const Chat = ({ conversation, setConversation, activeCustomer }) => {
 
   const messagesEndRef = useRef(null);
 
@@ -19,7 +19,7 @@ const Chat = ({ conversation, setConversation, activeConversation }) => {
   }, [newMessage]);
 
   const handleUpdateNewMessage = (newMessage) => {
-    if(activeConversation.customer_phone === newMessage.chat_phone) {
+    if(activeCustomer.customer_phone === newMessage.chat_phone) {
       const newConversation = [...conversation];
       newConversation.push(newMessage);
       setConversation(newConversation);
@@ -52,4 +52,4 @@ const Chat = ({ conversation, setConversation, activeConversation }) => {
   )
 }
 
-export default Chat
+export default Chat;

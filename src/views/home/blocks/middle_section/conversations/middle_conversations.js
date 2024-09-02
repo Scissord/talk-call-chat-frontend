@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useRef } from 'react'
 const MiddleConversations = (props) => {
   const {
     conversations,
-    activeConversation, handleChatClick,
+    activeCustomer, handleChatClick,
     setConversations, setCurrentPage,
     currentPage
   } = props;
@@ -64,17 +64,17 @@ const MiddleConversations = (props) => {
     <div ref={containerRef} className='flex-grow overflow-y-auto'>
       {conversations.length > 0 && conversations.map((conversation, i) => (
         <div
-          key={conversation.customer_id}
+          key={conversation.id}
           onClick={() => handleChatClick(conversation)}
           className={`relative select-none
             cursor-pointer flex items-center gap-2 px-5 py-3
             ${context.colorMode.theme === 0 && 'hover:bg-gray-300'}
             ${context.colorMode.theme === 1 && 'hover:bg-[#2d3f65]'}
-            ${activeConversation.customer_id === conversation.customer_id && context.colorMode.theme === 0 && 'bg-gray-300'}
-            ${activeConversation.customer_id === conversation.customer_id && context.colorMode.theme === 1 && 'bg-[#2d3f65]'}
+            ${activeCustomer.id === conversation.id && context.colorMode.theme === 0 && 'bg-gray-300'}
+            ${activeCustomer.id === conversation.id && context.colorMode.theme === 1 && 'bg-[#2d3f65]'}
           `}
         >
-          {activeConversation.customer_id === conversation.customer_id &&
+          {activeCustomer.id === conversation.id &&
             <div className='absolute left-0 h-full w-1 bg-[#0086FF]'/>
           }
           <div className="relative inline-block">

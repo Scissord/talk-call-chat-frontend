@@ -15,12 +15,12 @@ const TopConversations = ({ type, setType, setCurrentPage, setConversations }) =
   return (
     <div className='w-full min-h-[6vh] flex items-center select-none border-b border-slate-300'>
       <div
-        onClick={() => handleChangeType(false)}
+        onClick={() => handleChangeType(0)}
         className={`
           h-full w-1/2 flex items-center
           justify-center cursor-pointer border-r border-slate-300
-          ${type === false && context.colorMode.theme === 0 && 'bg-gray-300'}
-          ${type === false && context.colorMode.theme === 1 && 'bg-[#404d69]'}
+          ${type === 0 && context.colorMode.theme === 0 && 'bg-gray-300'}
+          ${type === 0 && context.colorMode.theme === 1 && 'bg-[#404d69]'}
         `}
       >
         <p
@@ -33,12 +33,12 @@ const TopConversations = ({ type, setType, setCurrentPage, setConversations }) =
         </p>
       </div>
       <div
-        onClick={() => handleChangeType(true)}
+        onClick={() => handleChangeType(1)}
         className={`
           h-full w-1/2 flex items-center
           justify-center cursor-pointer
-          ${type === true && context.colorMode.theme === 0 && 'bg-gray-300'}
-          ${type === true && context.colorMode.theme === 1 && 'bg-[#404d69]'}
+          ${type === 1 && context.colorMode.theme === 0 && 'bg-gray-300'}
+          ${type === 1 && context.colorMode.theme === 1 && 'bg-[#404d69]'}
         `}
       >
         <p

@@ -5,8 +5,8 @@ import React, { useContext } from 'react'
 
 const ChatTitle = ({
   fetchConversations, isFavorite, title,
-  activeConversation, setConversations,
-  setCurrentPage, setActiveConversation
+  activeCustomer, setConversations,
+  setCurrentPage, setActiveCustomer
 }) => {
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
@@ -14,17 +14,14 @@ const ChatTitle = ({
   const handleAddFavorite = async () => {
     await axios({
       method: 'PATCH',
-      url: `/conversations/${activeConversation.customer_id}`,
-      data: {
-        isFavorite: activeConversation.isFavorite
-      },
+      url: `/customers/${activeCustomer.id}`,
     })
       .then(() => {
         setConversations([]);
         setCurrentPage(1);
         fetchConversations()
-        setActiveConversation({
-          customer_id: null,
+        setActiveCustomer({
+          id: null,
           customer_good: "",
           customer_phone: "",
           leadvertex_id: null

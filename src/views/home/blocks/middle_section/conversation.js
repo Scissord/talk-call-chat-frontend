@@ -5,11 +5,12 @@ import { useContext } from 'react';
 import { ViewContext } from 'contexts/view';
 
 const Conversation = ({
+  isFavorite,
   conversation,
   setConversation,
   fetchConversations,
-  activeConversation,
-  setActiveConversation,
+  activeCustomer,
+  setActiveCustomer,
   message,
   setMessage,
   file,
@@ -27,13 +28,13 @@ const Conversation = ({
 
   return (
     <div className='flex flex-col justify-between sm:w-1/2 overflow-y-auto'>
-      {activeConversation.customer_id ? (
+      {activeCustomer.id ? (
         <>
           <ChatTitle
-            isFavorite={activeConversation.isFavorite}
-            activeConversation={activeConversation}
-            setActiveConversation={setActiveConversation}
-            title={activeConversation.customer_good}
+            isFavorite={isFavorite}
+            activeCustomer={activeCustomer}
+            setActiveCustomer={setActiveCustomer}
+            title={activeCustomer.customer_good}
             fetchConversations={fetchConversations}
             setConversations={setConversations}
             setCurrentPage={setCurrentPage}
@@ -41,7 +42,7 @@ const Conversation = ({
           <Chat
             conversation={conversation}
             setConversation={setConversation}
-            activeConversation={activeConversation}
+            activeCustomer={activeCustomer}
           />
           <ChatFooter
             file={file}

@@ -6,7 +6,6 @@ import { createContext, useState } from "react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
-// auth context
 export const ViewContext = createContext()
 
 export function View(props) {
@@ -31,10 +30,8 @@ export function View(props) {
   }
 
   function hideModal(cancel, res) {
-    // callback?
     if (!cancel && modal.callback) modal.callback(modal.form, res)
 
-    // reset the modal
     setModal({
       title: null,
       text: null,
@@ -63,7 +60,7 @@ export function View(props) {
   const layouts = {
     app: AppLayout,
     auth: AuthLayout,
-  }
+  };
 
   //web page title
   document.title = props.title

@@ -1,20 +1,20 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { SelectSearch } from 'components/lib'
 import { ViewContext } from 'contexts/view';
-import UserModal from './user_modal';
+import UserModal from '../modals/user_modal';
 
 const cards = [
-  { 
-    title: 'Найти' 
+  {
+    title: 'Найти'
   },
-  { 
-    title: 'Добавить' 
+  {
+    title: 'Добавить'
   },
-  { 
-    title: 'Изменить' 
+  {
+    title: 'Изменить'
   },
-  { 
-    title: 'Удалить' 
+  {
+    title: 'Удалить'
   },
 ]
 
@@ -56,7 +56,7 @@ const Card = ({ users, title, fetchUsers }) => {
           className="w-full"
           selectClass={`text-sm w-full`}
           placeholder={"Выберите пользователя"}
-          options={users}
+          options={users ?? []}
           value={user}
           onChange={(id, user) => {
             setUser(id);
@@ -78,7 +78,7 @@ const Card = ({ users, title, fetchUsers }) => {
           className="w-full"
           selectClass={`text-sm w-full`}
           placeholder={"Выберите пользователя"}
-          options={users}
+          options={users ?? []}
           value={user}
           onChange={(id, user) => {
             setUser(id);
@@ -92,7 +92,7 @@ const Card = ({ users, title, fetchUsers }) => {
           className="w-full"
           selectClass={`text-sm w-full`}
           placeholder={"Выберите пользователя"}
-          options={users}
+          options={users ?? []}
           value={user}
           onChange={(id, user) => {
             setUser(id);
@@ -101,6 +101,6 @@ const Card = ({ users, title, fetchUsers }) => {
           hide
         />
       )}
-    </div>  
+    </div>
   )
 }

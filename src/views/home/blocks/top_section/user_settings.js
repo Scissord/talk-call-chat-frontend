@@ -49,7 +49,7 @@ const UserSettings = () => {
   //       context.notification.show(err.response.data.detail, "error")
   //     })
   // };
-  
+
   return (
     <>
       <div className="flex items-center gap-3 cursor-pointer ml-auto flex-shrink-0">
@@ -72,7 +72,7 @@ const UserSettings = () => {
             </svg>
           )}
         </div>
-        <div 
+        <div
           onClick={() => {
             // setIsAvatarOpen(false);
             setIsSettingOpen(!isSettingOpen)
@@ -84,19 +84,19 @@ const UserSettings = () => {
             <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
           </svg>
         </div>
-        <img 
+        <img
           // onClick={() => {
           //   setIsSettingOpen(false);
           //   setIsAvatarOpen(!isAvatarOpen);
-          // }} 
-          className="w-[40px] h-[40px] rounded-full border border-slate-300" 
+          // }}
+          className="w-[40px] h-[40px] rounded-full border border-slate-300"
           src="assets/avatar-default.svg" alt="account-profile"
         />
       </div>
       {isSettingOpen && (
         <div className='absolute top-16 right-5'>
           <Animate type="slidedown">
-            {auth.user.role === 1 && (
+            {auth.user.role.id === "7" && (
               <div className='shadow-xl w-[200px] bg-white rounded-lg border border-slate-300'>
                 <div
                   onClick={() => navigate('/admin')}
