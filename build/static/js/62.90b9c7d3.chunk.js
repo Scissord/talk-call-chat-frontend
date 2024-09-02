@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunktalk_call_chat_frontend=self.webpackChunktalk_call_chat_frontend||[]).push([[62],{10062:(a,e,t)=>{t.r(e),t.d(e,{default:()=>c});t(65043);var l=t(70579);const c=()=>(0,l.jsx)("div",{children:"Create"})}}]);
-//# sourceMappingURL=62.90b9c7d3.chunk.js.map
