@@ -90,7 +90,7 @@ const MiddleConversations = (props) => {
             </p>
             <div className='flex items-center overflow-hidden gap-1'>
               <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
-                {conversation.phone}
+                {conversation.order_id}
               </p>
               {/* <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
                 {conversation?.lastMessage.length > 35 ? `${conversation?.lastMessage.slice(0, 35)}...` : conversation?.lastMessage}

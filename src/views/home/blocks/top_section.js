@@ -15,8 +15,8 @@ const TopSection = ({ search, setSearch, setCurrentPage }) => {
         <Logo/>
       </div>
       <div className='w-[50%] sm:w-1/2 overflow-hidden flex items-center'>
-        <SearchInput 
-          value={search} 
+        <SearchInput
+          value={search}
           onChange={(text) => handleSearch(text)}
         />
       </div>

@@ -4,7 +4,6 @@ import { s } from "components/lib"
 
 const MainPage = lazy(() => import("views/home"));
 const AdminPage = lazy(() => import("views/admin"));
-const CreatePage = lazy(() => import("views/create"));
 
 const Routes = [
   {
@@ -24,12 +23,6 @@ const Routes = [
     view: Signin,
     layout: "auth",
     title: "Авторизация",
-  },
-  {
-    path: "/create",
-    view: s(CreatePage),
-    layout: "auth",
-    title: "Добавление",
   },
 ]
 

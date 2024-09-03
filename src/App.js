@@ -1,4 +1,3 @@
-// components
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { NotFound } from "./views/error/404"
 import { AuthProvider, PrivateRoute } from "contexts/auth"
@@ -39,7 +38,6 @@ export default function App(props) {
               )
             })}
 
-            {/* 404 */}
             <Route
               path="*"
               element={
@@ -54,5 +52,5 @@ export default function App(props) {
         </SocketContextProvider>
       </BrowserRouter>
     </AuthProvider>
-  )
-}
+  );
+};

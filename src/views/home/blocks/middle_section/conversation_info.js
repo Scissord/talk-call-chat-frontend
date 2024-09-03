@@ -1,16 +1,18 @@
 import { ViewContext } from 'contexts/view'
 import React, { useContext } from 'react'
-import { AudioRecorder } from 'components/lib';
 
 const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
   const context = useContext(ViewContext);
 
-  const handleSetCert = async () => {
-    const response = await fetch('/templates/certificate.jpg');
+  const handleSetCert = async (url) => {
+    const response = await fetch(url);
     if (!response.ok) throw new Error('Image fetch failed');
 
+    // '/templates/alco-cert.jpg'
+    const name = url.split('/').pop();;
+
     const blob = await response.blob();
-    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+    const file = new File([blob], name, { type: 'image/jpeg' });
     setFile(file);
   };
 
@@ -26,12 +28,13 @@ const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
           <div className='flex flex-col gap-2 items-start border-t border-b w-full px-2 py-4'>
             <p
               className={`
-                text-2xl font-bold
+                text-md cursor-pointer hover:text-gray-300
                 ${context.colorMode.theme === 0 && 'text-black'}
                 ${context.colorMode.theme === 1 && 'text-white'}
               `}
+              onClick={() => handleSetCert('/templates/alco-cert.jpg')}
             >
-              Шаблоны
+              1. AlcoBalance
             </p>
             <p
               className={`
@@ -39,9 +42,9 @@ const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
                 ${context.colorMode.theme === 0 && 'text-black'}
                 ${context.colorMode.theme === 1 && 'text-white'}
               `}
-              onClick={() => setMessage('Сәлеметсізбе')}
+              onClick={() => handleSetCert('/templates/body-cert.jpg')}
             >
-              1. Сәлеметсізбе
+              2. BodyBalance
             </p>
             <p
               className={`
@@ -49,9 +52,9 @@ const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
                 ${context.colorMode.theme === 0 && 'text-black'}
                 ${context.colorMode.theme === 1 && 'text-white'}
               `}
-              onClick={() => setMessage('Жақсы рахмет')}
+              onClick={() => handleSetCert('/templates/ero-cert.jpg')}
             >
-              2. Жақсы рахмет
+              3. EroKing
             </p>
             <p
               className={`
@@ -59,9 +62,9 @@ const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
                 ${context.colorMode.theme === 0 && 'text-black'}
                 ${context.colorMode.theme === 1 && 'text-white'}
               `}
-              onClick={() => setMessage('Жоқ')}
+              onClick={() => handleSetCert('/templates/flex-cert.jpg')}
             >
-              3. Жоқ
+              4. FlexBalance
             </p>
             <p
               className={`
@@ -69,9 +72,19 @@ const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
                 ${context.colorMode.theme === 0 && 'text-black'}
                 ${context.colorMode.theme === 1 && 'text-white'}
               `}
-              onClick={handleSetCert}
+              onClick={() => handleSetCert('/templates/libido-cert.jpg')}
             >
-              3. Cert
+              4. LibidoBalance
+            </p>
+            <p
+              className={`
+                text-md cursor-pointer hover:text-gray-300
+                ${context.colorMode.theme === 0 && 'text-black'}
+                ${context.colorMode.theme === 1 && 'text-white'}
+              `}
+              onClick={() => handleSetCert('/templates/man-cert.jpg')}
+            >
+              4. ManBalance
             </p>
           </div>
         </div>
