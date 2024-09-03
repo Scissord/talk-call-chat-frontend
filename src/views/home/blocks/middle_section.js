@@ -52,13 +52,14 @@ const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
       params: {
         ...params
       },
-    })
-      .then((res) => {
+    }).then((res) => {
         if(search !== "") {
+          setConversations([...res.data.customers]);
+        } else if (search === "" && currentPage === 1) {
           setConversations([...res.data.customers]);
         } else {
           setConversations(prev => [...prev, ...res.data.customers]);
-        }
+        };
       })
       .catch((err) => {
         context.notification.show(err.response.data.detail, "error")
