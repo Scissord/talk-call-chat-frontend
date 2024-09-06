@@ -19,5 +19,5 @@ export default function MainPage() {
         setCurrentPage={setCurrentPage}
       />
     </div>
-  )
-}
+  );
+};

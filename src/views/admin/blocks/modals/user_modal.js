@@ -7,7 +7,7 @@ const style = {
   label: "text-black text-lg font-semibold",
   input:
     "text-gray-700 px-2 py-1 min-w-[50vh] outline-none hover:bg-blue-100 border border-slate-300 rounded-md",
-}
+};
 
 const UserModal = ({ type, user }) => {
   const disabled = type === 0 || type === 3;
@@ -15,18 +15,51 @@ const UserModal = ({ type, user }) => {
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 
+  const [user_info, setUserInfo] = useState(user);
+  const [roles, setRoles] = useState([
+    { role: 1, label: "Продажник call-center" },
+    { role: 2, label: "Руководитель продажников call-center" },
+    { role: 3, label: "Оператор ПД" },
+    { role: 4, label: "Оператор КД" },
+    { role: 5, label: "Руководитель ПД" },
+    { role: 6, label: "Руководитель КД" },
+    { role: 7, label: "Админ главный" },
+  ]);
+
   const [creatingUser, setCreatingUser] = useState({
     id: null,
     name: "",
     password: "",
-    role: null
-  })
+    role: roles[0].role,
+  });
 
-  const [user_info, setUserInfo] = useState(user);
+  useEffect(() => {
+    let filteredRoles = roles;
+
+    if (+auth.user.role.id === 2) {
+      filteredRoles = roles.filter((r) => +r.role === 1);
+    }
+    if (+auth.user.role.id === 5) {
+      filteredRoles = roles.filter((r) => +r.role === 3);
+    }
+    if (+auth.user.role.id === 6) {
+      filteredRoles = roles.filter((r) => +r.role === 4);
+    }
+
+    setRoles(filteredRoles);
+
+    // Обновляем роль в creatingUser после фильтрации ролей
+    if (filteredRoles.length > 0) {
+      setCreatingUser((prev) => ({
+        ...prev,
+        role: filteredRoles[0].role, // Устанавливаем роль из первого элемента нового списка ролей
+      }));
+    }
+  }, [auth]);
 
   const handleCreateUser = async () => {
-    if (creatingUser?.name.length < 3 || creatingUser?.password.length < 5 || !creatingUser?.role) {
-      context.notification.show("Логин больше 3, пароль больше 6 символов!", "error");
+    if (creatingUser?.name.length < 3 || creatingUser?.password.length < 5 || creatingUser?.role === null) {
+      context.notification.show("Логин больше 3, пароль больше 4 символов!", "error");
       return;
     }
 
@@ -47,8 +80,8 @@ const UserModal = ({ type, user }) => {
   };
 
   const handleUpdateUser = async () => {
-    if (!user_info?.id || user_info?.name.length < 3 || user_info?.password.length < 6 || user_info?.role === null || user_info?.role === undefined) {
-      context.notification.show("Заполните все поля / Минимум: пароль - 6 символов, логин - 3", "error");
+    if (!user_info?.id || user_info?.name.length < 3 || user_info?.password.length < 5 || user_info?.role === null || user_info?.role === undefined) {
+      context.notification.show("Заполните все поля / Минимум: пароль - 5 символов, логин - 3", "error");
       return;
     }
 
@@ -57,7 +90,7 @@ const UserModal = ({ type, user }) => {
       url: `/users/${user_info?.id}`,
       data: {
         name: user_info?.name,
-        password: user_info?.password,
+        // password: user_info?.password,
         role: user_info?.role
       }
     })
@@ -88,6 +121,7 @@ const UserModal = ({ type, user }) => {
       {(type === 0 || type === 2 || type === 3) && (
         <div className='flex flex-col gap-3'>
           <UserInfo
+            roles={roles}
             handleUpdateUser={handleUpdateUser}
             handleDeleteUser={handleDeleteUser}
             isDisabled={disabled}
@@ -121,13 +155,19 @@ const UserModal = ({ type, user }) => {
           </div>
           <div className="flex flex-col gap-1">
             <label className={style.label}>Роль:</label>
-            <input
-              type="number"
+            <select
               className={style.input}
-              placeholder="Введите роль..."
-              value={creatingUser?.role || ""}
               onChange={(e) => setCreatingUser({ ...creatingUser, role: e.target.value })}
-            />
+            >
+              {roles.map((option) => (
+                <option
+                  key={option.role}
+                  value={option.role}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
           <button
             onClick={() => handleCreateUser()}
@@ -141,7 +181,7 @@ const UserModal = ({ type, user }) => {
   )
 }
 
-const UserInfo = ({ handleUpdateUser, handleDeleteUser, isDisabled, user_info, setUserInfo, type }) => {
+const UserInfo = ({ roles, handleUpdateUser, handleDeleteUser, isDisabled, user_info, setUserInfo, type }) => {
   return (
     <div className='flex flex-col gap-2'>
       <p className='text-[24px] font-bold'>#ID:</p>
@@ -166,16 +206,24 @@ const UserInfo = ({ handleUpdateUser, handleDeleteUser, isDisabled, user_info, s
         className={style.input}
         value={user_info?.password}
         onChange={(e) => setUserInfo({ ...user_info, password: e.target.value })}
-        disabled={isDisabled}
+        disabled={true}
       />
       <p className='text-[24px] font-bold'>Role:</p>
-      <input
-        type="text"
+      <select
         className={style.input}
-        value={user_info?.role}
-        onChange={(e) => setUserInfo({ ...user_info, role: e.target.value })}
-        disabled={isDisabled}
-      />
+        onChange={(e) => {
+          setUserInfo({ ...user_info, role: e.target.value })
+        }}
+      >
+        {roles.map((option) => (
+          <option
+            key={option.role}
+            value={option.role}
+          >
+            {option.label}
+          </option>
+        ))}
+      </select>
       {type === 2 && (
         <button
           onClick={() => handleUpdateUser()}

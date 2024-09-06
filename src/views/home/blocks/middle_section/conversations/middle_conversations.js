@@ -1,4 +1,5 @@
 import { Icon } from 'components/lib';
+import { AuthContext } from 'contexts/auth';
 import { useSocketContext } from 'contexts/socket'
 import { ViewContext } from 'contexts/view'
 import React, { useContext, useEffect, useRef } from 'react'
@@ -11,10 +12,11 @@ const MiddleConversations = (props) => {
     currentPage
   } = props;
 
+  const auth = useContext(AuthContext);
   const containerRef = useRef(null);
 
   const context = useContext(ViewContext);
-  const { raiseConversation } = useSocketContext();
+  const { raiseConversation, customer } = useSocketContext();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,18 +41,63 @@ const MiddleConversations = (props) => {
   }, [currentPage]);
 
   useEffect(() => {
-    if (raiseConversation) {
+    if(raiseConversation) {
       handleRaiseConversation();
-    }
+    };
   }, [raiseConversation]);
+
+  useEffect(() => {
+    if(customer) {
+      handleUpdateCustomerStatus();
+    };
+  }, [customer]);
+
+  const handleUpdateCustomerStatus = () => {
+    setConversations((prevConversations) => {
+      const existIndex = prevConversations.findIndex((c) => c.order_id === customer.order_id);
+      const status = +auth.user.role.status;
+
+      if (existIndex !== -1) {
+        if(status === 100) {
+          return [
+            customer,
+            ...prevConversations.filter((_, index) => index !== existIndex)
+          ];
+        } else if (status === +customer.status) {
+          return [
+            customer,
+            ...prevConversations.filter((_, index) => index !== existIndex)
+          ];
+        } else {
+          return [
+            ...prevConversations.filter((_, index) => index !== existIndex)
+          ];
+        };
+      } else {
+        if(status === 100) {
+          return [
+            customer,
+            ...prevConversations
+          ];
+        } else if(status === +customer.status) {
+          return [
+            customer,
+            ...prevConversations
+          ];
+        };
+      };
+
+      return prevConversations;
+    });
+  };
 
   const handleRaiseConversation = () => {
     setConversations((prevConversations) => {
-      const existIndex = prevConversations.findIndex((c) => c.customer_id === raiseConversation.customer_id);
+      const existIndex = prevConversations.findIndex((c) => +c.id === +raiseConversation.id);
 
       if (existIndex !== -1) {
         const existingConversation = prevConversations[existIndex];
-        existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter || 0);
+        existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter);
         prevConversations.splice(existIndex, 1);
 
         return [existingConversation, ...prevConversations];

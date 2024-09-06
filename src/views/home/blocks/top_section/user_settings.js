@@ -13,42 +13,7 @@ const UserSettings = () => {
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 
-  const [avatar, setAvatar] = useState(null);
   const [isSettingOpen, setIsSettingOpen] = useState(false);
-  // const [isAvatarOpen, setIsAvatarOpen] = useState(false);
-
-  // const handleFileChange = async(e) => {
-  //   const selectedFile = e.target.files[0];
-  //   if (selectedFile) {
-  //     setAvatar(selectedFile);
-  //   }
-  //   await handleUploadAvatar();
-  // };
-
-  // const handleUploadAvatar = async () => {
-  //   if (avatar === null) {
-  //     context.notification.show("Загрузите аватар", "error")
-  //     return;
-  //   }
-
-  //   await axios({
-  //     method: "POST",
-  //     url: `/v1/upload_avatar`,
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${auth.user.token}`
-  //     },
-  //     data: {
-  //       avatar: avatar
-  //     }
-  //   })
-  //     .then((res) => {
-
-  //     })
-  //     .catch((err) => {
-  //       context.notification.show(err.response.data.detail, "error")
-  //     })
-  // };
 
   return (
     <>
@@ -74,7 +39,6 @@ const UserSettings = () => {
         </div>
         <div
           onClick={() => {
-            // setIsAvatarOpen(false);
             setIsSettingOpen(!isSettingOpen)
           }}
           className="text-[var(--settings-icon-color)] w-[22px] h-[22px] flex-shrink-0 hover:text-gray-400"
@@ -85,10 +49,6 @@ const UserSettings = () => {
           </svg>
         </div>
         <img
-          // onClick={() => {
-          //   setIsSettingOpen(false);
-          //   setIsAvatarOpen(!isAvatarOpen);
-          // }}
           className="w-[40px] h-[40px] rounded-full border border-slate-300"
           src="assets/avatar-default.svg" alt="account-profile"
         />
@@ -96,7 +56,7 @@ const UserSettings = () => {
       {isSettingOpen && (
         <div className='absolute top-16 right-5'>
           <Animate type="slidedown">
-            {auth.user.role.id === "7" && (
+            {(+auth.user.role.id === 7 || +auth.user.role.id === 2 || +auth.user.role.id === 5 || +auth.user.role.id === 6) && (
               <div className='shadow-xl w-[200px] bg-white rounded-lg border border-slate-300'>
                 <div
                   onClick={() => navigate('/admin')}

@@ -7,7 +7,7 @@ const Admin = () => {
       <TopSection/>
       <MiddleSection/>
     </div>
-  )
+  );
 };
 
 export default Admin;

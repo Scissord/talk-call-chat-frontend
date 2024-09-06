@@ -13,6 +13,7 @@ const ConversationInfo = ({ activeCustomer, setMessage, setFile }) => {
 
     const blob = await response.blob();
     const file = new File([blob], name, { type: 'image/jpeg' });
+    setMessage("");
     setFile(file);
   };
 

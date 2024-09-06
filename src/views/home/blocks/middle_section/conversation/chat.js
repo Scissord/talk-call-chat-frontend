@@ -19,7 +19,7 @@ const Chat = ({ conversation, setConversation, activeCustomer }) => {
   }, [newMessage]);
 
   const handleUpdateNewMessage = (newMessage) => {
-    if(activeCustomer.customer_phone === newMessage.chat_phone) {
+    if(+activeCustomer.id === +newMessage.customer_id) {
       const newConversation = [...conversation];
       newConversation.push(newMessage);
       setConversation(newConversation);

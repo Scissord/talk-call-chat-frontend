@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useState, useRef } from 'react';
-import { AuthContext } from 'contexts/auth';
+import { useContext, useEffect, useState } from 'react';
 import { ViewContext } from 'contexts/view';
 import Conversations from './middle_section/conversations';
 import Conversation from './middle_section/conversation';
@@ -9,7 +8,6 @@ import ConversationInfo from './middle_section/conversation_info';
 const limit = 20;
 
 const MiddleSection = ({ search, currentPage, setCurrentPage }) => {
-  const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 
   const [activeCustomer, setActiveCustomer] = useState({

@@ -1,14 +1,12 @@
 import axios from 'axios';
 import { AuthContext } from 'contexts/auth';
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import { ViewContext } from 'contexts/view';
 import TopCards from './middle_section/top_cards';
 import MiddleCards from './middle_section/middle_cards';
 import BottomCards from './middle_section/bottom_cards';
 
 const MiddleSection = () => {
-  const navigate = useNavigate();
   const auth = useContext(AuthContext);
   const context = useContext(ViewContext);
 

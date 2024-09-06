@@ -1,7 +1,7 @@
 import TopConversations from './conversations/top_conversations';
 import MiddleConversations from './conversations/middle_conversations';
 import FloatingButton from './conversations/floating_button';
-import { useSocketContext } from 'contexts/socket';
+// import { useSocketContext } from 'contexts/socket';
 
 const Conversations = (props) => {
   const {
@@ -11,25 +11,17 @@ const Conversations = (props) => {
     currentPage, setFile
   } = props;
 
-  const { raisedConversations, setRaisedConversations } = useSocketContext();
-
   const handleChatClick = (customer) => {
-    // if (raisedConversations && raisedConversations.length > 0) {
-    //   setConversations((prevConversations) => {
-    //     return prevConversations.map((c) => {
-    //       const exist = raisedConversations.find((raisedConv) => raisedConv.customer_id === c.customer_id);
-    //       if (exist && c.customer_id === conversation.customer_id) {
-    //         return { ...c, counter: null };
-    //       }
-    //       return c;
-    //     });
-    //   });
+    const conversation = conversations.find((c) => +c.id === +customer.id);
+    if (conversation) {
+      const updatedConversation = { ...conversation, counter: undefined };
 
-    //   const newRaisedConversations = raisedConversations.filter(
-    //     (raisedConv) => raisedConv.customer_id !== conversation.customer_id
-    //   );
-    //   setRaisedConversations(newRaisedConversations);
-    // }
+      const newConversations = conversations.map((c) =>
+        +c.id === +customer.id ? updatedConversation : c
+      );
+
+      setConversations(newConversations);
+    };
 
     setActiveCustomer(customer);
     fetchConversation(customer.id);
