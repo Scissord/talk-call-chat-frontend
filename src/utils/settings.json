@@ -1,8 +1,0 @@
-{
-  "development": {
-    "server_url": "http://31.128.41.42:8080/api"
-  },
-  "production": {
-    "server_url": "http://31.128.41.42:8080/api"
-  }
-}
