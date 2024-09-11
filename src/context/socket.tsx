@@ -45,7 +45,6 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
       };
 
       ws.onmessage = (event) => {
-        console.log(event);
         const data = JSON.parse(event.data);
         if(data.type === "new_message") {
           const message = JSON.parse(data.message);
@@ -77,10 +76,10 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
             return;
           } else {
             if(+user.id !== +data.user_id) {
-              console.log(blockIds);
               const newBlockIds = [...blockIds]
               newBlockIds.push(data.customer_id);
               setBlockIds(newBlockIds);
+              console.log('onDragStart completed')
             };
           };
         };
@@ -90,14 +89,9 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
             return;
           } else {
             if(+user.id !== +data.user_id) {
-              const newBlockIds = [...blockIds]
-              console.log(newBlockIds);
-              const index = newBlockIds.indexOf(data.customer_id);
-              if (index !== -1) {
-                newBlockIds.splice(index, 1);
-                setBlockIds(newBlockIds);
-              }
-              console.log(newBlockIds);
+              const newBlockIds = blockIds.filter(id => +id !== +data.customer_id);
+              setBlockIds(newBlockIds);
+              console.log('onDragEnd completed')
             };
           };
         };
