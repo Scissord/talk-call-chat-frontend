@@ -45,6 +45,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
       };
 
       ws.onmessage = (event) => {
+        console.log(event);
         const data = JSON.parse(event.data);
         if(data.type === "new_message") {
           const message = JSON.parse(data.message);
@@ -76,6 +77,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
             return;
           } else {
             if(+user.id !== +data.user_id) {
+              console.log(blockIds);
               const newBlockIds = [...blockIds]
               newBlockIds.push(data.customer_id);
               setBlockIds(newBlockIds);
@@ -83,16 +85,19 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
           };
         };
         if(data.type === "onDragEnd") {
+          console.log('here')
           if(+user.role.id === 1 || +user.role.id === 2) {
             return;
           } else {
             if(+user.id !== +data.user_id) {
               const newBlockIds = [...blockIds]
+              console.log(newBlockIds);
               const index = newBlockIds.indexOf(data.customer_id);
               if (index !== -1) {
                 newBlockIds.splice(index, 1);
                 setBlockIds(newBlockIds);
               }
+              console.log(newBlockIds);
             };
           };
         };
