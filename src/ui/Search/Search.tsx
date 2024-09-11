@@ -1,67 +1,62 @@
-import { FC, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { Loader } from '@ui';
-import { IconSearch } from '@icons';
+import debounce from 'lodash/debounce';
+import SearchIcon from './SearchIcon';
 
-interface ISearchProps {
+type Props = {
   value: string;
-  onChange: (value: string) => void;
-  throttle?: number;
-  placeholder?: string;
-  className?: string;
-  loading?: boolean;
-  disabled?: boolean;
+  setValue: (value: string) => void;
+  placeholder: string;
+  loading: boolean;
 };
 
 const css = {
   container: `
-    input input-bordered bg-white
-    dark:bg-dbg text-black dark:text-white
-    flex items-center gap-2
+    relative flex items-center
+    justify-between w-full
   `,
   input: `
-    grow
+    p-2 outline-none grow
+    border border-black
+    dark:border-white w-full
+  `,
+  rightIcon: `
+    absolute right-5
   `,
 };
 
-export const Search: FC<ISearchProps> = (props) => {
-  const [value, setValue] = useState(props.value || '');
-  const [typing, setTyping] = useState(false);
+export const Search = (props: Props) => {
+  const [inputValue, setInputValue] = useState<string>(props.value);
 
-  useEffect(() => {
-    let throttle = props.throttle ?? 1000;
-    if (throttle && !typing) {
-      const onKeyPress = () => {
-        setTyping(true);
-        setTimeout(() => {
-          setTyping(false);
-        }, throttle);
-      };
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      props.setValue(value);
+    }, 1000),
+    []
+  );
 
-      window.addEventListener('keydown', onKeyPress);
-      return () => window.removeEventListener('keydown', onKeyPress);
-    }
-  }, [props.throttle, typing]);
-
-  useEffect(() => {
-      let throttle = props.throttle ?? 100;
-      if (throttle && !typing) props.onChange(value);
-  }, [typing, value]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    setInputValue(text);
+    debouncedSearch(text);
+  };
 
   return (
     <label className={css.container}>
       <input
         type="text"
         className={css.input}
-        value={value}
+        value={inputValue}
         placeholder={props.placeholder ?? 'Поиск...'}
-        disabled={props.disabled}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
       />
-      {props.loading ?
-        <Loader size="loading-sm"/>
-      : (
-        <IconSearch/>
-      )}
+      <div className={css.rightIcon}>
+        {props.loading ? (
+          <Loader />
+        ) : (
+          <SearchIcon />
+        )}
+      </div>
     </label>
   );
-}
+};

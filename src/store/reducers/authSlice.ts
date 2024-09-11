@@ -1,18 +1,11 @@
 // store/authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@store/index';
-
-// Define the type for the user object
-interface User {
-  // Add user properties here. Example:
-  id: string;
-  name: string;
-  avatar: string;
-}
+import { IUser } from '@interfaces';
 
 // Define the type for the initial state
 interface AuthState {
-  user: User | null;
+  user: IUser | null;
   accessToken: string | null;
   isAuthenticated: boolean;
 }
@@ -35,7 +28,7 @@ const authSlice = createSlice({
         localStorage.removeItem('accessToken');
       }
     },
-    setUser(state, action: PayloadAction<User>) {
+    setUser(state, action: PayloadAction<IUser>) {
       state.user = action.payload;
       state.isAuthenticated = true;
       localStorage.setItem('user', JSON.stringify(action.payload));

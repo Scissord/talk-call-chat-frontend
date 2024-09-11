@@ -1,5 +1,5 @@
 // sidebar
-export { sidebar_urls } from './sidebar/sidebar_urls';
+export { useSidebarUrls } from './sidebar/sidebar_urls';
 
 // overall
 export { limits } from './limits/limits';

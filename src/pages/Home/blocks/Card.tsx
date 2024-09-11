@@ -1,8 +1,10 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { ICard } from '@interfaces';
 import { Draggable } from '@hello-pangea/dnd';
-import { DateFormat } from '@utils';
-import { useNavigate } from '@hooks';
+import { useAppSelector, useNavigate } from '@hooks';
+import { RootState } from '@store/index';
+import { getUser } from '@store/reducers/authSlice';
+import { useSocketContext } from '@context';
 
 type CardProps = {
   card: ICard,
@@ -26,11 +28,14 @@ const Card: FC<CardProps> = (props) => {
     index,
   } = props;
   const navigate = useNavigate();
+  const user = useAppSelector((state: RootState) => getUser(state));
+  const { isCardBlock } = useSocketContext();
 
   return (
     <Draggable
       index={index}
       draggableId={card?.id}
+      isDragDisabled={isCardBlock}
     >
       {(provided) => (
         <div
@@ -41,15 +46,31 @@ const Card: FC<CardProps> = (props) => {
             ...provided.draggableProps.style,
             zIndex: 10
           }}
-          onClick={() => navigate(`/cards/${card?.id}`)}
+          onClick={() => {
+            if (user) {
+              switch (+user.id) {
+                case 7:
+                  navigate("/chats", { state: { customer: card } });
+                  break;
+                default:
+                  if (card?.manager_id === user?.id) {
+                    navigate("/chats", { state: { customer: card } });
+                  }
+                  break;
+              };
+            };
+          }}
           className={css.container}
         >
-          <p>{"Входящие обращения №" + card?.id}</p>
-          <p>{card?.price}</p>
-          <p>{card?.client_name}</p>
+          <p>{"Клиент №" + card?.id}</p>
+          <p>{card?.order_id}</p>
           <div className='flex items-center justify-between'>
-            <p>{DateFormat(card?.created_at, 'H:i d.m.Y')}</p>
-            <img className='w-4 h-4 rounded-full' src={card?.avatar} alt="avatar"/>
+            <p>{card?.name}</p>
+            <img
+              src={card?.avatar ? card?.avatar : 'pics/default_avatar.png'}
+              className='w-4 h-4 rounded-full'
+              alt="avatar"
+            />
           </div>
         </div>
       )}

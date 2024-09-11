@@ -11,11 +11,11 @@ type ColumnProps = {
 
 const css = {
   container: `
-    column p-2 w-1/5 bg-column
+    column p-2 bg-column min-w-[245px]
     dark:bg-dcolumn rounded-xl
   `,
   title: `
-    text-lg text-center
+    text-sm text-center
     text-black dark:text-white
   `,
   add: `
@@ -36,7 +36,7 @@ const Column: FC<ColumnProps> = (props) => {
     .filter((card: ICard) => card);
 
   return (
-    <Droppable droppableId={column.id} key={column.id}>
+    <Droppable droppableId={column.id}>
       {(provided) => (
         <div
           {...provided.droppableProps}

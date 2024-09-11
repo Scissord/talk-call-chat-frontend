@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { motion, Variants } from 'framer-motion';
-import { sidebar_urls } from '@constants';
 import { useNavigate } from '@hooks';
+import { useSidebarUrls } from '@constants';
 
 type OpenedSidebarMiddleProps = {
   variants: Variants;
@@ -23,10 +23,11 @@ const css = {
 
 const OpenedSidebarMiddle: FC<OpenedSidebarMiddleProps> = ({ variants }) => {
   const navigate = useNavigate();
+  const sidebarUrls = useSidebarUrls();
 
   return (
     <div className={css.middle}>
-      {sidebar_urls.map((url, index) => (
+      {sidebarUrls.map((url, index) => (
         <motion.div
           key={index}
           onClick={() => navigate(url.path)}

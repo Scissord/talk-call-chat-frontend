@@ -60,8 +60,9 @@ const OpenedSidebarBottom: FC<OpenedSidebarBottomProps> = (props) => {
         whileTap={{ scale: 0.95 }}
       >
         <img
-          src={user?.avatar}
+          src={user?.avatar ? user?.avatar : 'pics/default_avatar.png'}
           className={css.avatar}
+          alt='avatar'
         />
         <p className={css.label}>
           {user && user?.name?.length > 10 ? `${user?.name.slice(0, 9)}...` : user?.name}

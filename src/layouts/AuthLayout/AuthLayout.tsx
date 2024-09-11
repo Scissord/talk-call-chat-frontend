@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { ColorModeButton } from '@components';
 import { useAppSelector } from '@hooks';
 import { selectTheme } from '@store/reducers/themeSlice';
 
@@ -15,9 +14,6 @@ export const AuthLayout: FC<AuthLayoutProps> = ({ children: DisplayComponent }) 
 		<div className={theme === 'dark' ? 'dark' : ''}>
 			<div className='min-h-[100vh] bg-neutral-200 dark:bg-indigo-950 flex items-center justify-center'>
         <DisplayComponent/>
-				<div className='absolute right-5 bottom-5'>
-					<ColorModeButton theme={theme}/>
-				</div>
 			</div>
 		</div>
 	)

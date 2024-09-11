@@ -1,19 +1,22 @@
 import { FC, Fragment } from 'react';
 import { useBoard } from '@hooks';
 import { DragDropContext } from '@hello-pangea/dnd';
+import { Loader } from '@ui';
 import Column from './blocks/Column';
 
 const css = {
   top_section: `
-    h-[14vh] flex items-center justify-between
+    h-[10vh] flex items-center justify-center
   `,
   label: `
     text-center w-full text-4xl
-    font-semibold text-red-500
+    font-semibold text-black dark:text-white
   `,
   bottom_section: `
-    h-[86vh] flex justify-between
-    gap-3 px-2 z-50
+    h-[90vh] flex py-4
+    container mx-auto
+    overflow-x-auto
+    gap-3 z-50
   `
 };
 
@@ -21,14 +24,20 @@ const Home: FC = () => {
   const {
     board,
     onDragEnd,
+    onDragStart,
+    loading
   } = useBoard();
+
+  if(loading) return <Loader
+    className='min-h-[100vh] loading-lg'
+  />
 
   return (
     <>
       <section className={css.top_section}>
-        <p className={css.label}>Deals</p>
+        <p className={css.label}>Воронка</p>
       </section>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <section className={css.bottom_section}>
           {board?.order.map((columnId) => (
             <Fragment key={columnId}>

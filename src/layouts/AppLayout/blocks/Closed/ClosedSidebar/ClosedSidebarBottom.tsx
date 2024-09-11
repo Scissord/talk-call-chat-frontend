@@ -46,8 +46,9 @@ const ClosedSidebarBottom: FC<ClosedSidebarBottomProps> = (props) => {
         className={css.icon}
       >
         <img
-          src={user?.avatar}
+          src={user?.avatar ? user?.avatar : 'pics/default_avatar.png'}
           className={css.avatar}
+          alt="avatar"
         />
       </div>
     </div>

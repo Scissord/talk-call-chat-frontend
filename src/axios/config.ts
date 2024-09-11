@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { store } from '@store/index';
 import { setAccessToken, localLogout } from '@store/reducers/authSlice';
-import { Settings } from '@utils';
+import { baseUrl } from '@utils';
 
-axios.defaults.baseURL = Settings.production.server_url;
+axios.defaults.baseURL = baseUrl;
 axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use((config) => {
@@ -35,8 +35,8 @@ axios.interceptors.response.use(
         return axios(originalRequest);
       } else {
         store.dispatch(localLogout());
-      }
-    }
+      };
+    };
 
     return Promise.reject(error);
   }

@@ -1,6 +1,4 @@
-import axios from "axios";
 import { FC, useContext, useState } from "react";
-import { Link } from "react-router-dom";
 import { useLoginMutation } from "@store/api/authApi";
 import { useAppDispatch, useNavigate } from "@hooks";
 import { setUser, setAccessToken } from "@store/reducers/authSlice";
@@ -35,19 +33,17 @@ const SignIn: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [name, setName] = useState("scissxrd");
-  const [password, setPassword] = useState("Surgood123#");
+  const [name, setName] = useState("medetaliev0504@gmail.com");
+  const [password, setPassword] = useState("SBAstore12@");
 
   const [login, { isError, isLoading }] = useLoginMutation();
 
   const handleLogin = async () => {
     try {
-      const user = await login({ name, password }).unwrap();
-      dispatch(setUser(user.user));
-      dispatch(setAccessToken(user.accessToken));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
+      const res = await login({ name, password }).unwrap();
+      dispatch(setUser(res.user));
+      dispatch(setAccessToken(res.accessToken));
       navigate("/");
-      // reset();
     } catch (error) {
       console.error('Failed to login:', error);
       const typedError = error as SignupError;
@@ -63,9 +59,13 @@ const SignIn: FC = () => {
         <img src="pics/auth-form-bg.svg" alt="auth-form-bg"/>
       </section>
       <section className={css.right_section}>
-        <img src="logo/logo_white.svg" alt="logo" className="w-16 sm:w-20"/>
-        <p className="text-3xl font-bold text-black dark:text-white">Hello Again!</p>
-        <p className="text-lg text-gray-400 break-words text-center">Please enter you're username and password to continue.</p>
+        <img src="pics/logo.png" alt="logo" className="w-16 sm:w-20"/>
+        <p className="text-3xl font-bold text-black dark:text-white">Приветствуем!</p>
+        <p
+          className="text-lg text-gray-400 break-words text-center px-6"
+        >
+          Пожалуйста введите данные для продолжения.
+        </p>
         <div className="flex flex-col items-center justify-center gap-6 w-[70%]">
           <label className="input input-bordered flex items-center gap-2 w-full">
             <svg
@@ -102,13 +102,11 @@ const SignIn: FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-          <Link to={"/recovery-password"} className="label-text-alt ml-auto text-blue-500 hover:underline">Recovery Password?</Link>
         </div>
         <button onClick={() => handleLogin()} className="btn btn-active btn-secondary" disabled={isLoading}>
           Login
         </button>
-        {isError && <div className="text-red-500">Login failed. Please try again.</div>}
-        <p className="px-12 lg:px-0 break-words text-center">Don't have an account yet? <Link to={"/registration"} className="text-blue-500 hover:underline">Sign Up</Link></p>
+        {isError && <div className="text-red-500">Ошибка, попробуйте ещё раз.</div>}
       </section>
     </div>
   );

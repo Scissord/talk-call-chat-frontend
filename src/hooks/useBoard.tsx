@@ -1,24 +1,37 @@
 import axios from '@axios';
-import { IBoard, IColumn } from '@interfaces';
+import { IBoard, ICard, IColumn } from '@interfaces';
 import { useEffect, useState } from 'react';
-import { DropResult } from '@hello-pangea/dnd';
+import { DragStart, DropResult } from '@hello-pangea/dnd';
+import { useSocketContext } from '@context';
+import { useAppSelector } from '@hooks';
+import { RootState } from '@store/index';
+import { getUser } from '@store/reducers/authSlice';
 
 export const useBoard = () => {
+  const { socket } = useSocketContext();
+  const user = useAppSelector((state: RootState) => getUser(state));
+
   const [board, setBoard] = useState<IBoard>({
     columns: {},
     cards: {},
     order: [],
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     getBoard();
   }, [])
 
   const getBoard = async () => {
+    setLoading(true);
     await axios({
       method: 'GET',
-      url: `http://localhost:8080/api/board`,
-    }).then((res) => setBoard(res.data));
+      url: `/board`,
+    }).then((res) => {
+      setLoading(false);
+      setBoard(res.data)
+    });
   };
 
   const onDragEnd = async (result: DropResult) => {
@@ -33,18 +46,17 @@ export const useBoard = () => {
       return;
     };
 
-    if (type === "column") {
-      const newColumnOrder = Array.from(board.order);
-      newColumnOrder.splice(source.index, 1);
-      newColumnOrder.splice(destination.index, 0, draggableId);
+    // if (type === "column") {
+    //   const newColumnOrder = Array.from(board.order);
+    //   newColumnOrder.splice(source.index, 1);
+    //   newColumnOrder.splice(destination.index, 0, draggableId);
 
-      setBoard({ ...board, order: newColumnOrder });
-      return;
-    };
+    //   setBoard({ ...board, order: newColumnOrder });
+    //   return;
+    // };
 
     const startColumn = (board.columns as { [key: string]: IColumn })[source.droppableId];
     const finishColumn = (board.columns as { [key: string]: IColumn })[destination.droppableId];
-
 
     if (startColumn === finishColumn) {
       const newCardIds = Array.from(startColumn.cardsIds);
@@ -66,7 +78,7 @@ export const useBoard = () => {
 
       await axios({
         method: 'PATCH',
-        url: `http://localhost:8080/api/cards/${draggableId}/move`,
+        url: `/cards/${draggableId}/move`,
         data: {
           cardId: draggableId,
           sourceColumnId: startColumn.id,
@@ -94,8 +106,17 @@ export const useBoard = () => {
       cardsIds: finishCardIds,
     };
 
+    const updatedCard = {
+      ...(board.cards as { [key: string]: ICard })[draggableId],
+      manager_id: finishColumn.manager_id,
+    };
+
     setBoard({
       ...board,
+      cards: {
+        ...board.cards,
+        [draggableId]: updatedCard,
+      },
       columns: {
         ...board.columns,
         [newStartColumn.id]: newStartColumn,
@@ -105,7 +126,7 @@ export const useBoard = () => {
 
     await axios({
       method: 'PATCH',
-      url: `http://localhost:8080/api/cards/${draggableId}/move`,
+      url: `/cards/${draggableId}/move`,
       data: {
         cardId: draggableId,
         sourceColumnId: startColumn.id,
@@ -117,8 +138,27 @@ export const useBoard = () => {
     })
   };
 
+  const onDragStart = (result: DragStart) => {
+    const { draggableId } = result;
+
+    if (user && socket && socket.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({
+        type: "onDragStart",
+        customer_id: draggableId,
+        user_id: user.id
+      });
+
+      socket.send(message);
+      console.log(`Message sent: ${message}`);
+    } else {
+      console.log('WebSocket is not connected');
+    }
+  };
+
   return {
     board,
     onDragEnd,
+    onDragStart,
+    loading
   };
 };

@@ -1,7 +1,7 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setAccessToken, localLogout } from '../reducers/authSlice';
 import { RootState } from '../index';
-import { Settings } from '@utils';
+import { baseUrl } from '@utils';
 
 interface ErrorData {
   accessToken?: string;
@@ -13,7 +13,7 @@ interface ApiError {
 };
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: Settings.production.server_url,
+  baseUrl,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;

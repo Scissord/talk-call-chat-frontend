@@ -6,11 +6,12 @@ export type { IOption } from './IOption';
 export type { IHeader } from './IHeader';
 export type { IField } from './IField';
 // DB
-export type { IProduct } from './IProduct';
+export type { IUser } from './IUser';
+export type { ICustomer } from './ICustomer';
+export type { IMessage } from './IMessage';
+export type { IAttachment } from './IAttachment';
 export type { IColumn } from './IColumn';
 export type { ICard } from './ICard';
-export type { IClient } from './IClient';
-export type { ISource } from './ISource';
 // REQUEST
 export type { IBoard } from './IBoard';
 export type { IGetQueryParams } from './IGetQueryParams';

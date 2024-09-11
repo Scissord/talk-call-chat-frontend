@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useNavigate } from "@hooks";
-import { sidebar_urls } from '@constants';
+import { useSidebarUrls } from '@constants';
 
 const css = {
   middle: `
@@ -17,10 +17,11 @@ const css = {
 
 const ClosedSidebarMiddle: FC = () => {
   const navigate = useNavigate();
+  const sidebarUrls = useSidebarUrls();
 
   return (
     <div className={css.middle}>
-      {sidebar_urls.map((url) => (
+      {sidebarUrls.map((url) => (
         <div
           key={url.path}
           onClick={() => navigate(url.path)}

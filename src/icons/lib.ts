@@ -3,6 +3,7 @@ export { IconArrowRightCircle } from './IconArrowRightCircle';
 export { IconArrowLeftCircle } from './IconArrowLeftCircle';
 export { IconFunnel } from './IconFunnel';
 export { IconChat } from './IconChat';
+export { IconAdmin } from './IconAdmin';
 
 //theme
 export { IconSun } from './IconSun';
