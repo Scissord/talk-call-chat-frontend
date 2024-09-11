@@ -46,14 +46,18 @@ export const useBoard = () => {
       return;
     };
 
-    // if (type === "column") {
-    //   const newColumnOrder = Array.from(board.order);
-    //   newColumnOrder.splice(source.index, 1);
-    //   newColumnOrder.splice(destination.index, 0, draggableId);
+    if (user && socket && socket.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({
+        type: "onDragEnd",
+        customer_id: draggableId,
+        user_id: user.id
+      });
 
-    //   setBoard({ ...board, order: newColumnOrder });
-    //   return;
-    // };
+      socket.send(message);
+      console.log(`Message sent: ${message}`);
+    } else {
+      console.log('WebSocket is not connected');
+    };
 
     const startColumn = (board.columns as { [key: string]: IColumn })[source.droppableId];
     const finishColumn = (board.columns as { [key: string]: IColumn })[destination.droppableId];
@@ -152,7 +156,7 @@ export const useBoard = () => {
       console.log(`Message sent: ${message}`);
     } else {
       console.log('WebSocket is not connected');
-    }
+    };
   };
 
   return {

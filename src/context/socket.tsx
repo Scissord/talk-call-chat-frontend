@@ -4,24 +4,20 @@ import { RootState } from "@store/index";
 import { getUser } from "@store/reducers/authSlice";
 import { createContext, FC, ReactNode, useContext, useEffect, useState } from "react";
 
-// Типы для контекста
 interface SocketContextType {
   socket: WebSocket | null;
   newMessage: IMessage | null;
   raiseConversation: any;
   newCustomer: ICustomer | null;
-  isCardBlock: boolean | undefined;
-}
+  blockIds: string[];
+};
 
-// Типы для пропсов провайдера
 type SocketProps = {
   children: ReactNode;
 };
 
-// Создаем контекст с правильными типами
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
-// Хук для использования контекста
 export const useSocketContext = () => {
   const context = useContext(SocketContext);
   if (!context) {
@@ -30,7 +26,6 @@ export const useSocketContext = () => {
   return context;
 };
 
-// Провайдер для контекста с указанием типов
 export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
   const user = useAppSelector((state: RootState) => getUser(state));
 
@@ -38,7 +33,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
   const [newMessage, setNewMessage] = useState<IMessage | null>(null);
   const [raiseConversation, setRaiseConversation] = useState<any>(null);
   const [newCustomer, setNewCustomer] = useState<ICustomer | null>(null);
-  const [isCardBlock, setIsCardBlock] = useState<boolean | undefined>(undefined);
+  const [blockIds, setBlockIds] = useState<string[] | []>([]);
 
   useEffect(() => {
     if (user) {
@@ -77,14 +72,27 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
           };
         };
         if(data.type === "onDragStart") {
-
           if(+user.role.id === 1 || +user.role.id === 2) {
             return;
           } else {
-            if(+user.id === +data.user_id) {
-              setIsCardBlock(false);
-            } else {
-              setIsCardBlock(true);
+            if(+user.id !== +data.user_id) {
+              const newBlockIds = [...blockIds]
+              newBlockIds.push(data.customer_id);
+              setBlockIds(newBlockIds);
+            };
+          };
+        };
+        if(data.type === "onDragEnd") {
+          if(+user.role.id === 1 || +user.role.id === 2) {
+            return;
+          } else {
+            if(+user.id !== +data.user_id) {
+              const newBlockIds = [...blockIds]
+              const index = newBlockIds.indexOf(data.customer_id);
+              if (index !== -1) {
+                newBlockIds.splice(index, 1);
+                setBlockIds(newBlockIds);
+              }
             };
           };
         };
@@ -113,7 +121,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         newMessage,
         raiseConversation,
         newCustomer,
-        isCardBlock,
+        blockIds
       }}
     >
       {children}

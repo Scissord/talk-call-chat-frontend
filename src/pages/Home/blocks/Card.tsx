@@ -29,13 +29,13 @@ const Card: FC<CardProps> = (props) => {
   } = props;
   const navigate = useNavigate();
   const user = useAppSelector((state: RootState) => getUser(state));
-  const { isCardBlock } = useSocketContext();
+  const { blockIds } = useSocketContext();
 
   return (
     <Draggable
       index={index}
       draggableId={card?.id}
-      isDragDisabled={isCardBlock}
+      isDragDisabled={blockIds.includes(card?.id)}
     >
       {(provided) => (
         <div
