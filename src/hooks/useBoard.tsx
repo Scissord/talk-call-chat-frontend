@@ -37,15 +37,6 @@ export const useBoard = () => {
   const onDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
-    if (!destination) return;
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    };
-
     if (user && socket && socket.readyState === WebSocket.OPEN) {
       const message = JSON.stringify({
         type: "onDragEnd",
@@ -57,6 +48,15 @@ export const useBoard = () => {
       console.log(`Message sent: ${message}`);
     } else {
       console.log('WebSocket is not connected');
+    };
+
+    if (!destination) return;
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
     };
 
     const startColumn = (board.columns as { [key: string]: IColumn })[source.droppableId];
