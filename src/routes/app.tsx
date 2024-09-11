@@ -3,7 +3,6 @@ import { CW } from '@components';
 import { IRoute } from '@interfaces';
 
 const HomePage = lazy(() => import('@pages/Home'));
-const CardPage = lazy(() => import('@pages/Card'));
 const UserPage = lazy(() => import('@pages/User'));
 const ChatsPage = lazy(() => import('@pages/Chats'));
 const AdminPage = lazy(() => import('@pages/Admin'));
@@ -14,12 +13,6 @@ const AppRoutes: IRoute[] = [
 		element: CW(HomePage),
 		layout: "app",
 		title: "Talk&Call",
-	},
-  {
-		path: "/cards/:id",
-		element: CW(CardPage),
-		layout: "app",
-		title: "Deal",
 	},
   {
     path: "/users/:id",

@@ -35,7 +35,7 @@ export const useBoard = () => {
   };
 
   const onDragEnd = async (result: DropResult) => {
-    const { destination, source, draggableId, type } = result;
+    const { destination, source, draggableId } = result;
 
     if (!destination) return;
 
