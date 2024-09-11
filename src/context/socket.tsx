@@ -10,6 +10,7 @@ interface SocketContextType {
   raiseConversation: any;
   newCustomer: ICustomer | null;
   blockIds: string[];
+  newCardSpot: any;
 };
 
 type SocketProps = {
@@ -34,6 +35,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
   const [raiseConversation, setRaiseConversation] = useState<any>(null);
   const [newCustomer, setNewCustomer] = useState<ICustomer | null>(null);
   const [blockIds, setBlockIds] = useState<string[] | []>([]);
+  const [newCardSpot, setNewCardSpot] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
@@ -84,13 +86,16 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
           };
         };
         if(data.type === "onDragEnd") {
-          console.log('here')
           if(+user.role.id === 1 || +user.role.id === 2) {
             return;
           } else {
             if(+user.id !== +data.user_id) {
               const newBlockIds = blockIds.filter(id => +id !== +data.customer_id);
               setBlockIds(newBlockIds);
+              if(data.destination.droppableId !== data.source.droppableId
+                && data.destination.index !== data.source.index) {
+                setNewCardSpot(data);
+              };
               console.log('onDragEnd completed')
             };
           };
@@ -120,7 +125,8 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         newMessage,
         raiseConversation,
         newCustomer,
-        blockIds
+        blockIds,
+        newCardSpot
       }}
     >
       {children}

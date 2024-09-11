@@ -8,7 +8,7 @@ import { RootState } from '@store/index';
 import { getUser } from '@store/reducers/authSlice';
 
 export const useBoard = () => {
-  const { socket } = useSocketContext();
+  const { socket, newCardSpot } = useSocketContext();
   const user = useAppSelector((state: RootState) => getUser(state));
 
   const [board, setBoard] = useState<IBoard>({
@@ -22,6 +22,18 @@ export const useBoard = () => {
   useEffect(() => {
     getBoard();
   }, [])
+
+  useEffect(() => {
+    if(newCardSpot) {
+      const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
+      const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
+      if (startColumn === finishColumn) {
+        sameColumn(startColumn, newCardSpot.source, newCardSpot.destination, newCardSpot.customer_id);
+        return;
+      }
+      differentColumns(startColumn, newCardSpot.source, finishColumn, newCardSpot.destination, newCardSpot.customer_id);
+    };
+  }, [newCardSpot])
 
   const getBoard = async () => {
     setLoading(true);
@@ -41,7 +53,9 @@ export const useBoard = () => {
       const message = JSON.stringify({
         type: "onDragEnd",
         customer_id: draggableId,
-        user_id: user.id
+        user_id: user.id,
+        destination,
+        source
       });
 
       socket.send(message);
@@ -63,23 +77,7 @@ export const useBoard = () => {
     const finishColumn = (board.columns as { [key: string]: IColumn })[destination.droppableId];
 
     if (startColumn === finishColumn) {
-      const newCardIds = Array.from(startColumn.cardsIds);
-      newCardIds.splice(source.index, 1);
-      newCardIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...startColumn,
-        cardsIds: newCardIds,
-      };
-
-      setBoard({
-        ...board,
-        columns: {
-          ...board.columns,
-          [newColumn.id]: newColumn,
-        },
-      });
-
+      sameColumn(startColumn, source, destination, draggableId);
       await axios({
         method: 'PATCH',
         url: `/cards/${draggableId}/move`,
@@ -94,8 +92,60 @@ export const useBoard = () => {
       })
 
       return;
-    }
+    };
 
+    differentColumns(startColumn, source, finishColumn, destination, draggableId);
+    await axios({
+      method: 'PATCH',
+      url: `/cards/${draggableId}/move`,
+      data: {
+        cardId: draggableId,
+        sourceColumnId: startColumn.id,
+        destinationColumnId: finishColumn.id,
+        sourceIndex: source.index,
+        destinationIndex: destination.index,
+      },
+      withCredentials: true,
+    })
+  };
+
+  const onDragStart = (result: DragStart) => {
+    const { draggableId } = result;
+
+    if (user && socket && socket.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({
+        type: "onDragStart",
+        customer_id: draggableId,
+        user_id: user.id
+      });
+
+      socket.send(message);
+      console.log(`Message sent: ${message}`);
+    } else {
+      console.log('WebSocket is not connected');
+    };
+  };
+
+  const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
+    const newCardIds = Array.from(startColumn.cardsIds);
+    newCardIds.splice(source.index, 1);
+    newCardIds.splice(destination.index, 0, draggableId);
+
+    const newColumn = {
+      ...startColumn,
+      cardsIds: newCardIds,
+    };
+
+    setBoard({
+      ...board,
+      columns: {
+        ...board.columns,
+        [newColumn.id]: newColumn,
+      },
+    });
+  };
+
+  const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
     const startCardIds = Array.from(startColumn.cardsIds);
     startCardIds.splice(source.index, 1);
     const newStartColumn = {
@@ -127,36 +177,6 @@ export const useBoard = () => {
         [newFinishColumn.id]: newFinishColumn,
       },
     });
-
-    await axios({
-      method: 'PATCH',
-      url: `/cards/${draggableId}/move`,
-      data: {
-        cardId: draggableId,
-        sourceColumnId: startColumn.id,
-        destinationColumnId: finishColumn.id,
-        sourceIndex: source.index,
-        destinationIndex: destination.index,
-      },
-      withCredentials: true,
-    })
-  };
-
-  const onDragStart = (result: DragStart) => {
-    const { draggableId } = result;
-
-    if (user && socket && socket.readyState === WebSocket.OPEN) {
-      const message = JSON.stringify({
-        type: "onDragStart",
-        customer_id: draggableId,
-        user_id: user.id
-      });
-
-      socket.send(message);
-      console.log(`Message sent: ${message}`);
-    } else {
-      console.log('WebSocket is not connected');
-    };
   };
 
   return {
