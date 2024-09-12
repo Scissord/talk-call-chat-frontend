@@ -25,6 +25,7 @@ export const useBoard = () => {
 
   useEffect(() => {
     if(newCardSpot) {
+      // console.log('here')
       const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
       const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
       if (startColumn === finishColumn) {
