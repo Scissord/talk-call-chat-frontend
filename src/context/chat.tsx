@@ -131,8 +131,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       forms.append('type', 'fileMessage');
     }
 
-    console.log(file);
-
     await axios({
       method: 'POST',
       url: `/messages`,

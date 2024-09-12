@@ -30,7 +30,6 @@ const ChatFooter: FC = () => {
 
   const startRecording = () => {
     setFile(null);
-    setMode('recording');
 
     // Проверяем поддержку getUserMedia
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -79,6 +78,8 @@ const ChatFooter: FC = () => {
         mediaRecorder.ondataavailable = (event: BlobEvent) => {
           audioChunks.push(event.data);
         };
+
+        setMode('recording');
 
         mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });

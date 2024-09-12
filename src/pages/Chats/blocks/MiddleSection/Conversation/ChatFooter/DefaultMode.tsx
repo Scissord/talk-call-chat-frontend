@@ -1,6 +1,8 @@
 import { FC, RefObject, useState } from 'react'
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
+import { useAppSelector } from '@hooks';
+import { selectTheme } from '@store/reducers/themeSlice';
 
 type RecordingModeProps = {
   fileInputRef: RefObject<HTMLInputElement>;
@@ -20,6 +22,8 @@ const DefaultMode: FC<RecordingModeProps> = (props) => {
     file, setFile, message, setMessage,
     handleSendMessage, startRecording, isMessageSending
   } = props;
+
+  const theme = useAppSelector(selectTheme);
 
   const [isPickedVisible, setIsPickedVisible] = useState(false);
 
@@ -56,7 +60,7 @@ const DefaultMode: FC<RecordingModeProps> = (props) => {
               </p>
               <svg
                 viewBox="0 0 1024 1024"
-                fill="currentColor"
+                fill={theme === 'dark' ? 'white' : 'black'}
                 height="0.7em"
                 width="0.7em"
                 cursor="pointer"
