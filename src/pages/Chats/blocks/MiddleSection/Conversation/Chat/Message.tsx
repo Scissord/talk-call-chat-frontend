@@ -27,7 +27,7 @@ const Message: FC<MessageProps> = ({ message }) => {
       />
       <div
         className={`
-          inline-block min-w-[10px] max-w-[50%]
+          overflow-hidden inline-block min-w-[10px] max-w-[50%]
           ${message.incoming && !message.attachment_url && 'rounded-r-xl rounded-tl-xl bg-gray-200 text-black px-3 py-3'}
           ${!message.incoming && !message.attachment_url && 'rounded-l-xl rounded-tr-xl bg-[#0086FF] text-white px-3 py-3'}
         `}
