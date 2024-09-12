@@ -98,13 +98,14 @@ const SignIn: FC = () => {
             <input
               type="password"
               className="grow w-full"
+              placeholder="******"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
         </div>
         <button onClick={() => handleLogin()} className="btn btn-active btn-secondary" disabled={isLoading}>
-          Login
+          Войти
         </button>
         {isError && <div className="text-red-500">Ошибка, попробуйте ещё раз.</div>}
       </section>
