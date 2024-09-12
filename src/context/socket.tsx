@@ -81,7 +81,6 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
               const newBlockIds = [...blockIds]
               newBlockIds.push(data.customer_id);
               setBlockIds(newBlockIds);
-              // console.log('onDragStart completed')
             };
           };
         };
@@ -92,10 +91,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
             if(+user.id !== +data.user_id) {
               const newBlockIds = blockIds.filter(id => +id !== +data.customer_id);
               setBlockIds(newBlockIds);
-              console.log(data.destination.droppableId !== data.source.droppableId);
-              console.log(data.destination.index !== data.source.index);
               setNewCardSpot(data);
-              // console.log('onDragEnd completed')
             };
           };
         };

@@ -33,8 +33,8 @@ const SignIn: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [name, setName] = useState("medetaliev0504@gmail.com");
-  const [password, setPassword] = useState("SBAstore12@");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
   const [login, { isError, isLoading }] = useLoginMutation();
 

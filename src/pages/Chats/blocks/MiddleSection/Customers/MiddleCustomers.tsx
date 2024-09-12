@@ -20,7 +20,7 @@ const MiddleCustomers: FC = () => {
   const user = useAppSelector((state: RootState) => getUser(state));
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // const { newCustomer, raiseConversation } = useSocketContext();
+  const { newCustomer, raiseConversation } = useSocketContext();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,35 +44,37 @@ const MiddleCustomers: FC = () => {
     };
   }, [page]);
 
-  // useEffect(() => {
-  //   if(raiseConversation) {
-  //     handleRaiseConversation();
-  //   };
-  // }, [raiseConversation]);
+  useEffect(() => {
+    if(raiseConversation) {
+      handleRaiseConversation();
+    };
+  }, [raiseConversation]);
 
-  // useEffect(() => {
-  //   if(newCustomer) {
-  //     handleUpdateCustomerStatus();
-  //   };
-  // }, [newCustomer]);
+  useEffect(() => {
+    if(newCustomer) {
+      handleUpdateCustomerStatus();
+    };
+  }, [newCustomer]);
 
   const handleChatClick = (customer: ICustomer) => {
-    // const conversation = customers.find((c) => {
-    //   if(c.id) {
-    //     return +c.id === +newCustomer.id
-    //   }
-    // });
-    // if (conversation) {
-    //   const updatedConversation = { ...conversation, counter: undefined };
+    const conversation = customers.find((c) => {
+      if(customer && c.id) {
+        return +c.id === +customer?.id
+      }
+    });
+    if (conversation) {
+      const updatedConversation = { ...conversation, counter: undefined };
 
-    //   const newCustomers = customers.map((c) => {
-    //     if(c.id) {
-    //       return +c.id === +newCustomer.id ? updatedConversation : c
-    //     }
-    //   });
+      const newCustomers = customers.map((c) => {
+        if(c.id) {
+          return +c.id === +customer?.id ? updatedConversation : c
+        }
+      });
 
-    //   setCustomers(newCustomers);
-    // };
+      if(newCustomers) {
+        setCustomers(newCustomers);
+      };
+    };
 
     setCustomer(customer);
     if(customer?.id) {
@@ -81,67 +83,67 @@ const MiddleCustomers: FC = () => {
     setFile(null);
   };
 
-  // const handleUpdateCustomerStatus = () => {
-  //   setCustomers((prevConversations) => {
-  //     const existIndex = prevConversations.findIndex((c) => c.order_id === newCustomer.order_id);
-  //     let status;
-  //     if(user){
-  //       status = +user?.role?.status;
-  //     };
+  const handleUpdateCustomerStatus = () => {
+    setCustomers((prevConversations) => {
+      const existIndex = prevConversations.findIndex((c: ICustomer) => c.order_id === newCustomer?.order_id);
+      let status;
+      if(user){
+        status = +user?.role?.status;
+      };
 
-  //     if (existIndex !== -1) {
-  //       if(status === 100) {
-  //         return [
-  //           customer,
-  //           ...prevConversations.filter((_, index) => index !== existIndex)
-  //         ];
-  //       } else if (status === +newCustomer.status) {
-  //         return [
-  //           customer,
-  //           ...prevConversations.filter((_, index) => index !== existIndex)
-  //         ];
-  //       } else {
-  //         return [
-  //           ...prevConversations.filter((_, index) => index !== existIndex)
-  //         ];
-  //       };
-  //     } else {
-  //       if(status === 100) {
-  //         return [
-  //           customer,
-  //           ...prevConversations
-  //         ];
-  //       } else if(status === +newCustomer.status) {
-  //         return [
-  //           customer,
-  //           ...prevConversations
-  //         ];
-  //       };
-  //     };
+      if (existIndex !== -1) {
+        if(status === 100) {
+          return [
+            newCustomer,
+            ...prevConversations.filter((_, index) => index !== existIndex)
+          ];
+        } else if (status === +newCustomer?.status) {
+          return [
+            newCustomer,
+            ...prevConversations.filter((_, index) => index !== existIndex)
+          ];
+        } else {
+          return [
+            ...prevConversations.filter((_, index) => index !== existIndex)
+          ];
+        };
+      } else {
+        if(status === 100) {
+          return [
+            newCustomer,
+            ...prevConversations
+          ];
+        } else if(status === +newCustomer?.status) {
+          return [
+            newCustomer,
+            ...prevConversations
+          ];
+        };
+      };
 
-  //     return prevConversations;
-  //   });
-  // };
+      return prevConversations;
+    });
+  };
 
-  // const handleRaiseConversation = () => {
-  //   setCustomers((prevConversations) => {
-  //     const existIndex = prevConversations.findIndex((c) => {
-  //       if(c.id) {
-  //         return +c.id === +raiseConversation.id
-  //       };
-  //     });
+  const handleRaiseConversation = () => {
+    setCustomers((prevConversations) => {
+      const existIndex = prevConversations.findIndex((c: ICustomer) => {
+        if(c.id) {
+          return +c.id === +raiseConversation.id
+        };
+      });
 
-  //     if (existIndex !== -1) {
-  //       const existingConversation = prevConversations[existIndex];
-  //       existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter);
-  //       prevConversations.splice(existIndex, 1);
+      if (existIndex !== -1) {
+        const existingConversation = prevConversations[existIndex];
+        existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter);
+        prevConversations.splice(existIndex, 1);
 
-  //       return [existingConversation, ...prevConversations];
-  //     } else {
-  //       return [{ ...raiseConversation, counter: raiseConversation.counter || 0 }, ...prevConversations];
-  //     }
-  //   });
-  // };
+        return [existingConversation, ...prevConversations];
+      } else {
+        return [{ ...raiseConversation, counter: raiseConversation.counter || 0 }, ...prevConversations];
+      }
+    });
+  };
 
   return (
     <div ref={containerRef} className='flex-grow overflow-y-auto'>
