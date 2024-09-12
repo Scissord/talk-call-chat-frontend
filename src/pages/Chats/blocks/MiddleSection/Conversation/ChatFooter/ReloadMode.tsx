@@ -1,6 +1,24 @@
+import { useAppSelector } from "@hooks";
+import { selectTheme } from "@store/reducers/themeSlice";
+import { FC } from "react";
 
-const ReloadMode = (props) => {
-  const { handleDeleteRecord, audio, handleReloadRecord, handleSendMessage, isMessageSending } = props;
+type RecordingModeProps = {
+  handleDeleteRecord: () => void;
+  audio: string;
+  handleReloadRecord: () => void;
+  handleSendMessage: () => void;
+  isMessageSending: boolean;
+  setMode: any;
+};
+
+const ReloadMode: FC<RecordingModeProps> = (props) => {
+  const {
+    handleDeleteRecord,
+    audio, handleReloadRecord,
+    handleSendMessage,
+    isMessageSending, setMode
+  } = props;
+  const theme = useAppSelector(selectTheme);
 
   return (
     <div className='flex items-center justify-center gap-3 w-full h-full'>
@@ -29,8 +47,7 @@ const ReloadMode = (props) => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
-            className='text-black dark:text-white'
-            // stroke={context.colorMode.theme === 0 ? "black" : "white"}
+            stroke={theme === 'dark' ? 'white' : 'black'}
             strokeWidth="1.2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -44,7 +61,8 @@ const ReloadMode = (props) => {
         <div
           onClick={() => {
             if(!isMessageSending) {
-              handleSendMessage()
+              setMode('default');
+              handleSendMessage();
             };
           }}
           className='w-5 h-5 cursor-pointer hover:bg-gray-200 hover:rounded-md hover:font-bold'
@@ -53,8 +71,7 @@ const ReloadMode = (props) => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
-            className="text-black white:text-white"
-            // stroke={context.colorMode.theme === 0 ? "black" : "white"}
+            stroke={theme === 'dark' ? 'white' : 'black'}
             strokeWidth="1.2"
             strokeLinecap="round"
             strokeLinejoin="round"

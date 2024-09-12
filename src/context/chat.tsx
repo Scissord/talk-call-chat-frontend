@@ -131,6 +131,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       forms.append('type', 'fileMessage');
     }
 
+    console.log(file);
+
     await axios({
       method: 'POST',
       url: `/messages`,
@@ -143,6 +145,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         setConversation((prevConversation) => [...prevConversation, res.data.message]);
         setMessage('');
         setFile(null);
+        setAudio("");
+        setRAudio(null);
         setIsMessageSending(false);
       })
       .catch(() => {

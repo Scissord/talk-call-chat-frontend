@@ -1,6 +1,16 @@
+import { FC } from "react";
+import { useAppSelector } from "@hooks";
+import { selectTheme } from "@store/reducers/themeSlice";
 
-const RecordingMode = (props) => {
+type RecordingModeProps = {
+  volume: number | string,
+  handleDeleteRecord: () => void;
+  stopRecording: () => void;
+};
+
+const RecordingMode: FC<RecordingModeProps> = (props) => {
   const { handleDeleteRecord, volume, stopRecording } = props;
+  const theme = useAppSelector(selectTheme);
 
   return (
     <div className='flex items-center justify-center gap-3 w-full'>
@@ -39,7 +49,7 @@ const RecordingMode = (props) => {
         <div onClick={() => stopRecording()}  className='hover:bg-gray-200 rounded-md'>
           <svg
             viewBox="0 0 1024 1024"
-            className="text-black dark:text-white"
+            fill={theme === 'dark' ? 'white' : 'black'}
             height="1.4em"
             width="1.4em"
             cursor={"pointer"}

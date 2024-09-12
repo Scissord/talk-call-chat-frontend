@@ -1,8 +1,8 @@
 import { FC, useRef, useState } from 'react';
+import { useChats } from '@context';
 import DefaultMode from './ChatFooter/DefaultMode';
 import ReloadMode from './ChatFooter/ReloadMode';
 import RecordingMode from './ChatFooter/RecordingMode';
-import { useChats } from '@context';
 
 const ChatFooter: FC = () => {
   const {
@@ -30,34 +30,60 @@ const ChatFooter: FC = () => {
 
   const startRecording = () => {
     setFile(null);
+    setMode('recording');
+
+    // Проверяем поддержку getUserMedia
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error('getUserMedia не поддерживается в этом браузере');
+      return;
+    }
+
     navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
+      .then((stream: MediaStream) => {
         const audioContext = new (window.AudioContext)();
         audioContextRef.current = audioContext;
+
         const source = audioContext.createMediaStreamSource(stream);
         const analyser = audioContext.createAnalyser();
         analyser.fftSize = 256;
         analyserRef.current = analyser;
+
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
         dataArrayRef.current = dataArray;
 
         source.connect(analyser);
 
-        const options = { mimeType: 'audio/ogg; codecs=opus' }; // Используем правильный MIME-тип
+        let mimeType = '';
+        if (MediaRecorder.isTypeSupported('audio/webm; codecs=opus')) {
+          mimeType = 'audio/webm; codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/ogg; codecs=opus')) {
+          mimeType = 'audio/ogg; codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+          mimeType = 'audio/webm';
+        } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+          mimeType = 'audio/mp4';
+        } else {
+          console.error('Ни один из MIME-типов не поддерживается');
+          return;
+        }
+
+        const options: MediaRecorderOptions = { mimeType }; // Правильный MIME-тип
         const mediaRecorder = new MediaRecorder(stream, options);
         mediaRecorderRef.current = mediaRecorder;
         mediaRecorder.start();
 
+        const audioChunks: Blob[] = [];
+        audioChunksRef.current = audioChunks;
+
         mediaRecorder.ondataavailable = (event: BlobEvent) => {
-          audioChunksRef.current.push(event.data);
+          audioChunks.push(event.data);
         };
 
         mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/ogg; codecs=opus' });
+          const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
           const audioUrl = URL.createObjectURL(audioBlob);
 
-          // Создаем объект File вместо Blob
           const audioFile = new File([audioBlob], 'recording.ogg', { type: 'audio/ogg; codecs=opus' });
 
           setAudio(audioUrl);
@@ -65,24 +91,24 @@ const ChatFooter: FC = () => {
 
           audioChunksRef.current = [];
           audioContext.close();
+
           if (animationRef.current) {
             cancelAnimationFrame(animationRef.current);
           }
         };
 
-        setMode('recording');
-
         animate();
       })
-      .catch(error => {
+      .catch((error: DOMException) => {
         console.error('Ошибка при записи аудио:', error);
       });
   };
 
+
   const stopRecording = () => {
+    setMode('reload');
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
-      setMode('reload');
     }
   };
 
@@ -145,6 +171,7 @@ const ChatFooter: FC = () => {
           handleReloadRecord={handleReloadRecord}
           handleSendMessage={handleSendMessage}
           isMessageSending={isMessageSending}
+          setMode={setMode}
         />
       )}
     </div>

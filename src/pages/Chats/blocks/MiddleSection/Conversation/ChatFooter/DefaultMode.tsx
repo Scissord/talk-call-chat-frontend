@@ -1,8 +1,20 @@
-import { useState } from 'react'
+import { FC, RefObject, useState } from 'react'
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 
-const DefaultMode = (props) => {
+type RecordingModeProps = {
+  fileInputRef: RefObject<HTMLInputElement>;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  file: File | null;
+  setFile: (file: File) => void;
+  message: string;
+  setMessage: (message: string) => void;
+  handleSendMessage: () => void;
+  startRecording: () => void;
+  isMessageSending: boolean;
+};
+
+const DefaultMode: FC<RecordingModeProps> = (props) => {
   const {
     fileInputRef, handleFileChange,
     file, setFile, message, setMessage,
@@ -58,7 +70,7 @@ const DefaultMode = (props) => {
 
         <input
           type="text"
-          className='w-full outline-none h-10 rounded-md pl-3 border border-slate-300'
+          className='text-black dark:text-white w-full outline-none h-10 rounded-md pl-3 border border-slate-300'
           placeholder="Введите..."
           value={message}
           onChange={(e) => {

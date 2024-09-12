@@ -19,6 +19,7 @@ const css = {
     p-2 outline-none grow
     border border-black
     dark:border-white w-full
+    text-black dark:text-white
   `,
   rightIcon: `
     absolute right-5
