@@ -31,7 +31,7 @@ const Column: FC<ColumnProps> = (props) => {
   } = props;
 
   const column = (board.columns as { [key: string]: IColumn })[columnId];
-  const cards = column.cardsIds
+  const cards = column?.cardsIds
     .map((cardId: string) => (board.cards as { [key: string]: ICard })[cardId])
     .filter((card: ICard) => card);
 
