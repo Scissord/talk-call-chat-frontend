@@ -108,6 +108,7 @@ const MiddleCustomers: FC = () => {
           ...customers?.filter((_, index) => index !== existIndex)
         ];
       };
+      setCustomers(newCustomers);
     } else {
       if(newCustomer && status === 100) {
         newCustomers = [
@@ -120,9 +121,8 @@ const MiddleCustomers: FC = () => {
           ...customers
         ];
       };
+      setCustomers(newCustomers);
     };
-
-    setCustomers(newCustomers);
   };
 
   const handleRaiseConversation = () => {
