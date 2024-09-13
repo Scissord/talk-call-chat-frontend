@@ -134,13 +134,13 @@ const MiddleCustomers: FC = () => {
       });
 
       if (existIndex !== -1) {
-        const existingConversation = prevConversations[existIndex];
-        existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter);
-        prevConversations.splice(existIndex, 1);
+        if(user?.role.status === +raiseConversation.status) {
+          const existingConversation = prevConversations[existIndex];
+          existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter);
+          prevConversations.splice(existIndex, 1);
 
-        return [existingConversation, ...prevConversations];
-      } else {
-        return [{ ...raiseConversation, counter: raiseConversation.counter || 0 }, ...prevConversations];
+          return [existingConversation, ...prevConversations];
+        };
       }
     });
   };
