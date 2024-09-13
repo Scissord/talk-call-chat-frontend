@@ -84,65 +84,67 @@ const MiddleCustomers: FC = () => {
   };
 
   const handleUpdateCustomerStatus = () => {
-    setCustomers((prevConversations: ICustomer[]) => {
-      const existIndex = prevConversations?.findIndex((c: ICustomer) => c.order_id === newCustomer?.order_id);
-      let status;
-      if(user){
-        status = +user?.role?.status;
-      };
+    let newCustomers: ICustomer[] = [];
 
-      if (existIndex !== -1) {
-        if(status === 100) {
-          return [
-            newCustomer,
-            ...prevConversations?.filter((_, index) => index !== existIndex)
-          ];
-        } else if (status === +newCustomer?.status) {
-          return [
-            newCustomer,
-            ...prevConversations?.filter((_, index) => index !== existIndex)
-          ];
-        } else {
-          return [
-            ...prevConversations?.filter((_, index) => index !== existIndex)
-          ];
-        };
+    const existIndex = customers?.findIndex((c: ICustomer) => c.order_id === newCustomer?.order_id);
+    let status;
+    if(user){
+      status = +user?.role?.status;
+    };
+
+    if (existIndex !== -1 && newCustomer) {
+      if(status === 100) {
+        newCustomers = [
+          newCustomer,
+          ...customers?.filter((_, index) => index !== existIndex)
+        ];
+      } else if (status === +newCustomer?.status) {
+        newCustomers = [
+          newCustomer,
+          ...customers?.filter((_, index) => index !== existIndex)
+        ];
       } else {
-        if(status === 100) {
-          return [
-            newCustomer,
-            ...prevConversations
-          ];
-        } else if(status === +newCustomer?.status) {
-          return [
-            newCustomer,
-            ...prevConversations
-          ];
-        };
+        newCustomers = [
+          ...customers?.filter((_, index) => index !== existIndex)
+        ];
       };
+    } else {
+      if(newCustomer && status === 100) {
+        newCustomers = [
+          newCustomer,
+          ...customers
+        ];
+      } else if(newCustomer && status === +newCustomer?.status) {
+        newCustomers = [
+          newCustomer,
+          ...customers
+        ];
+      };
+    };
 
-      return prevConversations;
-    });
+    setCustomers(newCustomers);
   };
 
   const handleRaiseConversation = () => {
-    setCustomers((prevConversations: ICustomer[]) => {
-      const existIndex = prevConversations?.findIndex((c: ICustomer) => {
-        if(c.id) {
-          return +c.id === +raiseConversation?.id
-        };
-      });
+    let newCustomers: ICustomer[] = [];
 
-      if (existIndex !== -1) {
-        if(user?.role.status === +raiseConversation?.status) {
-          const existingConversation = prevConversations[existIndex];
-          existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation?.counter);
-          prevConversations.splice(existIndex, 1);
-
-          return [existingConversation, ...prevConversations];
-        };
-      }
+    const existIndex = customers?.findIndex((c: ICustomer) => {
+      if(c.id) {
+        return +c.id === +raiseConversation?.id
+      };
     });
+
+    if (existIndex !== -1) {
+      if(user?.role.status === +raiseConversation?.status) {
+        const existingConversation = customers[existIndex];
+        existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation?.counter);
+        customers.splice(existIndex, 1);
+
+        newCustomers = [existingConversation, ...customers];
+      };
+    }
+
+    setCustomers(newCustomers);
   };
 
   return (
