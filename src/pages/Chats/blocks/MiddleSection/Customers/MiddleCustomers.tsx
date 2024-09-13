@@ -126,8 +126,6 @@ const MiddleCustomers: FC = () => {
   };
 
   const handleRaiseConversation = () => {
-    let newCustomers: ICustomer[] = [];
-
     const existIndex = customers?.findIndex((c: ICustomer) => {
       if(c.id) {
         return +c.id === +raiseConversation?.id
@@ -139,12 +137,9 @@ const MiddleCustomers: FC = () => {
         const existingConversation = customers[existIndex];
         existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation?.counter);
         customers.splice(existIndex, 1);
-
-        newCustomers = [existingConversation, ...customers];
+        setCustomers([existingConversation, ...customers]);
       };
     }
-
-    setCustomers(newCustomers);
   };
 
   return (
