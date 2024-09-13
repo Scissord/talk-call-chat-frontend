@@ -147,7 +147,7 @@ const MiddleCustomers: FC = () => {
 
   return (
     <div ref={containerRef} className='flex-grow overflow-y-auto'>
-      {customers.length > 0 && customers.map((conversation, i) => (
+      {customers && customers.length > 0 && customers?.map((conversation) => (
         <div
           key={conversation.id}
           onClick={() => handleChatClick(conversation)}
