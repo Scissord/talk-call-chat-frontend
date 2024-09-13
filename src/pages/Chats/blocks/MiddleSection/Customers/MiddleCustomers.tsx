@@ -84,8 +84,8 @@ const MiddleCustomers: FC = () => {
   };
 
   const handleUpdateCustomerStatus = () => {
-    setCustomers((prevConversations) => {
-      const existIndex = prevConversations.findIndex((c: ICustomer) => c.order_id === newCustomer?.order_id);
+    setCustomers((prevConversations: ICustomer[]) => {
+      const existIndex = prevConversations?.findIndex((c: ICustomer) => c.order_id === newCustomer?.order_id);
       let status;
       if(user){
         status = +user?.role?.status;
@@ -95,16 +95,16 @@ const MiddleCustomers: FC = () => {
         if(status === 100) {
           return [
             newCustomer,
-            ...prevConversations.filter((_, index) => index !== existIndex)
+            ...prevConversations?.filter((_, index) => index !== existIndex)
           ];
         } else if (status === +newCustomer?.status) {
           return [
             newCustomer,
-            ...prevConversations.filter((_, index) => index !== existIndex)
+            ...prevConversations?.filter((_, index) => index !== existIndex)
           ];
         } else {
           return [
-            ...prevConversations.filter((_, index) => index !== existIndex)
+            ...prevConversations?.filter((_, index) => index !== existIndex)
           ];
         };
       } else {
@@ -126,17 +126,17 @@ const MiddleCustomers: FC = () => {
   };
 
   const handleRaiseConversation = () => {
-    setCustomers((prevConversations) => {
-      const existIndex = prevConversations.findIndex((c: ICustomer) => {
+    setCustomers((prevConversations: ICustomer[]) => {
+      const existIndex = prevConversations?.findIndex((c: ICustomer) => {
         if(c.id) {
-          return +c.id === +raiseConversation.id
+          return +c.id === +raiseConversation?.id
         };
       });
 
       if (existIndex !== -1) {
-        if(user?.role.status === +raiseConversation.status) {
+        if(user?.role.status === +raiseConversation?.status) {
           const existingConversation = prevConversations[existIndex];
-          existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation.counter);
+          existingConversation.counter = (existingConversation.counter || 0) + (raiseConversation?.counter);
           prevConversations.splice(existIndex, 1);
 
           return [existingConversation, ...prevConversations];
