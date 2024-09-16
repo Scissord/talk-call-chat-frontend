@@ -15,7 +15,7 @@ const css = {
   container: `
     select-none p-2 m-2 bg-card dark:bg-dcard
     shadow-md rounded-lg text-[13px] text-black
-    dark:text-white relative z-10
+    dark:text-white relative z-10 overflow-hidden
   `,
   delete: `
     absolute top-1 right-2 hover:cursor-pointer
@@ -23,10 +23,7 @@ const css = {
 };
 
 const Card: FC<CardProps> = (props) => {
-  const {
-    card,
-    index,
-  } = props;
+  const { card, index } = props;
   const navigate = useNavigate();
   const user = useAppSelector((state: RootState) => getUser(state));
   const { blockIds } = useSocketContext();
@@ -62,8 +59,6 @@ const Card: FC<CardProps> = (props) => {
           }}
           className={css.container}
         >
-          <p>{"Клиент №" + card?.id}</p>
-          <p>{card?.order_id}</p>
           <div className='flex items-center justify-between'>
             <p>{card?.name}</p>
             <img
@@ -72,6 +67,8 @@ const Card: FC<CardProps> = (props) => {
               alt="avatar"
             />
           </div>
+          <p>{card?.order_id}</p>
+          {card?.text && <p>{card?.text}</p>}
         </div>
       )}
     </Draggable>

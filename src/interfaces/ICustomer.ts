@@ -1,5 +1,5 @@
 export type ICustomer = {
-  id: string | null;
+  id: string;
   name: string | "";
   phone: string | "";
   buyer_phone: string | "";
@@ -11,4 +11,5 @@ export type ICustomer = {
   ai_active: boolean | false;
   order_id: string | null;
   counter: number | null | 0;
+  manager_id: string;
 };

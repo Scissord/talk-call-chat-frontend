@@ -1,5 +1,5 @@
 import axios from '@axios';
-import { IBoard, ICard, IColumn } from '@interfaces';
+import { IBoard, ICard, IColumn, ICustomer } from '@interfaces';
 import { useEffect, useState } from 'react';
 import { DragStart, DropResult } from '@hello-pangea/dnd';
 import { useSocketContext } from '@context';
@@ -8,7 +8,7 @@ import { RootState } from '@store/index';
 import { getUser } from '@store/reducers/authSlice';
 
 export const useBoard = () => {
-  const { socket, newCardSpot } = useSocketContext();
+  const { socket, newCardSpot, newMessage } = useSocketContext();
   const user = useAppSelector((state: RootState) => getUser(state));
 
   const [board, setBoard] = useState<IBoard>({
@@ -25,7 +25,6 @@ export const useBoard = () => {
 
   useEffect(() => {
     if(newCardSpot) {
-      // console.log('here')
       const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
       const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
       if (startColumn === finishColumn) {
@@ -34,7 +33,13 @@ export const useBoard = () => {
       }
       differentColumns(startColumn, newCardSpot.source, finishColumn, newCardSpot.destination, newCardSpot.customer_id);
     };
-  }, [newCardSpot])
+  }, [newCardSpot]);
+
+  useEffect(() => {
+    if(newMessage?.customer_id) {
+      handleRaiseCustomer(newMessage?.customer_id.toString());
+    };
+  }, [newMessage]);
 
   const getBoard = async () => {
     setLoading(true);
@@ -128,7 +133,7 @@ export const useBoard = () => {
   };
 
   const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
-    const newCardIds = Array.from(startColumn.cardsIds);
+    const newCardIds = Array.from(startColumn?.cardsIds);
     newCardIds.splice(source.index, 1);
     newCardIds.splice(destination.index, 0, draggableId);
 
@@ -147,14 +152,14 @@ export const useBoard = () => {
   };
 
   const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
-    const startCardIds = Array.from(startColumn.cardsIds);
+    const startCardIds = Array.from(startColumn?.cardsIds);
     startCardIds.splice(source.index, 1);
     const newStartColumn = {
       ...startColumn,
       cardsIds: startCardIds,
     };
 
-    const finishCardIds = Array.from(finishColumn.cardsIds);
+    const finishCardIds = Array.from(finishColumn?.cardsIds);
     finishCardIds.splice(destination.index, 0, draggableId);
     const newFinishColumn = {
       ...finishColumn,
@@ -178,6 +183,27 @@ export const useBoard = () => {
         [newFinishColumn.id]: newFinishColumn,
       },
     });
+  };
+
+  const handleRaiseCustomer = (customer_id: string) => {
+    const targetColumnId = Object.keys(board.columns).find(columnId => {
+      return (board.columns as { [key: string]: IColumn })[columnId]?.cardsIds.includes(customer_id);
+    });
+
+    if (targetColumnId) {
+      const column = (board.columns as { [key: string]: IColumn })[targetColumnId];
+
+      column.cardsIds = column?.cardsIds.filter(id => +id !== +customer_id);
+      column.cardsIds.unshift(customer_id);
+
+      setBoard({
+        ...board,
+        columns: {
+          ...board.columns,
+          [targetColumnId]: column,
+        },
+      });
+    };
   };
 
   return {

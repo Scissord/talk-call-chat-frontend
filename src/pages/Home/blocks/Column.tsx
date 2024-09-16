@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react'
+import { FC } from 'react'
 import { IBoard, ICard, IColumn } from '@interfaces';
 import { Droppable } from '@hello-pangea/dnd';
 import Card from './Card';
@@ -18,11 +18,6 @@ const css = {
     text-sm text-center
     text-black dark:text-white
   `,
-  add: `
-    text-center select-none bg-white dark:bg-indigo-950
-    p-2 m-2 text-black dark:text-white shadow-md rounded-lg
-    cursor-pointer
-  `
 };
 
 const Column: FC<ColumnProps> = (props) => {
@@ -31,9 +26,12 @@ const Column: FC<ColumnProps> = (props) => {
   } = props;
 
   const column = (board.columns as { [key: string]: IColumn })[columnId];
-  const cards = column?.cardsIds
-    .map((cardId: string) => (board.cards as { [key: string]: ICard })[cardId])
-    .filter((card: ICard) => card);
+  let cards: ICard[] = [];
+  if(column.cardsIds){
+    cards = column?.cardsIds
+      .map((cardId: string) => (board.cards as { [key: string]: ICard })[cardId])
+      .filter((card: ICard) => card);
+  };
 
   return (
     <Droppable droppableId={column.id}>
@@ -45,12 +43,11 @@ const Column: FC<ColumnProps> = (props) => {
         >
           <p className={css.title}>{column.title}</p>
           {cards && cards.length > 0 && cards.map((card, index) => (
-            <Fragment key={card?.id}>
-              <Card
-                card={card}
-                index={index}
-              />
-            </Fragment>
+            <Card
+              key={card?.id}
+              card={card}
+              index={index}
+            />
           ))}
           {provided.placeholder}
         </div>

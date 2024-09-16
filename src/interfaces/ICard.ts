@@ -5,4 +5,5 @@ export type ICard = {
   good: string;
   order_id: string;
   manager_id: string;
+  text: string;
 };

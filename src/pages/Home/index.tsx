@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 import { useBoard } from '@hooks';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { Loader } from '@ui';
@@ -40,12 +40,11 @@ const Home: FC = () => {
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <section className={css.bottom_section}>
           {board?.order.map((columnId) => (
-            <Fragment key={columnId}>
-              <Column
-                columnId={columnId}
-                board={board}
-              />
-            </Fragment>
+            <Column
+              key={columnId}
+              columnId={columnId}
+              board={board}
+            />
           ))}
         </section>
       </DragDropContext>
