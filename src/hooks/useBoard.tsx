@@ -36,8 +36,8 @@ export const useBoard = () => {
   }, [newCardSpot]);
 
   useEffect(() => {
-    if(newMessage?.customer_id) {
-      handleRaiseCustomer(newMessage?.customer_id.toString());
+    if(newMessage?.customer_id && newMessage?.text) {
+      handleRaiseCustomer(newMessage?.customer_id.toString(), newMessage?.text);
     };
   }, [newMessage]);
 
@@ -133,59 +133,63 @@ export const useBoard = () => {
   };
 
   const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
-    const newCardIds = Array.from(startColumn?.cardsIds);
-    newCardIds.splice(source.index, 1);
-    newCardIds.splice(destination.index, 0, draggableId);
+    if(startColumn.cardsIds) {
+      const newCardIds = Array.from(startColumn?.cardsIds);
+      newCardIds.splice(source.index, 1);
+      newCardIds.splice(destination.index, 0, draggableId);
 
-    const newColumn = {
-      ...startColumn,
-      cardsIds: newCardIds,
+      const newColumn = {
+        ...startColumn,
+        cardsIds: newCardIds,
+      };
+
+      setBoard({
+        ...board,
+        columns: {
+          ...board.columns,
+          [newColumn.id]: newColumn,
+        },
+      });
     };
-
-    setBoard({
-      ...board,
-      columns: {
-        ...board.columns,
-        [newColumn.id]: newColumn,
-      },
-    });
   };
 
   const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
-    const startCardIds = Array.from(startColumn?.cardsIds);
-    startCardIds.splice(source.index, 1);
-    const newStartColumn = {
-      ...startColumn,
-      cardsIds: startCardIds,
-    };
+    if(startColumn.cardsIds && finishColumn.cardsIds) {
+      const startCardIds = Array.from(startColumn?.cardsIds);
+      startCardIds.splice(source.index, 1);
+      const newStartColumn = {
+        ...startColumn,
+        cardsIds: startCardIds,
+      };
 
-    const finishCardIds = Array.from(finishColumn?.cardsIds);
-    finishCardIds.splice(destination.index, 0, draggableId);
-    const newFinishColumn = {
-      ...finishColumn,
-      cardsIds: finishCardIds,
-    };
+      const finishCardIds = Array.from(finishColumn?.cardsIds);
+      finishCardIds.splice(destination.index, 0, draggableId);
+      const newFinishColumn = {
+        ...finishColumn,
+        cardsIds: finishCardIds,
+      };
 
-    const updatedCard = {
-      ...(board.cards as { [key: string]: ICard })[draggableId],
-      manager_id: finishColumn.manager_id,
-    };
+      const updatedCard = {
+        ...(board.cards as { [key: string]: ICard })[draggableId],
+        manager_id: finishColumn.manager_id,
+      };
 
-    setBoard({
-      ...board,
-      cards: {
-        ...board.cards,
-        [draggableId]: updatedCard,
-      },
-      columns: {
-        ...board.columns,
-        [newStartColumn.id]: newStartColumn,
-        [newFinishColumn.id]: newFinishColumn,
-      },
-    });
+      setBoard({
+        ...board,
+        cards: {
+          ...board.cards,
+          [draggableId]: updatedCard,
+        },
+        columns: {
+          ...board.columns,
+          [newStartColumn.id]: newStartColumn,
+          [newFinishColumn.id]: newFinishColumn,
+        },
+      });
+    };
   };
 
-  const handleRaiseCustomer = (customer_id: string) => {
+  const handleRaiseCustomer = (customer_id: string, text: string) => {
     const targetColumnId = Object.keys(board.columns).find(columnId => {
       return (board.columns as { [key: string]: IColumn })[columnId]?.cardsIds.includes(customer_id);
     });
@@ -196,12 +200,21 @@ export const useBoard = () => {
       column.cardsIds = column?.cardsIds.filter(id => +id !== +customer_id);
       column.cardsIds.unshift(customer_id);
 
+      const newCard = {
+        ...(board.cards as { [key: string]: ICard })[customer_id],
+        text
+      };
+
       setBoard({
         ...board,
         columns: {
           ...board.columns,
           [targetColumnId]: column,
         },
+        cards: {
+          ...board.cards,
+          [customer_id]: newCard
+        }
       });
     };
   };
