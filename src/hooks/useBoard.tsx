@@ -24,16 +24,21 @@ export const useBoard = () => {
   }, [])
 
   useEffect(() => {
-    if(newCardSpot) {
-      const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
-      const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
-      if (startColumn === finishColumn) {
-        sameColumn(startColumn, newCardSpot.source, newCardSpot.destination, newCardSpot.customer_id);
-        return;
+    if (newCardSpot && newCardSpot.source && newCardSpot.destination) {
+      if (newCardSpot.source.droppableId && newCardSpot.destination.droppableId) {
+        const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
+        const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
+
+        if (startColumn === finishColumn) {
+          sameColumn(startColumn, newCardSpot.source, newCardSpot.destination, newCardSpot.customer_id);
+          return;
+        }
+
+        differentColumns(startColumn, newCardSpot.source, finishColumn, newCardSpot.destination, newCardSpot.customer_id);
       }
-      differentColumns(startColumn, newCardSpot.source, finishColumn, newCardSpot.destination, newCardSpot.customer_id);
-    };
+    }
   }, [newCardSpot]);
+
 
   useEffect(() => {
     if(newMessage?.customer_id && newMessage?.text) {
