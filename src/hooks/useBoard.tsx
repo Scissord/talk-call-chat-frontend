@@ -138,8 +138,8 @@ export const useBoard = () => {
   };
 
   const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
-    if(startColumn && startColumn.cardsIds) {
-      const newCardIds = Array.from(startColumn?.cardsIds);
+    if (startColumn && Array.isArray(startColumn.cardsIds)) {
+      const newCardIds = Array.from(startColumn.cardsIds);
       newCardIds.splice(source.index, 1);
       newCardIds.splice(destination.index, 0, draggableId);
 
@@ -155,20 +155,24 @@ export const useBoard = () => {
           [newColumn.id]: newColumn,
         },
       });
-    };
+    } else {
+      console.error("startColumn or cardsIds is not properly initialized.");
+    }
   };
 
   const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
-    if(startColumn && startColumn.cardsIds && finishColumn && finishColumn.cardsIds) {
-      const startCardIds = Array.from(startColumn?.cardsIds);
+    if (startColumn && Array.isArray(startColumn.cardsIds) && finishColumn && Array.isArray(finishColumn.cardsIds)) {
+      const startCardIds = Array.from(startColumn.cardsIds);
       startCardIds.splice(source.index, 1);
+
       const newStartColumn = {
         ...startColumn,
         cardsIds: startCardIds,
       };
 
-      const finishCardIds = Array.from(finishColumn?.cardsIds);
+      const finishCardIds = Array.from(finishColumn.cardsIds);
       finishCardIds.splice(destination.index, 0, draggableId);
+
       const newFinishColumn = {
         ...finishColumn,
         cardsIds: finishCardIds,
@@ -191,8 +195,11 @@ export const useBoard = () => {
           [newFinishColumn.id]: newFinishColumn,
         },
       });
-    };
+    } else {
+      console.error("Either startColumn, finishColumn, or their cardsIds are not properly initialized.");
+    }
   };
+
 
   const handleRaiseCustomer = (customer_id: string, text: string) => {
     const targetColumnId = Object.keys(board.columns).find(columnId => {
