@@ -68,7 +68,9 @@ const Card: FC<CardProps> = (props) => {
             />
           </div>
           <p>{card?.order_id}</p>
-          {card?.text && <p className='bg-green-800 p-1 w-full'>{card?.text}</p>}
+          {card?.text && <p className='bg-green-800 p-1 w-full rounded'>
+            {card?.text ? card.text.slice(0, 20) : ''}
+          </p>}
         </div>
       )}
     </Draggable>
