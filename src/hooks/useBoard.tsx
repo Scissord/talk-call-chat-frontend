@@ -138,7 +138,7 @@ export const useBoard = () => {
   };
 
   const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
-    if(startColumn.cardsIds) {
+    if(startColumn && startColumn.cardsIds) {
       const newCardIds = Array.from(startColumn?.cardsIds);
       newCardIds.splice(source.index, 1);
       newCardIds.splice(destination.index, 0, draggableId);
@@ -159,7 +159,7 @@ export const useBoard = () => {
   };
 
   const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
-    if(startColumn.cardsIds && finishColumn.cardsIds) {
+    if(startColumn && startColumn.cardsIds && finishColumn && finishColumn.cardsIds) {
       const startCardIds = Array.from(startColumn?.cardsIds);
       startCardIds.splice(source.index, 1);
       const newStartColumn = {
