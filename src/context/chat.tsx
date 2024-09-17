@@ -10,7 +10,7 @@ interface Params {
   limit: number;
   page: number;
   search?: string;
-}
+};
 
 interface ChatContextType {
   search: string;

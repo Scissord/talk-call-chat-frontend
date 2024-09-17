@@ -1,14 +1,15 @@
 import { FC, useContext } from 'react'
-import { ViewContext } from '@context';
+import { useChats, ViewContext } from '@context';
 import AddModal from './AddModal';
 
 const FloatingButton: FC = () => {
   const context = useContext(ViewContext);
+  const { fetchCustomers } = useChats();
 
   const handleAddConversation = () => {
     context?.modal.show({
       title: 'Написать первым',
-      children: <AddModal />
+      children: <AddModal fetchCustomers={fetchCustomers}/>
     })
   };
 

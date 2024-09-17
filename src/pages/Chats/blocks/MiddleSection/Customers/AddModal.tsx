@@ -1,10 +1,14 @@
 import axios from '@axios';
+import { FC, useState } from 'react';
 import { useViewContext } from '@context';
 import { useAppSelector } from '@hooks';
 import { selectTheme } from '@store/reducers/themeSlice';
-import { FC, useState } from 'react'
 
-const AddModal: FC = () => {
+type Props = {
+  fetchCustomers: () => void;
+};
+
+const AddModal: FC<Props> = ({ fetchCustomers }) => {
   const context = useViewContext();
   const theme = useAppSelector(selectTheme);
 
@@ -25,12 +29,15 @@ const AddModal: FC = () => {
         leadvertex_id: leadvertex_id,
       }
     })
-      .then((res) => {
+      .then(() => {
+        fetchCustomers();
         context?.modal.hide();
         context?.notification.show("Успешно!", "success");
       })
-      .catch((err) => context?.notification.show("Ошибка при отправке сообщения", "error"))
-  }
+      .catch(() => {
+        context?.notification.show("Ошибка при отправке сообщения", "error")
+      });
+  };
 
   return (
     <div className='flex flex-col gap-6 h-[25vh]'>
