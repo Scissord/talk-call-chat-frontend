@@ -14,8 +14,7 @@ const css = {
   `,
   bottom_section: `
     h-[90vh] flex py-4
-    container mx-auto
-    overflow-x-auto
+    mx-6 overflow-x-auto
     gap-3 z-50
   `
 };

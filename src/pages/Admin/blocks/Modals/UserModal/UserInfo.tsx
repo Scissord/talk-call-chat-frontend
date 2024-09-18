@@ -85,6 +85,7 @@ const UserInfo: FC<UserInfoProps> = (props) => {
         onChange={(e) => {
           setUserInfo({ ...user_info, role: e.target.value })
         }}
+        disabled={isDisabled}
       >
         {roles.map((option) => (
           <option

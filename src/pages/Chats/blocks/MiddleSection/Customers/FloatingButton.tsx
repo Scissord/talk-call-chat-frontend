@@ -16,7 +16,7 @@ const FloatingButton: FC = () => {
   return (
     <div
       onClick={() => handleAddConversation()}
-      className='fixed bottom-3 right-3 bg-[#0086FF] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-xl'
+      className='fixed bottom-3 right-3 bg-[#0086FF] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-xl text-white'
     >
       +
     </div>

@@ -1,14 +1,10 @@
 import { FC } from 'react';
-import { useAppSelector } from '@hooks';
-import { selectTheme } from '@store/reducers/themeSlice';
 
 export const IconAdmin: FC = () => {
-  const theme = useAppSelector(selectTheme);
-
   return (
     <svg
       viewBox="0 0 24 24"
-      fill={theme === 'dark' ? 'white' : 'black'}
+      fill={'white'}
       height="1.4em"
       width="1.4em"
       cursor="pointer"

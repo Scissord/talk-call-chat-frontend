@@ -13,10 +13,6 @@ const css = {
   motion: `
     w-full flex items-center justify-between px-4
   `,
-  title: `
-    flex flex-col font-bold text-md
-    text-center text-black dark:text-white
-  `,
   icon: `
     flex items-center justify-center
     hover:rounded-lg p-2 cursor-pointer
@@ -39,18 +35,16 @@ const OpenedSidebarTop: FC<OpenedSidebarTopProps> = ({ variants }) => {
       transition={{ delay: 0.1 }}
       className={css.motion}
     >
-      <p
-        className={css.title}
-      >
-        <img src="pics/logo.png" className='w-20' alt="logo"/>
-      </p>
+      <div className='h-full w-full flex items-center justify-center'>
+        <img src="pics/logo.png" className='select-none w-24'  alt="logo"/>
+      </div>
 
-      <div
+      {/* <div
         className={css.icon}
         onClick={() => dispatch(toggleSidebar())}
       >
         <IconArrowLeftCircle fill={theme === 'light' ? 'black' : 'white'}/>
-      </div>
+      </div> */}
     </motion.div>
   )
 }

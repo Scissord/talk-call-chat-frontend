@@ -28,7 +28,7 @@ const Card: FC<CardProps> = ({ users, title, fetchUsers }) => {
 
   return (
     <div className='w-full sm:w-1/4 h-[15vh] bg-white border border-slate-300 rounded-lg px-4 py-2'>
-      <p className='text-[24px] font-semibold mb-2'>{title}</p>
+      <p className='text-[24px] text-black font-semibold mb-2'>{title}</p>
       {title === 'Найти' && (
         <SelectSearch
           array={users ?? []}

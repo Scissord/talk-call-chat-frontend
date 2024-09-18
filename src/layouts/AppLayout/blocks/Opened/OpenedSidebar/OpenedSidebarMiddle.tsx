@@ -9,15 +9,15 @@ type OpenedSidebarMiddleProps = {
 
 const css = {
   middle: `
-    flex flex-col gap-3 pt-8 h-full w-full px-2
+    flex flex-col gap-3 h-full w-full px-2
   `,
   icon: `
     flex items-center gap-3
     hover:rounded-lg p-2 cursor-pointer
-    hover:bg-gray-200 dark:hover:bg-gray-700
+    hover:bg-gray-100 hover:bg-opacity-50
   `,
   label: `
-    text-[13px] select-none text-black dark:text-white
+    text-[13px] select-none text-white
   `,
 };
 

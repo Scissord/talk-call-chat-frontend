@@ -14,8 +14,10 @@ type CardProps = {
 const css = {
   container: `
     select-none p-2 m-2 bg-card dark:bg-dcard
-    shadow-md rounded-lg text-[13px] text-black
+    shadow-lg rounded-lg text-[13px] text-black
     dark:text-white relative z-10 overflow-hidden
+    flex items-center gap-3 border border-slate-200
+    dark:border-indigo-900
   `,
   delete: `
     absolute top-1 right-2 hover:cursor-pointer
@@ -59,18 +61,42 @@ const Card: FC<CardProps> = (props) => {
           }}
           className={css.container}
         >
-          <div className='flex items-center justify-between'>
-            <p>{card?.name}</p>
-            <img
-              src={card?.avatar ? card?.avatar : 'pics/default_avatar.png'}
-              className='w-4 h-4 rounded-full'
-              alt="avatar"
-            />
+          <img
+            src={card?.avatar ? card?.avatar : 'pics/default_avatar.png'}
+            className='w-10 h-10 rounded-full'
+            alt="avatar"
+          />
+          <div className='flex flex-col w-full text-xs'>
+            <div className='flex items-center justify-between w-full'>
+              <p>{card?.order_id}</p>
+              <p>{card?.time}</p>
+            </div>
+            <div className='flex items-center justify-between w-full'>
+              <p className='font-bold'>
+                {card?.name.length > 15? card.name.slice(0, 14) : card?.name}
+              </p>
+              <div className='ml-auto'>
+                <img
+                  src={card?.path}
+                  className='w-6'
+                  alt="product"
+                />
+              </div>
+            </div>
+            <div className='flex items-center'>
+              <img
+                src={'pics/whatsapp_logo.webp'}
+                className='w-4 rounded-full'
+                alt="whatsapp"
+              />
+              {card?.text && <p className='w-full rounded'>
+                {card?.text.length > 10 ? card.text.slice(0, 10) + '...' : card?.text}
+              </p>}
+              {card?.counter && <p className='ml-auto flex items-center justify-center p-1 w-4 h-4 rounded-full bg-red-600 text-white'>
+                {card?.counter}
+              </p>}
+            </div>
           </div>
-          <p>{card?.order_id}</p>
-          {card?.text && <p className='bg-green-800 p-1 w-full rounded'>
-            {card?.text ? card.text.slice(0, 20) : ''}
-          </p>}
         </div>
       )}
     </Draggable>

@@ -1,13 +1,8 @@
-import { FC, RefObject } from 'react';
-import { useAppDispatch, useAppSelector } from '@hooks';
-import { toggleColorMode } from '@store/reducers/themeSlice';
+import { FC } from 'react';
+import { useAppSelector } from '@hooks';
 import { ColorModeButton } from '@components';
 import { getUser } from '@store/reducers/authSlice';
-
-type ClosedSidebarBottomProps = {
-  menuClosedButtonRef: RefObject<HTMLDivElement>;
-  toggleMenu: () => void;
-};
+import { RootState } from '@store/index';
 
 const css = {
   bottom: `
@@ -21,30 +16,19 @@ const css = {
     ease-in-out transform active:scale-95
   `,
   avatar: `
-    w-[1.4em] h-[1.4em] rounded-full
+    select-none w-[1.4em] h-[1.4em] rounded-full
   `
 };
 
-const ClosedSidebarBottom: FC<ClosedSidebarBottomProps> = (props) => {
-  const { menuClosedButtonRef, toggleMenu } = props;
-
-  const dispatch = useAppDispatch();
-
-  const user = useAppSelector(getUser);
+const ClosedSidebarBottom: FC = () => {
+  const user = useAppSelector((state: RootState) => getUser(state));
 
   return (
     <div className={css.bottom}>
-      <div
-        onClick={() => dispatch(toggleColorMode())}
-        className={css.icon}
-      >
+      <div className={css.icon}>
         <ColorModeButton />
       </div>
-      <div
-        ref={menuClosedButtonRef}
-        onClick={() => toggleMenu()}
-        className={css.icon}
-      >
+      <div className={css.icon}>
         <img
           src={user?.avatar ? user?.avatar : 'pics/default_avatar.png'}
           className={css.avatar}
@@ -55,4 +39,4 @@ const ClosedSidebarBottom: FC<ClosedSidebarBottomProps> = (props) => {
   )
 }
 
-export default ClosedSidebarBottom
+export default ClosedSidebarBottom;

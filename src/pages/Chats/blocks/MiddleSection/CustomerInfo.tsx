@@ -22,7 +22,7 @@ const ConversationInfo: FC = () => {
   };
 
   return (
-    <div className='h-full w-full sm:w-1/4 border-l border-slate-300 overflow-y-auto'>
+    <div className='h-full w-full sm:w-1/4 border-r border-l border-slate-300 overflow-y-auto'>
       {customer ? (
         <div className="flex flex-col gap-6 items-center py-6">
           <img

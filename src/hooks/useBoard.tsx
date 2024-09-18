@@ -39,7 +39,6 @@ export const useBoard = () => {
     }
   }, [newCardSpot]);
 
-
   useEffect(() => {
     if(newMessage?.customer_id && newMessage?.text) {
       handleRaiseCustomer(newMessage?.customer_id.toString(), newMessage?.text);
@@ -200,7 +199,6 @@ export const useBoard = () => {
     }
   };
 
-
   const handleRaiseCustomer = (customer_id: string, text: string) => {
     const targetColumnId = Object.keys(board.columns).find(columnId => {
       return (board.columns as { [key: string]: IColumn })[columnId]?.cardsIds.includes(customer_id);
@@ -212,10 +210,14 @@ export const useBoard = () => {
       column.cardsIds = column?.cardsIds.filter(id => +id !== +customer_id);
       column.cardsIds.unshift(customer_id);
 
+      const existingCard = (board.cards as { [key: string]: ICard })[customer_id];
       const newCard = {
-        ...(board.cards as { [key: string]: ICard })[customer_id],
-        text
+        ...existingCard,
+        text,
+        counter: existingCard?.counter ? existingCard.counter + 1 : 1
       };
+
+      console.log(newCard);
 
       setBoard({
         ...board,

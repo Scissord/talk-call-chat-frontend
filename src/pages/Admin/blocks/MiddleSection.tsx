@@ -1,9 +1,7 @@
 import axios from '@axios';
 import { useEffect, useState } from 'react'
-import TopCards from './MiddleSection/TopCards';
-import MiddleCards from './MiddleSection/MiddleCards';
-import BottomCards from './MiddleSection/BottomCards';
 import { useViewContext } from '@context';
+import Cards from './MiddleSection/Cards';
 
 const MiddleSection = () => {
   const context = useViewContext();
@@ -17,7 +15,7 @@ const MiddleSection = () => {
   const fetchUsers = async () => {
     await axios({
       method: 'GET',
-      url: `/users`,
+      url: `/admin`,
     })
       .then((res) => {
         setUsers(res.data.users);
@@ -29,11 +27,9 @@ const MiddleSection = () => {
 
   return (
     <div className='h-[86vh] w-full'>
-      <TopCards users={users} fetchUsers={fetchUsers}/>
-      <MiddleCards/>
-      <BottomCards/>
+      <Cards users={users} fetchUsers={fetchUsers}/>
     </div>
   )
 }
 
-export default MiddleSection
+export default MiddleSection;

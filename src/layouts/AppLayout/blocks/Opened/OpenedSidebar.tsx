@@ -10,7 +10,7 @@ type OpenedSidebarProps = {
 
 const css = {
   container: `
-    w-full h-full flex flex-col
+    w-full h-full flex flex-col gap-3
     items-center py-4 overflow-hidden
   `,
 };

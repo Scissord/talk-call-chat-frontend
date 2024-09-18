@@ -1,33 +1,24 @@
-import { FC, RefObject } from "react";
+import { FC } from "react";
 import ClosedSidebarTop from "./ClosedSidebar/ClosedSidebarTop";
 import ClosedSidebarMiddle from "./ClosedSidebar/ClosedSidebarMiddle";
 import ClosedSidebarBottom from "./ClosedSidebar/ClosedSidebarBottom";
 
-type ClosedSidebarProps = {
-  menuClosedButtonRef: RefObject<HTMLDivElement>;
-  toggleMenu: () => void;
-};
-
 const css = {
   container: `
-    w-full h-full flex flex-col
-    items-center py-4 overflow-hidden
+    w-full h-full flex
+    flex-col gap-6 py-4
+    items-center overflow-hidden
   `,
 };
 
-const ClosedSidebar: FC<ClosedSidebarProps> = (props) => {
-  const { menuClosedButtonRef, toggleMenu } = props;
-
+const ClosedSidebar: FC = () => {
   return (
     <div className={css.container}>
       <ClosedSidebarTop/>
       <ClosedSidebarMiddle/>
-      <ClosedSidebarBottom
-        toggleMenu={toggleMenu}
-        menuClosedButtonRef={menuClosedButtonRef}
-      />
+      <ClosedSidebarBottom/>
     </div>
   );
 };
 
-export default ClosedSidebar
+export default ClosedSidebar;

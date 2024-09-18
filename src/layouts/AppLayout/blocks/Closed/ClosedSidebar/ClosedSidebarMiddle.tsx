@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { useNavigate } from "@hooks";
 import { useSidebarUrls } from '@constants';
 
 const css = {
   middle: `
-    flex flex-col gap-3 pt-8 h-full
+    flex flex-col gap-3 h-full
   `,
   icon: `
     flex items-center justify-center
@@ -16,7 +15,6 @@ const css = {
 };
 
 const ClosedSidebarMiddle: FC = () => {
-  const navigate = useNavigate();
   const sidebarUrls = useSidebarUrls();
 
   return (
@@ -24,7 +22,6 @@ const ClosedSidebarMiddle: FC = () => {
       {sidebarUrls.map((url) => (
         <div
           key={url.path}
-          onClick={() => navigate(url.path)}
           className={css.icon}
         >
           {url.icon}

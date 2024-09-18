@@ -5,7 +5,7 @@ import { selectTheme } from '@store/reducers/themeSlice';
 
 export const ColorModeButton: FC = () => {
   const theme = useAppSelector(selectTheme);
-  const color = theme === 'light' ? 'black' : 'white'
+  const color = 'white'
 
   return (
 		<>

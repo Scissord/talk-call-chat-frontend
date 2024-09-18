@@ -4,7 +4,7 @@ import MiddleSection from './blocks/MiddleSection';
 
 const Admin: FC = () => {
   return (
-    <div className='min-w-full min-h-[100vh]'>
+    <div className='min-h-[100vh] bg-white'>
       <TopSection/>
       <MiddleSection/>
     </div>

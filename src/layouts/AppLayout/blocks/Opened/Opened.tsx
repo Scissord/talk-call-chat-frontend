@@ -1,6 +1,8 @@
 import { FC, RefObject } from 'react'
 import OpenedSidebar from './OpenedSidebar';
 import OpenedUserOptions from './OpenedUserOptions';
+import { useAppDispatch } from '@hooks';
+import { toggleSidebar } from '@store/reducers/sidebarSlice';
 
 type OpenedProps = {
   menuOpenedButtonRef: RefObject<HTMLDivElement>;
@@ -17,8 +19,13 @@ const Opened: FC<OpenedProps> = (props) => {
     handleLogOut
   } = props;
 
+  const dispatch = useAppDispatch();
+
   return (
-    <>
+    <div
+      className='w-full h-full'
+      onMouseLeave={() => dispatch(toggleSidebar())}
+    >
       <OpenedSidebar
         menuOpenedButtonRef={menuOpenedButtonRef}
         toggleMenu={() => toggleMenu()}
@@ -29,7 +36,7 @@ const Opened: FC<OpenedProps> = (props) => {
         menuOpenedButtonRef={menuOpenedButtonRef}
         handleLogOut={handleLogOut}
       />
-    </>
+    </div>
   );
 };
 

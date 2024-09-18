@@ -16,16 +16,31 @@ type AppLayoutProps = {
 
 const css = {
   container: `
-    flex items-center justify-center relative min-h-[100vh]
+    flex items-center
+    justify-center
+    relative min-h-[100vh]
   `,
   sidebar: `
-    mr-auto h-[100vh] bg-white dark:bg-gray-900
-    hidden lg:flex flex-col items-center rounded-tr-sm
-    rounded-br-sm transition-width duration-300 relative
+    h-[100vh] hidden lg:flex
+    flex-col items-center rounded-tr-sm
+    rounded-br-sm transition-width
+    duration-300 fixed top-0 left-0 z-50
+    bg-center bg-cover
   `,
   displayComponent: `
-    w-full min-h-[100vh] bg-neutral-200 dark:bg-indigo-950
+    min-h-[100vh] w-[95%] ml-auto
+    bg-neutral-200 dark:bg-indigo-950
+  `,
+  opened: `
+    w-[16%]
+  `,
+  closed: `
+    w-[5%]
   `
+};
+
+const sidebar = {
+  backgroundImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), linear-gradient(to bottom, rgba(29, 78, 216, 0.7), rgba(126, 34, 206, 0.7), rgba(49, 46, 129, 0.7), rgba(220, 38, 38, 0.7)), url(pics/sidebar-bg.jpg)',
 };
 
 export const AppLayout: FC<AppLayoutProps> = ({ children: DisplayComponent }) => {
@@ -36,10 +51,8 @@ export const AppLayout: FC<AppLayoutProps> = ({ children: DisplayComponent }) =>
   const theme = useAppSelector(selectTheme);
   const isSidebarOpen = useAppSelector(selectSidebar);
 
-  const menuClosedButtonRef = useRef<HTMLDivElement>(null);
   const menuOpenedButtonRef = useRef<HTMLDivElement>(null);
 
-  const [isCloseMenu, setIsCloseMenu] = useState<boolean>(false);
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
 
   const [logout] = useLogoutMutation();
@@ -61,14 +74,12 @@ export const AppLayout: FC<AppLayoutProps> = ({ children: DisplayComponent }) =>
 
   return (
     <div className={`${css.container} ${theme === 'dark' ? 'dark' : ''}`}>
-      <div className={`${css.sidebar} ${isSidebarOpen ? 'w-[18%]' : 'w-[5%]'}`}>
+      <div
+        style={sidebar}
+        className={`${css.sidebar} ${isSidebarOpen ? css.opened : css.closed}`}
+      >
         {!isSidebarOpen ? (
-          <Closed
-            menuClosedButtonRef={menuClosedButtonRef}
-            toggleMenu={() => setIsCloseMenu(!isCloseMenu)}
-            isCloseMenu={isCloseMenu}
-            handleLogOut={handleLogOut}
-          />
+          <Closed/>
         ) : (
           <Opened
             menuOpenedButtonRef={menuOpenedButtonRef}

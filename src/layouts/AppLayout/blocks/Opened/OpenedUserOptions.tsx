@@ -19,8 +19,8 @@ const variants = {
 
 const css = {
   bottom: `
-    flex flex-col bottom-16 left-4
-    absolute min-w-40 min-h-8 bg-white
+    flex flex-col bottom-16 left-2
+    absolute min-w-52 min-h-8 bg-white
     dark:bg-indigo-950 rounded-lg border
   `,
   label: `

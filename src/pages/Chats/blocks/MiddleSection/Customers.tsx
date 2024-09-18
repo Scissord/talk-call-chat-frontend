@@ -9,7 +9,7 @@ const Conversations: FC = () => {
     <div
       className={`
         flex flex-col h-full w-full sm:w-1/4
-        overflow-y-auto border-r
+        overflow-y-auto border-l border-r
         border-slate-300 relative
       `}
     >

@@ -38,13 +38,13 @@ const UserModal: FC<UserModalProps> = ({ type, user, fetchUsers }) => {
 
   const [user_info, setUserInfo] = useState(user);
   const [roles, setRoles] = useState([
-    { role: "1", label: "Менеджер отдела продал call-center" },
-    { role: "2", label: "Руководитель отдела продаж call-center" },
+    // { role: "1", label: "Менеджер отдела продал call-center" },
+    // { role: "2", label: "Руководитель отдела продаж call-center" },
     { role: "3", label: "Оператор ПД" },
     { role: "4", label: "Оператор КД" },
     { role: "5", label: "РГ ПД" },
     { role: "6", label: "РГ КД" },
-    { role: "7", label: "Администратор" },
+    // { role: "7", label: "Администратор" },
   ]);
 
   const [creatingUser, setCreatingUser] = useState({
@@ -85,7 +85,7 @@ const UserModal: FC<UserModalProps> = ({ type, user, fetchUsers }) => {
 
     await axios({
       method: 'POST',
-      url: `/users`,
+      url: `/admin`,
       data: {
         name: creatingUser?.name,
         password: creatingUser?.password,
@@ -108,7 +108,7 @@ const UserModal: FC<UserModalProps> = ({ type, user, fetchUsers }) => {
 
     await axios({
       method: 'PATCH',
-      url: `/users/${user_info?.id}`,
+      url: `/admin/${user_info?.id}`,
       data: {
         name: user_info?.name,
         // password: user_info?.password,
@@ -129,7 +129,10 @@ const UserModal: FC<UserModalProps> = ({ type, user, fetchUsers }) => {
 
     await axios({
       method: 'DELETE',
-      url: `/users/${user_info?.id}`,
+      url: `/admin/${user_info?.id}`,
+      data: {
+        role: user_info?.role,
+      },
     })
       .then(() => {
         context?.notification.show("Пользователь успешно удален!", "success");
@@ -173,10 +176,11 @@ const UserModal: FC<UserModalProps> = ({ type, user, fetchUsers }) => {
           <div className="flex flex-col gap-1">
             <label
               className={`${css.label} ${theme === 'dark' ? 'text-white' : 'text-black'}`}
-            >              Пароль:
+            >
+            Пароль:
             </label>
             <input
-              type="password"
+              type="text"
               className={`${css.input} ${theme === 'dark' ? 'text-white' : 'text-black'}`}
               value={creatingUser?.password || ""}
               placeholder="Введите пароль..."
@@ -211,9 +215,7 @@ const UserModal: FC<UserModalProps> = ({ type, user, fetchUsers }) => {
         </div>
       )}
     </div>
-  )
-}
-
-
+  );
+};
 
 export default UserModal;

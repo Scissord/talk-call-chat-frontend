@@ -6,4 +6,7 @@ export type ICard = {
   order_id: string;
   manager_id: string;
   text: string;
+  counter?: number;
+  path?: string;
+  time?: string;
 };
