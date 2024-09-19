@@ -1,14 +1,16 @@
 import axios from '@axios';
-import { IBoard, ICard, IColumn, ICustomer } from '@interfaces';
-import { useEffect, useState } from 'react';
+import { IBoard, ICard, IColumn } from '@interfaces';
+import { useEffect, useState, useCallback, KeyboardEvent } from 'react';
 import { DragStart, DropResult } from '@hello-pangea/dnd';
-import { useSocketContext } from '@context';
-import { useAppSelector } from '@hooks';
+import { useSocketContext, useViewContext } from '@context';
+import { useAppSelector, useNavigate } from '@hooks';
 import { RootState } from '@store/index';
 import { getUser } from '@store/reducers/authSlice';
 
 export const useBoard = () => {
   const { socket, newCardSpot, newMessage } = useSocketContext();
+  const navigate = useNavigate();
+  const context = useViewContext();
   const user = useAppSelector((state: RootState) => getUser(state));
 
   const [board, setBoard] = useState<IBoard>({
@@ -17,46 +19,62 @@ export const useBoard = () => {
     order: [],
   });
 
+  const [search, setSearch] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    getBoard();
-  }, [])
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const inputValue = (e.target as HTMLInputElement).value;
+      const cards = board?.cards as { [key: string]: ICard };
 
-  useEffect(() => {
-    if (newCardSpot && newCardSpot.source && newCardSpot.destination) {
-      if (newCardSpot.source.droppableId && newCardSpot.destination.droppableId) {
-        const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
-        const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
-
-        if (startColumn === finishColumn) {
-          sameColumn(startColumn, newCardSpot.source, newCardSpot.destination, newCardSpot.customer_id);
-          return;
-        }
-
-        differentColumns(startColumn, newCardSpot.source, finishColumn, newCardSpot.destination, newCardSpot.customer_id);
-      }
-    }
-  }, [newCardSpot]);
-
-  useEffect(() => {
-    if(newMessage?.customer_id && newMessage?.text) {
-      handleRaiseCustomer(newMessage?.customer_id.toString(), newMessage?.text);
+      if (cards) {
+        const card = Object.values(cards).find(card => +card.order_id === +inputValue);
+        if(card) {
+          navigate("/chats", { state: { customer: card } });
+        } else {
+          context?.notification.show('Пользователь не найден', 'error');
+        };
+      } else {
+        context?.notification.show('Пользователь не найден', 'error');
+      };
     };
-  }, [newMessage]);
+  };
 
-  const getBoard = async () => {
+  const getBoard = useCallback(async () => {
     setLoading(true);
     await axios({
       method: 'GET',
-      url: `/board`,
+      url: '/board',
     }).then((res) => {
       setLoading(false);
-      setBoard(res.data)
+      setBoard(res.data);
     });
-  };
+  }, []);
 
-  const onDragEnd = async (result: DropResult) => {
+  useEffect(() => {
+    getBoard();
+  }, [getBoard]);
+
+  useEffect(() => {
+    if (newCardSpot?.source?.droppableId && newCardSpot?.destination?.droppableId) {
+      const startColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.source.droppableId];
+      const finishColumn = (board.columns as { [key: string]: IColumn })[newCardSpot.destination.droppableId];
+
+      if (startColumn === finishColumn) {
+        sameColumn(startColumn, newCardSpot.source, newCardSpot.destination, newCardSpot.customer_id);
+      } else {
+        differentColumns(startColumn, newCardSpot.source, finishColumn, newCardSpot.destination, newCardSpot.customer_id);
+      }
+    }
+  }, [newCardSpot, board.columns]);
+
+  useEffect(() => {
+    if (newMessage?.customer_id && newMessage?.text) {
+      handleRaiseCustomer(newMessage.customer_id.toString(), newMessage.text);
+    }
+  }, [newMessage]);
+
+  const onDragEnd = useCallback(async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
     if (user && socket && socket.readyState === WebSocket.OPEN) {
@@ -65,78 +83,64 @@ export const useBoard = () => {
         customer_id: draggableId,
         user_id: user.id,
         destination,
-        source
+        source,
       });
 
       socket.send(message);
       console.log(`Message sent: ${message}`);
     } else {
       console.log('WebSocket is not connected');
-    };
+    }
 
     if (!destination) return;
 
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
-    };
+    }
 
     const startColumn = (board.columns as { [key: string]: IColumn })[source.droppableId];
     const finishColumn = (board.columns as { [key: string]: IColumn })[destination.droppableId];
 
     if (startColumn === finishColumn) {
       sameColumn(startColumn, source, destination, draggableId);
-      await axios({
-        method: 'PATCH',
-        url: `/cards/${draggableId}/move`,
-        data: {
-          cardId: draggableId,
-          sourceColumnId: startColumn.id,
-          destinationColumnId: startColumn.id,
-          sourceIndex: source.index,
-          destinationIndex: destination.index,
-        },
-        withCredentials: true,
-      })
-
-      return;
-    };
-
-    differentColumns(startColumn, source, finishColumn, destination, draggableId);
-    await axios({
-      method: 'PATCH',
-      url: `/cards/${draggableId}/move`,
-      data: {
+      await axios.patch(`/cards/${draggableId}/move`, {
         cardId: draggableId,
         sourceColumnId: startColumn.id,
-        destinationColumnId: finishColumn.id,
+        destinationColumnId: startColumn.id,
         sourceIndex: source.index,
         destinationIndex: destination.index,
-      },
-      withCredentials: true,
-    })
-  };
+      }, { withCredentials: true });
+      return;
+    }
 
-  const onDragStart = (result: DragStart) => {
+    differentColumns(startColumn, source, finishColumn, destination, draggableId);
+    await axios.patch(`/cards/${draggableId}/move`, {
+      cardId: draggableId,
+      sourceColumnId: startColumn.id,
+      destinationColumnId: finishColumn.id,
+      sourceIndex: source.index,
+      destinationIndex: destination.index,
+    }, { withCredentials: true });
+  }, [board, user, socket]);
+
+  const onDragStart = useCallback((result: DragStart) => {
     const { draggableId } = result;
 
     if (user && socket && socket.readyState === WebSocket.OPEN) {
       const message = JSON.stringify({
         type: "onDragStart",
         customer_id: draggableId,
-        user_id: user.id
+        user_id: user.id,
       });
 
       socket.send(message);
       console.log(`Message sent: ${message}`);
     } else {
       console.log('WebSocket is not connected');
-    };
-  };
+    }
+  }, [socket, user]);
 
-  const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
+  const sameColumn = useCallback((startColumn: IColumn, source: any, destination: any, draggableId: string) => {
     if (startColumn && Array.isArray(startColumn.cardsIds)) {
       const newCardIds = Array.from(new Set(startColumn.cardsIds));
 
@@ -151,19 +155,19 @@ export const useBoard = () => {
         cardsIds: newCardIds,
       };
 
-      setBoard({
-        ...board,
+      setBoard((prevBoard) => ({
+        ...prevBoard,
         columns: {
-          ...board.columns,
+          ...prevBoard.columns,
           [newColumn.id]: newColumn,
         },
-      });
+      }));
     } else {
       console.error("startColumn или cardsIds не корректно инициализированы.");
     }
-  };
+  }, []);
 
-  const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
+  const differentColumns = useCallback((startColumn: IColumn, source: any, finishColumn: IColumn, destination: any, draggableId: string) => {
     if (startColumn && Array.isArray(startColumn.cardsIds) && finishColumn && Array.isArray(finishColumn.cardsIds)) {
       const startCardIds = Array.from(new Set(startColumn.cardsIds));
       startCardIds.splice(source.index, 1);
@@ -181,67 +185,66 @@ export const useBoard = () => {
         cardsIds: finishCardIds,
       };
 
-      console.log(finishCardIds)
-
       const updatedCard = {
-        ...(board.cards as { [key: string]: ICard })[draggableId],
+        ...(board.columns as { [key: string]: ICard })[draggableId],
         manager_id: finishColumn.manager_id,
       };
 
-      // Обновляем состояние доски
-      setBoard({
-        ...board,
+      setBoard((prevBoard) => ({
+        ...prevBoard,
         cards: {
-          ...board.cards,
+          ...prevBoard.cards,
           [draggableId]: updatedCard,
         },
         columns: {
-          ...board.columns,
+          ...prevBoard.columns,
           [newStartColumn.id]: newStartColumn,
           [newFinishColumn.id]: newFinishColumn,
         },
-      });
+      }));
     } else {
       console.error("startColumn, finishColumn или их cardsIds не корректно инициализированы.");
     }
-  };
+  }, [board.cards]);
 
-  const handleRaiseCustomer = (customer_id: string, text: string) => {
-    const targetColumnId = Object.keys(board.columns).find(columnId => {
-      return (board.columns as { [key: string]: IColumn })[columnId]?.cardsIds.includes(customer_id);
-    });
+  const handleRaiseCustomer = useCallback((customer_id: string, text: string) => {
+    const targetColumnId = Object.keys(board.columns).find(columnId =>
+      (board.columns as { [key: string]: IColumn })[columnId]?.cardsIds.includes(customer_id)
+    );
 
     if (targetColumnId) {
       const column = (board.columns as { [key: string]: IColumn })[targetColumnId];
-
-      column.cardsIds = column?.cardsIds.filter(id => +id !== +customer_id);
+      column.cardsIds = column?.cardsIds.filter(id => id !== customer_id);
       column.cardsIds.unshift(customer_id);
 
-      const existingCard = (board.cards as { [key: string]: ICard })[customer_id];
+      const existingCard = (board.columns as { [key: string]: ICard })[customer_id];
       const newCard = {
         ...existingCard,
         text,
-        counter: existingCard?.counter ? existingCard.counter + 1 : 1
+        counter: existingCard?.counter ? existingCard.counter + 1 : 1,
       };
 
-      setBoard({
-        ...board,
+      setBoard((prevBoard) => ({
+        ...prevBoard,
         columns: {
-          ...board.columns,
+          ...prevBoard.columns,
           [targetColumnId]: column,
         },
         cards: {
-          ...board.cards,
-          [customer_id]: newCard
-        }
-      });
-    };
-  };
+          ...prevBoard.cards,
+          [customer_id]: newCard,
+        },
+      }));
+    }
+  }, [board]);
 
   return {
     board,
     onDragEnd,
     onDragStart,
-    loading
+    loading,
+    search,
+    setSearch,
+    handleKeyDown
   };
 };

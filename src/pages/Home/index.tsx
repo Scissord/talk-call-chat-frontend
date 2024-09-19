@@ -1,12 +1,14 @@
-import { FC } from 'react';
-import { useBoard } from '@hooks';
+import { ChangeEvent, FC, KeyboardEvent, useState } from 'react';
+import { useBoard, useNavigate } from '@hooks';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { Loader } from '@ui';
 import Column from './blocks/Column';
+import { ICard } from '@interfaces';
+import { useViewContext } from '@context';
 
 const css = {
   top_section: `
-    h-[10vh] flex items-center justify-center
+    h-[10vh] flex items-center justify-between
   `,
   label: `
     text-center w-full text-4xl
@@ -24,7 +26,10 @@ const Home: FC = () => {
     board,
     onDragEnd,
     onDragStart,
-    loading
+    loading,
+    search,
+    setSearch,
+    handleKeyDown,
   } = useBoard();
 
   if(loading) return <Loader
@@ -35,6 +40,13 @@ const Home: FC = () => {
     <>
       <section className={css.top_section}>
         <p className={css.label}>Воронка</p>
+        <input
+          type="text"
+          value={search}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyDown(e)}
+          className='border border-white mr-3 px-2 text-black dark:text-white'
+        />
       </section>
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         <section className={css.bottom_section}>
