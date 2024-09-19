@@ -51,6 +51,12 @@ const Card: FC<CardProps> = (props) => {
                 case 7:
                   navigate("/chats", { state: { customer: card } });
                   break;
+                case 43:
+                  navigate("/chats", { state: { customer: card } });
+                  break;
+                case 45:
+                  navigate("/chats", { state: { customer: card } });
+                  break;
                 default:
                   if (card?.manager_id === user?.id) {
                     navigate("/chats", { state: { customer: card } });
