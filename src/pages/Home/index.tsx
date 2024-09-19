@@ -1,14 +1,13 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from 'react';
-import { useBoard, useNavigate } from '@hooks';
+import { ChangeEvent, FC, KeyboardEvent } from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
+import { useBoard } from '@hooks';
 import { Loader } from '@ui';
 import Column from './blocks/Column';
-import { ICard } from '@interfaces';
-import { useViewContext } from '@context';
 
 const css = {
   top_section: `
-    h-[10vh] flex items-center justify-between
+    h-[10vh] flex items-center
+    justify-between relative
   `,
   label: `
     text-center w-full text-4xl
@@ -43,9 +42,10 @@ const Home: FC = () => {
         <input
           type="text"
           value={search}
+          placeholder='Поиск...'
           onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
           onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyDown(e)}
-          className='border border-white mr-3 px-2 text-black dark:text-white'
+          className='rounded border border-black dark:border-white mr-3 px-2 text-black dark:text-white'
         />
       </section>
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
