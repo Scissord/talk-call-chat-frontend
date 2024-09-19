@@ -17,7 +17,7 @@ const AddModal: FC<Props> = ({ fetchCustomers }) => {
   const [phone, setPhone] = useState<string>("");
 
   const handleSendUser = async () => {
-    if(!message || !leadvertex_id || !phone) {
+    if(!message || !leadvertex_id) {
       context?.notification.show("Заполните все поля", "error");
       return;
     };
@@ -28,7 +28,7 @@ const AddModal: FC<Props> = ({ fetchCustomers }) => {
       data: {
         message,
         leadvertex_id,
-        phone: phone.replace(/\D/g, '') + '@c.us'
+        phone: phone !== "" ? phone.replace(/\D/g, '') + '@c.us' : ""
       },
     })
       .then(() => {
