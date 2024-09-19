@@ -79,7 +79,7 @@ const Card: FC<CardProps> = (props) => {
             </div>
             <div className='flex items-center justify-between w-full'>
               <p className='font-bold'>
-                {card?.name.length > 15? card.name.slice(0, 14) : card?.name}
+                {card?.name?.length > 15? card?.name?.slice(0, 14) : card?.name}
               </p>
               <div className='ml-auto'>
                 <img
