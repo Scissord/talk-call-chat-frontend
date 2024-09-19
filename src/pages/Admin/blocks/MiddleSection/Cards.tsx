@@ -14,12 +14,6 @@ const cards = [
   {
     title: 'Удалить'
   },
-  // {
-  //   title: 'Найти'
-  // },
-  // {
-  //   title: 'Изменить'
-  // },
 ];
 
 const Cards: FC<TopCardsProps> = ({ users, fetchUsers }) => {

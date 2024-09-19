@@ -138,8 +138,12 @@ export const useBoard = () => {
 
   const sameColumn = (startColumn: any, source: any, destination: any, draggableId: string) => {
     if (startColumn && Array.isArray(startColumn.cardsIds)) {
-      const newCardIds = Array.from(startColumn.cardsIds);
+      const newCardIds = Array.from(new Set(startColumn.cardsIds));
+
+      // Удаляем карточку с исходной позиции
       newCardIds.splice(source.index, 1);
+
+      // Вставляем карточку в новую позицию
       newCardIds.splice(destination.index, 0, draggableId);
 
       const newColumn = {
@@ -155,13 +159,13 @@ export const useBoard = () => {
         },
       });
     } else {
-      console.error("startColumn or cardsIds is not properly initialized.");
+      console.error("startColumn или cardsIds не корректно инициализированы.");
     }
   };
 
   const differentColumns = (startColumn: any, source: any, finishColumn: any, destination: any, draggableId: string) => {
     if (startColumn && Array.isArray(startColumn.cardsIds) && finishColumn && Array.isArray(finishColumn.cardsIds)) {
-      const startCardIds = Array.from(startColumn.cardsIds);
+      const startCardIds = Array.from(new Set(startColumn.cardsIds));
       startCardIds.splice(source.index, 1);
 
       const newStartColumn = {
@@ -169,7 +173,7 @@ export const useBoard = () => {
         cardsIds: startCardIds,
       };
 
-      const finishCardIds = Array.from(finishColumn.cardsIds);
+      const finishCardIds = Array.from(new Set(finishColumn.cardsIds));
       finishCardIds.splice(destination.index, 0, draggableId);
 
       const newFinishColumn = {
@@ -177,11 +181,14 @@ export const useBoard = () => {
         cardsIds: finishCardIds,
       };
 
+      console.log(finishCardIds)
+
       const updatedCard = {
         ...(board.cards as { [key: string]: ICard })[draggableId],
         manager_id: finishColumn.manager_id,
       };
 
+      // Обновляем состояние доски
       setBoard({
         ...board,
         cards: {
@@ -195,7 +202,7 @@ export const useBoard = () => {
         },
       });
     } else {
-      console.error("Either startColumn, finishColumn, or their cardsIds are not properly initialized.");
+      console.error("startColumn, finishColumn или их cardsIds не корректно инициализированы.");
     }
   };
 
@@ -216,8 +223,6 @@ export const useBoard = () => {
         text,
         counter: existingCard?.counter ? existingCard.counter + 1 : 1
       };
-
-      console.log(newCard);
 
       setBoard({
         ...board,
