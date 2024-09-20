@@ -144,10 +144,7 @@ export const useBoard = () => {
     if (startColumn && Array.isArray(startColumn.cardsIds)) {
       const newCardIds = Array.from(new Set(startColumn.cardsIds));
 
-      // Удаляем карточку с исходной позиции
       newCardIds.splice(source.index, 1);
-
-      // Вставляем карточку в новую позицию
       newCardIds.splice(destination.index, 0, draggableId);
 
       const newColumn = {
@@ -186,22 +183,22 @@ export const useBoard = () => {
       };
 
       const updatedCard = {
-        ...(board.columns as { [key: string]: ICard })[draggableId],
+        ...(board.cards as { [key: string]: ICard })[draggableId],
         manager_id: finishColumn.manager_id,
       };
 
-      setBoard((prevBoard) => ({
-        ...prevBoard,
+      setBoard({
+        ...board,
         cards: {
-          ...prevBoard.cards,
+          ...board.cards,
           [draggableId]: updatedCard,
         },
         columns: {
-          ...prevBoard.columns,
+          ...board.columns,
           [newStartColumn.id]: newStartColumn,
           [newFinishColumn.id]: newFinishColumn,
         },
-      }));
+      });
     } else {
       console.error("startColumn, finishColumn или их cardsIds не корректно инициализированы.");
     }
