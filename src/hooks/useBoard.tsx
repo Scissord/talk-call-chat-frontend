@@ -214,7 +214,7 @@ export const useBoard = () => {
       column.cardsIds = column?.cardsIds.filter(id => id !== customer_id);
       column.cardsIds.unshift(customer_id);
 
-      const existingCard = (board.columns as { [key: string]: ICard })[customer_id];
+      const existingCard = (board.cards as { [key: string]: ICard })[customer_id];
       const newCard = {
         ...existingCard,
         text,
