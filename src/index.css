@@ -1,14 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('/fonts/HelveticaNeue/HelveticaNeue-Light.otf') format('opentype');
+}
 
 /* Reset and base styles  */
 * {
   padding: 0px;
   margin: 0px;
-  font-family: "Spline Sans Mono", monospace;
+  font-family: 'Helvetica Neue', sans-serif;;
   @apply: transition-colors duration-300 ease-in-out;
 }
 

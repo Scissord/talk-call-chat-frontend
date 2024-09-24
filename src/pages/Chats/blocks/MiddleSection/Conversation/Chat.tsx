@@ -1,12 +1,18 @@
-import { FC, Fragment, useEffect, useRef } from "react";
+import axios from "@axios";
+import { FC, useEffect, useRef, useState } from "react";
 import { useSocketContext } from "@context";
-import Message from "./Chat/Message";
 import { useChats } from "@context";
 import { IMessage } from "@interfaces";
+import Message from "./Chat/Message";
+import './scroll.css'
 
 const Chat: FC = () => {
-  const { customer, conversation, setConversation } = useChats();
+  const { customer, conversation, setSearch, setConversation } = useChats();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const [activeMessageId, setActiveMessageId] = useState<string>("");
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const { newMessage } = useSocketContext();
 
@@ -34,14 +40,44 @@ const Chat: FC = () => {
     }
   };
 
+  const handleContextMenu = (event: any, messageId: string) => {
+    event.preventDefault();
+    setMenuPosition({ x: event.clientX, y: event.clientY });
+    setActiveMessageId(messageId);
+  };
+
+  const onCloseMenu = () => {
+    setActiveMessageId("");
+    setMenuPosition({ x: 0, y: 0 });
+    setSearch("");
+  };
+
+  const replyMessage = async (message_id: string, customer_id: string) => {
+    await axios({
+      method: 'POST',
+      url: "/messages/reply",
+      data: { message_id, customer_id }
+    }).then(() => {
+      setActiveMessageId("");
+      setSearch("");
+    });
+  };
+
   return (
-    <div className='w-full h-full flex flex-col gap-3 overflow-y-auto px-6 py-6'>
+    <div className={`
+      w-full h-full flex flex-col gap-3 px-3 py-6
+      ${activeMessageId !== "" ? "overflow-hidden" : "scroll"}
+    `}>
       {conversation?.length > 0 && conversation?.map((message) => (
-        <Fragment key={message.id}>
-          <Message
-            message={message}
-          />
-        </Fragment>
+        <Message
+          key={message.id}
+          message={message}
+          isActive={+activeMessageId === +message?.id}
+          onContextMenu={(event) => handleContextMenu(event, message.id)}
+          onCloseMenu={onCloseMenu}
+          replyMessage={replyMessage}
+          menuPosition={menuPosition}
+        />
       ))}
       <div ref={messagesEndRef} />
     </div>

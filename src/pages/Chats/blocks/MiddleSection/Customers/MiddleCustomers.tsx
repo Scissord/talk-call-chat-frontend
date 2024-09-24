@@ -120,6 +120,8 @@ const MiddleCustomers: FC = () => {
           newCustomer,
           ...customers
         ];
+      } else {
+        newCustomers = [...customers];
       };
       setCustomers(newCustomers);
     };

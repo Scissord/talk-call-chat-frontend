@@ -12,4 +12,5 @@ export type ICustomer = {
   order_id: string | null;
   counter: number | null | 0;
   manager_id: string;
+  manager_name: string | null;
 };

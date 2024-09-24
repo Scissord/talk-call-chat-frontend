@@ -1,4 +1,4 @@
-import{r as l,V as m,a as f,k as j,l as v,j as e,m as b,n as N}from"./index-B4-VUMB1.js";const n={container:`
+import{r as l,V as m,a as f,k as j,l as v,j as e,m as b,n as N}from"./index-iWr51EkW.js";const n={container:`
     flex w-[80%] lg:w-[60%] h-[80vh] lg:h-[70vh] border border-gray-300
     dark:border-neutral-200 rounded-xl shadow-2xl
     shadow-neutral-400 dark:shadow-none

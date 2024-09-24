@@ -1,7 +1,7 @@
 import { IAttachment } from "@interfaces";
 
 export type IMessage = {
-  id: string | null;
+  id: string;
   customer_id: string;
   text: string | "";
   incoming: boolean;
@@ -11,4 +11,6 @@ export type IMessage = {
   attachment_url: string | null;
   attachments: IAttachment[] | null;
   url: string | null;
+  created_at: string;
+  manager_name: string | null;
 };

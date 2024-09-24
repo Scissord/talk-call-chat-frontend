@@ -18,6 +18,7 @@ const TopSection: FC = () => {
           setValue={(text: string) => handleSearch(text)}
           placeholder='Поиск...'
           loading={false}
+          className="border border-black dark:border-white w-full text-black dark:text-white"
         />
       </div>
     </section>

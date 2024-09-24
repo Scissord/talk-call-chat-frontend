@@ -24,15 +24,15 @@ const ConversationInfo: FC = () => {
               />
             )}
           </div>
-          {/* <div className='flex flex-col gap-2 items-start border-b border-slate-300 w-full px-2 py-4'>
+          <div className='flex flex-col gap-2 items-start border-b border-slate-300 w-full px-2 py-4'>
               <p
               className={`
                 text-md cursor-pointer hover:text-gray-300
                 text-black dark:text-white
               `}>
-                Ответственный: {customer?.manager_id ? customer.manager_id : "Нет"}
+                Ответственный: {customer?.manager_name ? customer.manager_name : "Нет"}
               </p>
-          </div> */}
+          </div>
         </div>
       ) : (
         <div className='h-full flex flex-col items-center justify-center'>

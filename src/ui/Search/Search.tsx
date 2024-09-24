@@ -8,6 +8,7 @@ type Props = {
   setValue: (value: string) => void;
   placeholder: string;
   loading: boolean;
+  className?: string;
 };
 
 const css = {
@@ -17,9 +18,6 @@ const css = {
   `,
   input: `
     p-2 outline-none grow
-    border border-black
-    dark:border-white w-full
-    text-black dark:text-white
   `,
   rightIcon: `
     absolute right-5
@@ -46,7 +44,7 @@ export const Search = (props: Props) => {
     <label className={css.container}>
       <input
         type="text"
-        className={css.input}
+        className={css.input + ' ' + props.className}
         value={inputValue}
         placeholder={props.placeholder ?? 'Поиск...'}
         onChange={handleChange}
