@@ -20,7 +20,7 @@ const MiddleCustomers: FC = () => {
   // const user = useAppSelector((state: RootState) => getUser(state));
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { newMessage, sender } = useSocketContext();
+  // const { newMessage, sender } = useSocketContext();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,11 +57,11 @@ const MiddleCustomers: FC = () => {
   //   };
   // }, [newCustomer]);
 
-  useEffect(() => {
-    if(newMessage && sender) {
-      handleRaiseConversation();
-    };
-  }, [newMessage])
+  // useEffect(() => {
+  //   if(newMessage && sender) {
+  //     handleRaiseConversation();
+  //   };
+  // }, [newMessage])
 
   const handleChatClick = (customer: ICustomer) => {
     const existIndex = customers?.findIndex((c: ICustomer) => {
@@ -79,20 +79,20 @@ const MiddleCustomers: FC = () => {
     setFile(null);
   };
 
-  const handleRaiseConversation = () => {
-    const existIndex = customers?.findIndex((c: ICustomer) => {
-      if(c.id && sender?.id) {
-        return +c.id === +sender?.id
-      };
-    });
+  // const handleRaiseConversation = () => {
+  //   const existIndex = customers?.findIndex((c: ICustomer) => {
+  //     if(c.id && sender?.id) {
+  //       return +c.id === +sender?.id
+  //     };
+  //   });
 
-    if (existIndex !== -1) {
-      const existingConversation = customers[existIndex];
-      existingConversation.counter += 1;
-      customers.splice(existIndex, 1);
-      setCustomers([existingConversation, ...customers]);
-    }
-  };
+  //   if (existIndex !== -1) {
+  //     const existingConversation = customers[existIndex];
+  //     existingConversation.counter += 1;
+  //     customers.splice(existIndex, 1);
+  //     setCustomers([existingConversation, ...customers]);
+  //   }
+  // };
 
   // const handleUpdateCustomerStatus = () => {
   //   let newCustomers: ICustomer[] = [];
