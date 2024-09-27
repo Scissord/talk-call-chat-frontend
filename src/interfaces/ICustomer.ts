@@ -1,16 +1,12 @@
 export type ICustomer = {
   id: string;
-  name: string | "";
-  phone: string | "";
-  buyer_phone: string | "";
-  avatar: string | null;
-  good: string | null;
-  assistant: string | null;
-  thread: string | null;
-  status: number | 0;
-  ai_active: boolean | false;
-  order_id: string | null;
-  counter: number | null | 0;
-  manager_id: string;
-  manager_name: string | null;
+  name: string;
+  avatar: string;
+  good: string;
+  status: number;
+  order_id: string;
+  counter: number;
+  manager_name: string;
+  last_message_text: string;
+  time: string;
 };

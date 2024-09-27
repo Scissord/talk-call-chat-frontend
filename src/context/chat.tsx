@@ -88,7 +88,9 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           setCustomers([...res.data.customers]);
         } else {
           setCustomers((prev) => [...prev, ...res.data.customers]);
-        }
+        };
+
+        console.log(res.data.customers);
       })
       .catch(() => {
         context?.notification.show('Ошибка при загрузке чатов', 'error');

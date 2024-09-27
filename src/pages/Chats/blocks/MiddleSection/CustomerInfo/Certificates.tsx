@@ -6,6 +6,15 @@ type CertificatesProps = {
   setLoading: (val: boolean) => void;
 };
 
+const css = {
+  p: `
+    text-md cursor-pointer
+    hover:text-slate-400
+    dark:hover:text-slate-400
+    text-black dark:text-white
+  `
+};
+
 const Certificates: FC<CertificatesProps> = (props) => {
   const { setLoading, setMessage, setFile } = props;
 
@@ -25,56 +34,39 @@ const Certificates: FC<CertificatesProps> = (props) => {
 
   return (
     <>
+      <h1 className='font-bold text-xl text-black dark:text-white'>Сертификаты</h1>
       <p
-        className={`
-          text-md cursor-pointer hover:text-gray-300
-          text-black dark:text-white
-        `}
+        className={css.p}
         onClick={() => handleSetCert('/templates/alco-cert.jpg')}
       >
         1. AlcoBalance
       </p>
       <p
-        className={`
-          text-md cursor-pointer hover:text-gray-300
-          text-black dark:text-white
-        `}
+        className={css.p}
         onClick={() => handleSetCert('/templates/body-cert.jpg')}
       >
         2. BodyBalance
       </p>
       <p
-        className={`
-          text-md cursor-pointer hover:text-gray-300
-          text-black dark:text-white
-        `}
+        className={css.p}
         onClick={() => handleSetCert('/templates/ero-cert.jpg')}
       >
         3. EroKing
       </p>
       <p
-        className={`
-          text-md cursor-pointer hover:text-gray-300
-          text-black dark:text-white
-        `}
+        className={css.p}
         onClick={() => handleSetCert('/templates/flex-cert.jpg')}
       >
         4. FlexBalance
       </p>
       <p
-        className={`
-          text-md cursor-pointer hover:text-gray-300
-        text-black dark:text-white
-        `}
+        className={css.p}
         onClick={() => handleSetCert('/templates/libido-cert.jpg')}
       >
         4. LibidoBalance
       </p>
       <p
-        className={`
-          text-md cursor-pointer hover:text-gray-300
-          text-black dark:text-white
-        `}
+        className={css.p}
         onClick={() => handleSetCert('/templates/man-cert.jpg')}
       >
         4. ManBalance

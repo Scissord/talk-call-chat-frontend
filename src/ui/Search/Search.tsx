@@ -46,7 +46,7 @@ export const Search = (props: Props) => {
         type="text"
         className={css.input + ' ' + props.className}
         value={inputValue}
-        placeholder={props.placeholder ?? 'Поиск...'}
+        placeholder={props.placeholder ?? 'Поиск'}
         onChange={handleChange}
       />
       <div className={css.rightIcon}>

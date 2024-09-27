@@ -5,7 +5,7 @@ import CustomerInfo from './MiddleSection/CustomerInfo';
 
 const MiddleSection: FC = () => {
   return (
-    <div className='flex flex-col sm:flex-row h-[88vh]'>
+    <div className='flex flex-col sm:flex-row h-[100vh]'>
       <Customers/>
       <Conversation/>
       <CustomerInfo/>

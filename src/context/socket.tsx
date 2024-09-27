@@ -7,7 +7,8 @@ import { createContext, FC, ReactNode, useContext, useEffect, useState } from "r
 interface SocketContextType {
   socket: WebSocket | null;
   newMessage: IMessage | null;
-  raiseConversation: any;
+  sender: ICustomer | null;
+  // raiseConversation: any;
   newCustomer: ICustomer | null;
   blockIds: string[];
   newCardSpot: any;
@@ -31,9 +32,17 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
   const user = useAppSelector((state: RootState) => getUser(state));
 
   const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  // Если нам написали, то поднять в чате, и поднять в колонке
   const [newMessage, setNewMessage] = useState<IMessage | null>(null);
-  const [raiseConversation, setRaiseConversation] = useState<any>(null);
+  const [sender, setSender] = useState<ICustomer | null>(null);
+
+  // const [raiseConversation, setRaiseConversation] = useState<any>(null);
+
+  // Если он падает в кд, или пд, то добавить в начало колонки
   const [newCustomer, setNewCustomer] = useState<ICustomer | null>(null);
+
+  // Для drag'n'drop
   const [blockIds, setBlockIds] = useState<string[] | []>([]);
   const [newCardSpot, setNewCardSpot] = useState<any>(null);
 
@@ -48,53 +57,37 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        // Если нам написали, то поднять в чате, и поднять в колонке
         if(data.type === "new_message") {
           const message = JSON.parse(data.message);
-          if(+user.role.id === 1 || +user.role.id === 2) {
-            return;
-          } else {
-            setNewMessage(message);
-          };
+          const sender = JSON.parse(data.customer);
+          setNewMessage(message);
+          setSender(sender);
         };
-        if(data.type === "up_customer") {
-          const customer = JSON.parse(data.customer);
-          customer.counter = 1;
-          if(+user.role.id === 1 || +user.role.id === 2) {
-            return;
-          } else {
-            setRaiseConversation(customer);
-          };
-        };
+        // Если он падает в кд, или пд, то добавить в начало колонки
         if(data.type === "updated_status") {
           const customer = JSON.parse(data.customer);
-          if(+user.role.id === 1 || +user.role.id === 2) {
-            return;
-          } else {
-            setNewCustomer(customer);
-          };
+          setNewCustomer(customer);
         };
         if(data.type === "onDragStart") {
-          if(+user.role.id === 1 || +user.role.id === 2) {
-            return;
-          } else {
-            if(+user.id !== +data.user_id) {
-              const newBlockIds = [...blockIds]
-              newBlockIds.push(data.customer_id);
-              setBlockIds(newBlockIds);
-            };
+          if(+user.id !== +data.user_id) {
+            const newBlockIds = [...blockIds]
+            newBlockIds.push(data.customer_id);
+            setBlockIds(newBlockIds);
           };
         };
         if(data.type === "onDragEnd") {
-          if(+user.role.id === 1 || +user.role.id === 2) {
-            return;
-          } else {
-            if(+user.id !== +data.user_id) {
-              const newBlockIds = blockIds.filter(id => +id !== +data.customer_id);
-              setBlockIds(newBlockIds);
-              setNewCardSpot(data);
-            };
+          if(+user.id !== +data.user_id) {
+            const newBlockIds = blockIds.filter(id => +id !== +data.customer_id);
+            setBlockIds(newBlockIds);
+            setNewCardSpot(data);
           };
         };
+        // if(data.type === "up_customer") {
+        //   const customer = JSON.parse(data.customer);
+        //   customer.counter = 1;
+        //   setRaiseConversation(customer);
+        // };
       };
 
       ws.onclose = () => {
@@ -118,7 +111,8 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
       value={{
         socket,
         newMessage,
-        raiseConversation,
+        sender,
+        // raiseConversation,
         newCustomer,
         blockIds,
         newCardSpot

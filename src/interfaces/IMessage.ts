@@ -3,7 +3,7 @@ import { IAttachment } from "@interfaces";
 export type IMessage = {
   id: string;
   customer_id: string;
-  text: string | "";
+  text: string;
   incoming: boolean;
   quoted_message: string | null;
   user_id: number | null;

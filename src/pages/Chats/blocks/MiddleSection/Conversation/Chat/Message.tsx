@@ -82,7 +82,7 @@ const Message: FC<MessageProps> = (props) => {
     >
       <div className='flex flex-col items-center gap-1'>
         <img
-          src={message.avatar ? message.avatar :  'pics/default_avatar.png'}
+          src={!message.incoming ? 'pics/default_avatar.png' : message?.avatar ? message?.avatar : 'pics/default_avatar.png'}
           className='h-10 w-10 rounded-full border border-slate-300'
           alt='avatar'
         />
@@ -93,8 +93,8 @@ const Message: FC<MessageProps> = (props) => {
       <div
         className={`
           overflow-hidden inline-block relative min-w-[10px] max-w-[50%]
-          ${message.incoming && 'rounded-r-xl rounded-tl-xl bg-gray-200 text-black px-3 py-3'}
-          ${!message.incoming && 'rounded-l-xl rounded-tr-xl bg-[#0086FF] text-white px-3 py-3'}
+          ${message.incoming && 'rounded-r-xl rounded-tl-xl bg-gray-100 text-black px-3 py-3'}
+          ${!message.incoming && 'rounded-l-xl rounded-tr-xl bg-[#646dff] text-white px-3 py-3'}
         `}
         onContextMenu={onContextMenu}
       >
