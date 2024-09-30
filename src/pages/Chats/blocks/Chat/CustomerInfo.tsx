@@ -2,7 +2,7 @@ import { useChats } from '@context';
 import { FC, useState } from 'react'
 import { Loader } from '@ui';
 import Certificates from './CustomerInfo/Certificates';
-import Tags from './CustomerInfo/Tags';
+// import Tags from './CustomerInfo/Tags';
 import Responsible from './CustomerInfo/Responsible';
 
 const ConversationInfo: FC = () => {

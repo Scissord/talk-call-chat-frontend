@@ -35,6 +35,7 @@ interface ChatContextType {
   fetchCustomers: () => Promise<void>;
   fetchConversation: (customer_id: string) => Promise<void>;
   handleSendMessage: () => Promise<void>;
+  isCustomersLoading: boolean;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -47,6 +48,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [customers, setCustomers] = useState<ICustomer[] | []>([]);
+  const [isCustomersLoading, setIsCustomersLoading] = useState<boolean>(false);
   const [customer, setCustomer] = useState<ICustomer | null>(null);
   const [conversation, setConversation] = useState<IMessage[] | []>([]);
   const [message, setMessage] = useState<string>('');
@@ -67,6 +69,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   }, [localCustomer])
 
   const fetchCustomers = async () => {
+    setIsCustomersLoading(true);
     const params: Params = {
       limit: limit,
       page: page,
@@ -90,7 +93,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           setCustomers((prev) => [...prev, ...res.data.customers]);
         };
 
-        console.log(res.data.customers);
+        setIsCustomersLoading(false);
       })
       .catch(() => {
         context?.notification.show('Ошибка при загрузке чатов', 'error');
@@ -188,6 +191,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         fetchCustomers,
         fetchConversation,
         handleSendMessage,
+        isCustomersLoading
       }}
     >
       {children}

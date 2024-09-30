@@ -1,9 +1,7 @@
 import { FC, useEffect, useRef } from 'react'
-import { useSocketContext, useChats } from '@context'
-// import { useAppSelector,  } from '@hooks';
-// import { RootState } from '@store/index';
-// import { getUser } from '@store/reducers/authSlice';
+import { useChats, useSocketContext } from '@context'
 import { ICustomer } from '@interfaces';
+import { Loader } from '@ui';
 
 const MiddleCustomers: FC = () => {
   const {
@@ -14,13 +12,13 @@ const MiddleCustomers: FC = () => {
     page,
     setPage,
     fetchConversation,
-    setFile
+    setFile,
+    isCustomersLoading
   } = useChats();
 
-  // const user = useAppSelector((state: RootState) => getUser(state));
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // const { newMessage, sender } = useSocketContext();
+  const { newMessage, sender } = useSocketContext();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,23 +43,11 @@ const MiddleCustomers: FC = () => {
     };
   }, [page]);
 
-  // useEffect(() => {
-  //   if(raiseConversation) {
-  //     handleRaiseConversation();
-  //   };
-  // }, [raiseConversation]);
-
-  // useEffect(() => {
-  //   if(newCustomer) {
-  //     handleUpdateCustomerStatus();
-  //   };
-  // }, [newCustomer]);
-
-  // useEffect(() => {
-  //   if(newMessage && sender) {
-  //     handleRaiseConversation();
-  //   };
-  // }, [newMessage])
+  useEffect(() => {
+    if(newMessage && sender) {
+      handleRaiseConversation();
+    };
+  }, [newMessage])
 
   const handleChatClick = (customer: ICustomer) => {
     const existIndex = customers?.findIndex((c: ICustomer) => {
@@ -79,20 +65,21 @@ const MiddleCustomers: FC = () => {
     setFile(null);
   };
 
-  // const handleRaiseConversation = () => {
-  //   const existIndex = customers?.findIndex((c: ICustomer) => {
-  //     if(c.id && sender?.id) {
-  //       return +c.id === +sender?.id
-  //     };
-  //   });
+  const handleRaiseConversation = () => {
+    const existIndex = customers?.findIndex((c: ICustomer) => {
+      if(c.id && sender?.id) {
+        return +c.id === +sender?.id
+      };
+    });
 
-  //   if (existIndex !== -1) {
-  //     const existingConversation = customers[existIndex];
-  //     existingConversation.counter += 1;
-  //     customers.splice(existIndex, 1);
-  //     setCustomers([existingConversation, ...customers]);
-  //   }
-  // };
+    if (existIndex !== -1) {
+      const existingConversation = customers[existIndex];
+      existingConversation.counter += 1;
+      existingConversation.last_message_text = newMessage?.text ?? "";
+      customers.splice(existIndex, 1);
+      setCustomers([existingConversation, ...customers]);
+    }
+  };
 
   // const handleUpdateCustomerStatus = () => {
   //   let newCustomers: ICustomer[] = [];
@@ -154,6 +141,10 @@ const MiddleCustomers: FC = () => {
   //     };
   //   }
   // };
+
+  if (isCustomersLoading) return <Loader
+    className='h-[100%] loading-lg'
+  />
 
   return (
     <div ref={containerRef} className='flex-grow overflow-y-auto'>

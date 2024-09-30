@@ -7,7 +7,7 @@ import { createContext, FC, ReactNode, useContext, useEffect, useState } from "r
 interface SocketContextType {
   socket: WebSocket | null;
   newMessage: IMessage | null;
-  // sender: ICustomer | null;
+  sender: ICustomer | null;
   blockIds: string[];
   newCardSpot: any;
 };
@@ -33,9 +33,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
 
   // Если нам написали, то поднять в чате, и поднять в колонке
   const [newMessage, setNewMessage] = useState<IMessage | null>(null);
-  // const [sender, setSender] = useState<ICustomer | null>(null);
-
-  // const [raiseConversation, setRaiseConversation] = useState<any>(null);
+  const [sender, setSender] = useState<ICustomer | null>(null);
 
   // Если он падает в кд, или пд, то добавить в начало колонки
   // const [newCustomer, setNewCustomer] = useState<ICustomer | null>(null);
@@ -58,9 +56,10 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         // Если нам написали, то поднять в чате, и поднять в колонке
         if(data.type === "new_message") {
           const message = JSON.parse(data.message);
-          // const sender = JSON.parse(data.customer);
+          const sender = JSON.parse(data.customer);
+          console.log(data);
           setNewMessage(message);
-          // setSender(sender);
+          setSender(sender);
         };
         // Если он падает в кд, или пд, то добавить в начало колонки
         // if(data.type === "updated_status") {
@@ -81,11 +80,6 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
             setNewCardSpot(data);
           };
         };
-        // if(data.type === "up_customer") {
-        //   const customer = JSON.parse(data.customer);
-        //   customer.counter = 1;
-        //   setRaiseConversation(customer);
-        // };
       };
 
       ws.onclose = () => {
@@ -109,8 +103,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
       value={{
         socket,
         newMessage,
-        // sender,
-        // raiseConversation,
+        sender,
         blockIds,
         newCardSpot
       }}
