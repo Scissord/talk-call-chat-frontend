@@ -150,7 +150,7 @@ const MiddleCustomers: FC = () => {
     //       className='h-[100%] loading-lg'
     //     />
     //   ) : (
-        <div ref={containerRef} className='flex-grow overflow-y-auto bg-green-100'>
+        <div ref={containerRef} className='flex-grow overflow-y-auto'>
           {customers && customers.length > 0 && customers?.map((conversation) => (
             <div
               key={conversation.id}
