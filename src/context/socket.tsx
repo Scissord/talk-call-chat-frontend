@@ -57,7 +57,6 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         if(data.type === "new_message") {
           const message = JSON.parse(data.message);
           const sender = JSON.parse(data.customer);
-          console.log(data);
           setNewMessage(message);
           setSender(sender);
         };

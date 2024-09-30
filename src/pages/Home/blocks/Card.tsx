@@ -89,7 +89,7 @@ const Card: FC<CardProps> = (props) => {
                 />
               </div>
             </div>
-            <div className='flex items-center'>
+            <div className='flex items-center relative'>
               <img
                 src={'pics/whatsapp_logo.webp'}
                 className='w-4 rounded-full'
@@ -98,7 +98,7 @@ const Card: FC<CardProps> = (props) => {
               {card?.text && <p className='w-full rounded'>
                 {card?.text.length > 10 ? card.text.slice(0, 10) + '...' : card?.text}
               </p>}
-              {card?.counter && <p className='ml-auto flex items-center justify-center p-1 w-4 h-4 rounded-full bg-red-600 text-white'>
+              {card?.counter !== 0 && <p className='absolute right-0 flex items-center justify-center text-[6px] w-3 h-3 bg-[#646dff] rounded-full text-white'>
                 {card?.counter}
               </p>}
             </div>

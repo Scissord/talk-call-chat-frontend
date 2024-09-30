@@ -67,7 +67,7 @@ const OpenedSidebarBottom: FC<OpenedSidebarBottomProps> = (props) => {
           alt='avatar'
         />
         <p className={css.label}>
-          {user && user?.name?.length > 10 ? `${user?.name.slice(0, 9)}...` : user?.name}
+          {user && user?.name?.length > 20 ? `${user?.name.slice(0, 20)}...` : user?.name}
         </p>
       </motion.div>
     </div>
