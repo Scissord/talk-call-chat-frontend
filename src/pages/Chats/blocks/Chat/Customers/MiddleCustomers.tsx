@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from 'react'
 import { useChats, useSocketContext } from '@context'
 import { ICustomer } from '@interfaces';
-import { Loader } from '@ui';
+// import { Loader } from '@ui';
 
 const MiddleCustomers: FC = () => {
   const {
@@ -26,6 +26,7 @@ const MiddleCustomers: FC = () => {
         const { scrollHeight, scrollTop, clientHeight } = containerRef.current;
         if (scrollTop + clientHeight + 1 >= scrollHeight) {
           const newPage = page + 1;
+          console.log(newPage)
           setPage(newPage);
         }
       }
@@ -41,7 +42,7 @@ const MiddleCustomers: FC = () => {
         container.removeEventListener('scroll', handleScroll);
       }
     };
-  }, [page]);
+  }, [containerRef, page]);
 
   useEffect(() => {
     if(newMessage && sender) {
@@ -142,56 +143,60 @@ const MiddleCustomers: FC = () => {
   //   }
   // };
 
-  if (isCustomersLoading) return <Loader
-    className='h-[100%] loading-lg'
-  />
-
   return (
-    <div ref={containerRef} className='flex-grow overflow-y-auto'>
-      {customers && customers.length > 0 && customers?.map((conversation) => (
-        <div
-          key={conversation.id}
-          onClick={() => handleChatClick(conversation)}
-          className={`relative select-none
-            cursor-pointer flex items-center gap-2 px-5 py-3
-          hover:bg-gray-100 dark:hover:bg-[#2d3f65]
-            ${customer?.id === conversation.id && 'bg-gray-100 dark:bg-[#2d3f65]'}
-          `}
-        >
-          {customer?.id === conversation.id &&
-            <div className='absolute left-0 h-full w-1 bg-[#646dff]'/>
-          }
-          <div className="w-12">
-            <img
-              src={conversation.avatar ? conversation.avatar : 'pics/default_avatar.png'}
-              className='border border-slate-300 rounded-full'
-              alt="avatar"
-            />
-          </div>
-          <div className='flex flex-col w-full'>
-            <div className='flex items-center justify-between w-full'>
-              <p className={`font-bold text-[15px] text-black dark:text-white`}>
-                {conversation.name}
-              </p>
-              <p className='text-[10px] text-black dark:text-white'>
-                {conversation.time}
-              </p>
+    // <>
+    //   {isCustomersLoading ? (
+    //     <Loader
+    //       className='h-[100%] loading-lg'
+    //     />
+    //   ) : (
+        <div ref={containerRef} className='flex-grow overflow-y-auto bg-green-100'>
+          {customers && customers.length > 0 && customers?.map((conversation) => (
+            <div
+              key={conversation.id}
+              onClick={() => handleChatClick(conversation)}
+              className={`relative select-none
+                cursor-pointer flex items-center gap-2 px-5 py-3
+              hover:bg-gray-100 dark:hover:bg-[#2d3f65]
+                ${customer?.id === conversation.id && 'bg-gray-100 dark:bg-[#2d3f65]'}
+              `}
+            >
+              {customer?.id === conversation.id &&
+                <div className='absolute left-0 h-full w-1 bg-[#646dff]'/>
+              }
+              <div className="w-12">
+                <img
+                  src={conversation.avatar ? conversation.avatar : 'pics/default_avatar.png'}
+                  className='border border-slate-300 rounded-full'
+                  alt="avatar"
+                />
+              </div>
+              <div className='flex flex-col w-full'>
+                <div className='flex items-center justify-between w-full'>
+                  <p className={`font-bold text-[15px] text-black dark:text-white`}>
+                    {conversation.name}
+                  </p>
+                  <p className='text-[10px] text-black dark:text-white'>
+                    {conversation.time}
+                  </p>
+                </div>
+                <div className='flex items-center justify-between w-full'>
+                  <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
+                    {conversation.last_message_text.length > 27
+                      ? conversation.last_message_text.slice(0, 27) + '...'
+                      : conversation.last_message_text
+                    }
+                  </p>
+                  {conversation.counter !== 0 && <p className='flex items-center justify-center text-[8px] w-3 h-3 bg-[#646dff] rounded-full text-white'>
+                    {conversation.counter}
+                  </p>}
+                </div>
+              </div>
             </div>
-            <div className='flex items-center justify-between w-full'>
-              <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
-                {conversation.last_message_text.length > 27
-                  ? conversation.last_message_text.slice(0, 27) + '...'
-                  : conversation.last_message_text
-                }
-              </p>
-              {conversation.counter !== 0 && <p className='flex items-center justify-center text-[8px] w-3 h-3 bg-[#646dff] rounded-full text-white'>
-                {conversation.counter}
-              </p>}
-            </div>
-          </div>
+          ))}
         </div>
-      ))}
-    </div>
+    //   )}
+    // </>
   );
 };
 
