@@ -143,60 +143,58 @@ const MiddleCustomers: FC = () => {
   //   }
   // };
 
+  //   {isCustomersLoading ? (
+  //     <Loader
+  //       className='h-[100%] loading-lg'
+  //     />
+  //   )
+
   return (
-    // <>
-    //   {isCustomersLoading ? (
-    //     <Loader
-    //       className='h-[100%] loading-lg'
-    //     />
-    //   ) : (
-        <div ref={containerRef} className='flex-grow overflow-y-auto'>
-          {customers && customers.length > 0 && customers?.map((conversation) => (
-            <div
-              key={conversation.id}
-              onClick={() => handleChatClick(conversation)}
-              className={`relative select-none
-                cursor-pointer flex items-center gap-2 px-5 py-3
-              hover:bg-gray-100 dark:hover:bg-[#2d3f65]
-                ${customer?.id === conversation.id && 'bg-gray-100 dark:bg-[#2d3f65]'}
-              `}
-            >
-              {customer?.id === conversation.id &&
-                <div className='absolute left-0 h-full w-1 bg-[#646dff]'/>
-              }
-              <div className="w-12">
-                <img
-                  src={conversation.avatar ? conversation.avatar : 'pics/default_avatar.png'}
-                  className='border border-slate-300 rounded-full'
-                  alt="avatar"
-                />
-              </div>
-              <div className='flex flex-col w-full'>
-                <div className='flex items-center justify-between w-full'>
-                  <p className={`font-bold text-[15px] text-black dark:text-white`}>
-                    {conversation.name}
-                  </p>
-                  <p className='text-[10px] text-black dark:text-white'>
-                    {conversation.time}
-                  </p>
-                </div>
-                <div className='flex items-center justify-between w-full'>
-                  <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
-                    {conversation.last_message_text.length > 27
-                      ? conversation.last_message_text.slice(0, 27) + '...'
-                      : conversation.last_message_text
-                    }
-                  </p>
-                  {conversation.counter !== 0 && <p className='flex items-center justify-center text-[8px] w-3 h-3 bg-[#646dff] rounded-full text-white'>
-                    {conversation.counter}
-                  </p>}
-                </div>
-              </div>
+    <div ref={containerRef} className='flex-grow overflow-y-auto'>
+      {customers && customers.length > 0 && customers?.map((conversation) => (
+        <div
+          key={conversation.id}
+          onClick={() => handleChatClick(conversation)}
+          className={`relative select-none
+            cursor-pointer flex items-center gap-2 px-5 py-3
+          hover:bg-gray-100 dark:hover:bg-[#2d3f65]
+            ${customer?.id === conversation.id && 'bg-gray-100 dark:bg-[#2d3f65]'}
+          `}
+        >
+          {customer?.id === conversation.id &&
+            <div className='absolute left-0 h-full w-1 bg-[#646dff]'/>
+          }
+          <div className="w-12">
+            <img
+              src={conversation.avatar ? conversation.avatar : 'pics/default_avatar.png'}
+              className='border border-slate-300 rounded-full'
+              alt="avatar"
+            />
+          </div>
+          <div className='flex flex-col w-full'>
+            <div className='flex items-center justify-between w-full'>
+              <p className={`font-bold text-[15px] text-black dark:text-white`}>
+                {conversation.name}
+              </p>
+              <p className='text-[10px] text-black dark:text-white'>
+                {conversation.time}
+              </p>
             </div>
-          ))}
+            <div className='flex items-center justify-between w-full'>
+              <p className="whitespace-nowrap overflow-hidden overflow-ellipsis text-[var(--msg-message)] text-[13px]">
+                {conversation.last_message_text.length > 27
+                  ? conversation.last_message_text.slice(0, 27) + '...'
+                  : conversation.last_message_text
+                }
+              </p>
+              {conversation.counter !== 0 && <p className='flex items-center justify-center text-[8px] w-3 h-3 bg-[#646dff] rounded-full text-white'>
+                {conversation.counter}
+              </p>}
+            </div>
+          </div>
         </div>
-    //   )}
-    // </>
+      ))}
+    </div>
   );
 };
 

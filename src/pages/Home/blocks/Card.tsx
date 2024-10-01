@@ -89,16 +89,16 @@ const Card: FC<CardProps> = (props) => {
                 />
               </div>
             </div>
-            <div className='flex items-center relative'>
+            <div className='flex items-center mt-2'>
               <img
                 src={'pics/whatsapp_logo.webp'}
                 className='w-4 rounded-full'
                 alt="whatsapp"
               />
-              {card?.text && <p className='w-full rounded'>
+              {card?.text && <p className='rounded'>
                 {card?.text.length > 10 ? card.text.slice(0, 10) + '...' : card?.text}
               </p>}
-              {card?.counter !== 0 && <p className='absolute right-0 flex items-center justify-center text-[6px] w-3 h-3 bg-[#646dff] rounded-full text-white'>
+              {card?.counter !== 0 && <p className='ml-auto text-[8px] w-3 h-3 bg-[#646dff] rounded-full text-white flex items-center justify-center'>
                 {card?.counter}
               </p>}
             </div>
