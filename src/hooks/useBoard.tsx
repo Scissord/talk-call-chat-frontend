@@ -51,6 +51,25 @@ export const useBoard = () => {
     });
   }, []);
 
+  const deleteCard = useCallback(async (card_id: string, column_id: string) => {
+    const confirm = window.confirm('Вы уверены?')
+    if(!confirm) return;
+    await axios({
+      method: 'DELETE',
+      url: `/cards/${card_id}`,
+      data: {
+        column_id
+      },
+    }).then(() => {
+      const { [card_id]: deletedCard, ...newCards } = board.cards as { [key: string]: ICard };
+
+      setBoard(prevBoard => ({
+        ...prevBoard,
+        cards: newCards,
+      }));
+    });
+  }, [board.cards]);
+
   useEffect(() => {
     getBoard();
   }, [getBoard]);
@@ -242,6 +261,7 @@ export const useBoard = () => {
     loading,
     search,
     setSearch,
-    handleKeyDown
+    handleKeyDown,
+    deleteCard
   };
 };

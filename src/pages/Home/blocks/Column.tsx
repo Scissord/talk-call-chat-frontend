@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { IBoard, ICard, IColumn } from '@interfaces';
 import { Droppable } from '@hello-pangea/dnd';
 import Card from './Card';
@@ -7,6 +7,7 @@ import './scroll.css';
 type ColumnProps = {
   columnId: string;
   board: IBoard;
+  deleteCard: (card_id: string, column_id: string) => void;
 };
 
 const css = {
@@ -22,16 +23,18 @@ const css = {
 
 const Column: FC<ColumnProps> = (props) => {
   const {
-    columnId, board,
+    columnId, board, deleteCard
   } = props;
 
   const column = (board.columns as { [key: string]: IColumn })[columnId];
-  let cards: ICard[] = [];
-  if(column.cardsIds){
-    cards = column?.cardsIds
-      .map((cardId: string) => (board.cards as { [key: string]: ICard })[cardId])
-      .filter((card: ICard) => card);
-  };
+  const cards = useMemo(() => {
+    if (column.cardsIds) {
+      return column.cardsIds
+        .map((cardId: string) => (board.cards as { [key: string]: ICard })[cardId])
+        .filter((card: ICard) => card);
+    }
+    return [];
+  }, [column.cardsIds, board.cards]);
 
   return (
     <Droppable droppableId={column.id}>
@@ -47,6 +50,8 @@ const Column: FC<ColumnProps> = (props) => {
               key={card?.id}
               card={card}
               index={index}
+              deleteCard={deleteCard}
+              column_id={column.id}
             />
           ))}
           {provided.placeholder}
@@ -56,4 +61,4 @@ const Column: FC<ColumnProps> = (props) => {
   )
 }
 
-export default Column
+export default Column;

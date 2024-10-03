@@ -29,6 +29,7 @@ const Home: FC = () => {
     search,
     setSearch,
     handleKeyDown,
+    deleteCard
   } = useBoard();
 
   if(loading) return <Loader
@@ -55,6 +56,7 @@ const Home: FC = () => {
               key={columnId}
               columnId={columnId}
               board={board}
+              deleteCard={deleteCard}
             />
           ))}
         </section>

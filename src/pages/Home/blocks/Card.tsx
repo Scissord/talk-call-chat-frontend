@@ -1,14 +1,17 @@
-import { FC } from 'react'
+import { FC, memo, useState  } from 'react'
 import { ICard } from '@interfaces';
 import { Draggable } from '@hello-pangea/dnd';
 import { useAppSelector, useNavigate } from '@hooks';
 import { RootState } from '@store/index';
 import { getUser } from '@store/reducers/authSlice';
 import { useSocketContext } from '@context';
+import { IconTrash } from '@icons';
 
 type CardProps = {
   card: ICard,
   index: number;
+  deleteCard: (card_id: string, column_id: string) => void;
+  column_id: string;
 };
 
 const css = {
@@ -24,10 +27,11 @@ const css = {
   `,
 };
 
-const Card: FC<CardProps> = (props) => {
-  const { card, index } = props;
+const Card: FC<CardProps> = memo((props) => {
+  const { card, index, deleteCard, column_id } = props;
   const navigate = useNavigate();
   const user = useAppSelector((state: RootState) => getUser(state));
+  const [isTrashVisible, setIsTrashVisible] = useState<boolean>(false);
   const { blockIds } = useSocketContext();
 
   return (
@@ -66,7 +70,19 @@ const Card: FC<CardProps> = (props) => {
             };
           }}
           className={css.container}
+          onMouseEnter={() => setIsTrashVisible(true)}
+          onMouseLeave={() => setIsTrashVisible(false)}
         >
+          {isTrashVisible && (
+            <div
+              className='absolute top-1 left-1 cursor-pointer text-red-600'
+              onClick={(e) => {
+              e.stopPropagation();
+              deleteCard(card?.id, column_id);
+            }}>
+              <IconTrash width='0.8rem' height='0.8rem'/>
+            </div>
+          )}
           <img
             src={card?.avatar ? card?.avatar : 'pics/default_avatar.png'}
             className='w-10 h-10 rounded-full'
@@ -107,6 +123,6 @@ const Card: FC<CardProps> = (props) => {
       )}
     </Draggable>
   )
-}
+});
 
 export default Card
