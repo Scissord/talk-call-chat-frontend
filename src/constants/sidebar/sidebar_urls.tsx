@@ -12,15 +12,10 @@ export const useSidebarUrls  = () => {
 
   let sidebar_urls = [
     {
-      icon: <IconFunnel />,
-      label: 'Воронка',
-      path: '/'
-    },
-    {
       icon: <IconChat />,
       label: 'Мои чаты',
       path: '/chats'
-    },
+    }
   ];
 
   if (user && (+user.role.id === 7 || +user.role.id === 5 || +user.role.id === 6)) {
@@ -28,6 +23,12 @@ export const useSidebarUrls  = () => {
       icon: <IconAdmin />,
       label: 'Админ панель',
       path: '/admin'
+    });
+
+    sidebar_urls.push({
+      icon: <IconFunnel />,
+      label: 'Воронка',
+      path: '/'
     });
   }
 
