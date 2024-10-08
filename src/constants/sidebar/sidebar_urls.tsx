@@ -18,6 +18,14 @@ export const useSidebarUrls  = () => {
     }
   ];
 
+  if (user && (+user.role.id === 3 || +user.role.id === 4 || +user.role.id === 5 || +user.role.id === 6 || +user.role.id === 7)) {
+    sidebar_urls.push({
+      icon: <IconFunnel />,
+      label: 'Воронка',
+      path: '/'
+    });
+  }
+
   if (user && (+user.role.id === 7 || +user.role.id === 5 || +user.role.id === 6)) {
     sidebar_urls.push({
       icon: <IconAdmin />,
@@ -25,11 +33,6 @@ export const useSidebarUrls  = () => {
       path: '/admin'
     });
 
-    sidebar_urls.push({
-      icon: <IconFunnel />,
-      label: 'Воронка',
-      path: '/'
-    });
   }
 
   return sidebar_urls;
