@@ -36,20 +36,28 @@ type ColumnProps = {
   columnId: string;
   board: IBoard;
   deleteCard: (card_id: string, column_id: string) => void;
+  toggleFixCard: (card_id: string) => void;
 };
 
-const Column: FC<ColumnProps> = memo(({ board, columnId, deleteCard }) => {
+const Column: FC<ColumnProps> = memo((props) => {
+  const { board, columnId, deleteCard, toggleFixCard } = props;
+
   const column = (board.columns as { [key: string]: IColumn })[columnId];
 
   const cards = useMemo(() => {
     return Object.values(board.cards)
       .filter((card) => +card.manager_id === +column.manager_id)
       .sort((a, b) => {
-        const dateA = new Date(a.last_message_date).getTime();
-        const dateB = new Date(b.last_message_date).getTime();
-        return dateB - dateA;
+        if (a.isfixed === b.isfixed) {
+          const dateA = new Date(a.last_message_date).getTime();
+          const dateB = new Date(b.last_message_date).getTime();
+          return dateB - dateA;
+        }
+
+        return a.isfixed ? -1 : 1;
       });
-  }, [board]);
+  }, [board, column.manager_id]);
+
 
   return (
     <div className={css.container}>
@@ -131,6 +139,7 @@ const Column: FC<ColumnProps> = memo(({ board, columnId, deleteCard }) => {
                     style={style}
                     data={data}
                     deleteCard={deleteCard}
+                    toggleFixCard={toggleFixCard}
                   />
                 )}
                 </VariableSizeList>

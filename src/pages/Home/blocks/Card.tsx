@@ -1,7 +1,7 @@
 import { useSocketContext } from "@context";
 import { Draggable } from "@hello-pangea/dnd";
 import { useAppSelector } from "@hooks";
-import { IconTrash } from "@icons";
+import { IconTrash, IconPin } from "@icons";
 import { ICard } from "@interfaces";
 import { RootState } from "@store/index";
 import { getUser } from "@store/reducers/authSlice";
@@ -26,12 +26,14 @@ type CardProps = {
   style: CSSProperties;
   data: ICard[];
   deleteCard: (card_id: string, column_id: string) => void;
+  toggleFixCard: (card_id: string) => void;
 };
 
-const Card: FC<CardProps> = memo(({ index, style, data, deleteCard }) => {
+const Card: FC<CardProps> = memo((props) => {
+  const { index, style, data, deleteCard, toggleFixCard } = props;
   const navigate = useNavigate();
   const user = useAppSelector((state: RootState) => getUser(state));
-  const [isTrashVisible, setIsTrashVisible] = useState<boolean>(false);
+  const [isEditable, setIsEditable] = useState<boolean>(false);
   const { blockIds } = useSocketContext();
 
   const card = data[index];
@@ -68,20 +70,32 @@ const Card: FC<CardProps> = memo(({ index, style, data, deleteCard }) => {
               };
             };
           }}
-          onMouseEnter={() => setIsTrashVisible(true)}
-          onMouseLeave={() => setIsTrashVisible(false)}
+          onMouseEnter={() => setIsEditable(true)}
+          onMouseLeave={() => setIsEditable(false)}
         >
           <div className={css.container}>
-            {isTrashVisible && (
-              <div
-                className='absolute top-1 left-1 cursor-pointer text-red-600'
-                onClick={(e) => {
-                e.stopPropagation();
-                deleteCard(card?.id, card.manager_id);
-              }}>
-                <IconTrash width='0.8rem' height='0.8rem'/>
-              </div>
+            {isEditable && (
+              <>
+                <div
+                  className='absolute top-1 left-1 cursor-pointer'
+                  onClick={(e) => {
+                  e.stopPropagation();
+                  deleteCard(card?.id, card.manager_id);
+                }}>
+                  <IconTrash width='0.8rem' height='0.8rem'/>
+                </div>
+                <div
+                  className='absolute bottom-1 left-1 cursor-pointer'
+                  onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFixCard(card?.id);
+                }}>
+                  <IconPin/>
+                </div>
+              </>
+
             )}
+            <p>{card.isfixed.toString()}</p>
             <img
               src={card?.avatar || 'pics/default_avatar.png'}
               className='w-10 h-10 rounded-full border'

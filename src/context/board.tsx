@@ -26,6 +26,7 @@ interface BoardContextType {
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   deleteCard: (card_id: string, manager_id: string) => void;
   getBoard: () => void;
+  toggleFixCard: (card_id: string) => void;
 };
 
 const BoardContext = createContext<BoardContextType | undefined>(undefined);
@@ -117,6 +118,24 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
     });
   }, [board.cards]);
 
+  const toggleFixCard = useCallback(async (card_id: string) => {
+    const confirm = window.confirm('Вы уверены?')
+    if(!confirm) return;
+
+    await axios({
+      method: 'PATCH',
+      url: `/cards/${card_id}/toggle_fix`,
+    }).then(() => {
+      const cards = {...board.cards};
+      cards[card_id].isfixed = !cards[card_id].isfixed;
+
+      setBoard({
+        ...board,
+        cards
+      });
+    })
+  }, [board.cards]);
+
   const onDragStart = useCallback((result: DragStart) => {
     const { draggableId } = result;
 
@@ -203,7 +222,8 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
         setSearch,
         handleKeyDown,
         deleteCard,
-        getBoard
+        getBoard,
+        toggleFixCard
       }}
     >
       {children}

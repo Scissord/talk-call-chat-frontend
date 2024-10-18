@@ -54,7 +54,8 @@ const Board: FC = memo(() => {
     setSearch,
     handleKeyDown,
     deleteCard,
-    getBoard
+    getBoard,
+    toggleFixCard
   } = useBoard();
 
   if(loading) return <Loader className={css.loader}  />
@@ -89,6 +90,7 @@ const Board: FC = memo(() => {
                 board={board}
                 columnId={columnId}
                 deleteCard={deleteCard}
+                toggleFixCard={toggleFixCard}
               />
             ))}
           </div>

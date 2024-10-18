@@ -15,6 +15,7 @@ export { IconTrash } from './IconTrash';
 export { IconPlusCircle } from './IconPlusCircle';
 export { IconSearch } from './IconSearch';
 export { IconReload } from './IconReload';
+export { IconPin } from './IconPin';
 
 //auth
 export { IconExit } from './IconExit';

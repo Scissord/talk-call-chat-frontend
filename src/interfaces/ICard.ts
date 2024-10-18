@@ -10,4 +10,5 @@ export type ICard = {
   path?: string;
   time?: string;
   last_message_date: string;
+  isfixed: boolean;
 };
