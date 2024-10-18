@@ -8,7 +8,7 @@ interface ThemeState {
 
 // Define the initial state using that type
 const initialState: ThemeState = {
-  value: localStorage.getItem("theme") === 'light' ? 'light' : 'dark',
+  value: localStorage.getItem("theme") === 'dark' ? 'dark' : 'light',
 };
 
 export const themeSlice = createSlice({

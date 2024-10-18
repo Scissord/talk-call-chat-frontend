@@ -9,4 +9,5 @@ export type ICard = {
   counter?: number;
   path?: string;
   time?: string;
+  last_message_date: string;
 };

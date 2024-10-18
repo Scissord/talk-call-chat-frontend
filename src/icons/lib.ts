@@ -14,6 +14,7 @@ export { IconEdit } from './IconEdit';
 export { IconTrash } from './IconTrash';
 export { IconPlusCircle } from './IconPlusCircle';
 export { IconSearch } from './IconSearch';
+export { IconReload } from './IconReload';
 
 //auth
 export { IconExit } from './IconExit';

@@ -104,7 +104,7 @@ const SignIn: FC = () => {
             />
           </label>
         </div>
-        <button onClick={() => handleLogin()} className="btn btn-active btn-secondary" disabled={isLoading}>
+        <button onClick={() => handleLogin()} className="btn btn-active btn-secondary text-white" disabled={isLoading}>
           Войти
         </button>
         {isError && <div className="text-red-500">Ошибка, попробуйте ещё раз.</div>}

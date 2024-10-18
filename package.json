@@ -32,6 +32,9 @@
     "react-select": "^5.8.0",
     "react-select-search": "^4.1.7",
     "react-toastify": "^10.0.5",
+    "react-virtualized-auto-sizer": "^1.0.24",
+    "react-window": "^1.8.10",
+    "smart-webcomponents-react": "^20.0.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {
@@ -39,6 +42,7 @@
     "@types/node": "^20.14.11",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-window": "^1.8.8",
     "@types/sass": "^1.45.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",

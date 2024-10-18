@@ -1,3 +1,5 @@
+import { ICard } from "@interfaces";
+
 export type IColumn = {
   id: string | "";
   title: string | "";
@@ -7,4 +9,5 @@ export type IColumn = {
   created_at: Date | null;
   updated_at: Date | null;
   status: number;
+  cards: ICard[];
 };
