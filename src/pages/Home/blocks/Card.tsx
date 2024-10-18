@@ -95,7 +95,6 @@ const Card: FC<CardProps> = memo((props) => {
               </>
 
             )}
-            <p>{card.isfixed.toString()}</p>
             <img
               src={card?.avatar || 'pics/default_avatar.png'}
               className='w-10 h-10 rounded-full border'
