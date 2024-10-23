@@ -1,8 +1,9 @@
 import { useAppSelector } from "@hooks";
-import { ICustomer, IMessage } from "@interfaces";
+import { ICard, ICustomer, IMessage } from "@interfaces";
 import { RootState } from "@store/index";
 import { getUser } from "@store/reducers/authSlice";
 import { createContext, FC, ReactNode, useContext, useEffect, useState } from "react";
+import axios from '@axios';
 
 interface SocketContextType {
   socket: WebSocket | null;
@@ -10,6 +11,7 @@ interface SocketContextType {
   sender: ICustomer | null;
   blockIds: string[];
   newCardSpot: any;
+  upCustomer: ICard | null;
 };
 
 type SocketProps = {
@@ -36,7 +38,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
   const [sender, setSender] = useState<ICustomer | null>(null);
 
   // Если он падает в кд, или пд, то добавить в начало колонки
-  // const [newCustomer, setNewCustomer] = useState<ICustomer | null>(null);
+  const [upCustomer, setUpCustomer] = useState<ICard | null>(null);
 
   // Для drag'n'drop
   const [blockIds, setBlockIds] = useState<string[] | []>([]);
@@ -61,10 +63,18 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
           setSender(sender);
         };
         // Если он падает в кд, или пд, то добавить в начало колонки
-        // if(data.type === "updated_status") {
-        //   const customer = JSON.parse(data.customer);
-        //   setNewCustomer(customer);
-        // };
+        if(data.type === "up_customer") {
+          const info = JSON.parse(data.info);
+          // here request
+          axios({
+            method: 'POST',
+            url: '/api/board/get_customer_info',
+            data: info
+          }).then((res) => {
+            console.log(res.data);
+            setUpCustomer(res.data);
+          })
+        };
         if(data.type === "onDragStart") {
           if(+user.id !== +data.user_id) {
             const newBlockIds = [...blockIds]
@@ -104,7 +114,8 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         newMessage,
         sender,
         blockIds,
-        newCardSpot
+        newCardSpot,
+        upCustomer
       }}
     >
       {children}

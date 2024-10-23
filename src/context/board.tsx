@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@hooks';
 import { RootState } from '@store/index';
 import { getUser } from '@store/reducers/authSlice';
-import { ICard, IColumn } from '@interfaces';
+import { ICard, IColumn, ICustomer } from '@interfaces';
 
 interface BoardContextType {
   columns: IColumn[];
@@ -35,7 +35,7 @@ interface BoardContextType {
 const BoardContext = createContext<BoardContextType | undefined>(undefined);
 
 export const BoardProvider = ({ children }: { children: ReactNode }) => {
-  const { socket, newCardSpot, newMessage } = useSocketContext();
+  const { socket, newCardSpot, upCustomer } = useSocketContext();
   const navigate = useNavigate();
   const context = useViewContext();
   const user = useAppSelector((state: RootState) => getUser(state));
@@ -59,6 +59,7 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [columns])
 
+  // Это чтобы поменять место карточки
   useEffect(() => {
     if (newCardSpot?.source?.droppableId && newCardSpot?.destination?.droppableId) {
       const newCards = [...cards]
@@ -87,10 +88,10 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
   }, [newCardSpot, columns]);
 
   useEffect(() => {
-    if (newMessage?.customer_id && newMessage?.text) {
-      handleRaiseCustomer(newMessage.customer_id, newMessage.text);
+    if (upCustomer) {
+      handleRaiseCustomer(upCustomer);
     }
-  }, [newMessage]);
+  }, [upCustomer]);
 
   const incrementPage = async (columnId: string, managerId: string) => {
     const newPages = {...pageForColumn};
@@ -277,20 +278,14 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
 
   }, [user, socket, cards, columns]);
 
-  const handleRaiseCustomer = useCallback((customer_id: string, text: string) => {
+  const handleRaiseCustomer = useCallback((upCustomer: ICard) => {
     const newCards = [...cards];
-    for(const cardGroup of newCards) {
-      const card = cardGroup.cards.find(card => +card.id === +customer_id);
-
-      if(card) {
-        card.text = text;
-        card.counter = card?.counter ? card.counter + 1 : 1;
-
-        const date = new Date();
-        const hoursAndMinutes = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        card.last_message_date = hoursAndMinutes;
-      };
+    const cardGroup = newCards.find(cardGroup => +cardGroup.manager_id === +upCustomer.manager_id);
+    if(cardGroup) {
+      cardGroup.cards.unshift(upCustomer);
+      cardGroup.total += 1;
     }
+    setCards(newCards);
   }, [cards]);
 
   return (
