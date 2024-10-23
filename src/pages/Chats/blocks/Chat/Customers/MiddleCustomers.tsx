@@ -1,7 +1,6 @@
 import { FC, useEffect, useRef } from 'react'
 import { useChats, useSocketContext } from '@context'
 import { ICustomer } from '@interfaces';
-// import { Loader } from '@ui';
 
 const MiddleCustomers: FC = () => {
   const {
@@ -13,7 +12,7 @@ const MiddleCustomers: FC = () => {
     setPage,
     fetchConversation,
     setFile,
-    isCustomersLoading
+    // isCustomersLoading
   } = useChats();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,7 +25,6 @@ const MiddleCustomers: FC = () => {
         const { scrollHeight, scrollTop, clientHeight } = containerRef.current;
         if (scrollTop + clientHeight + 1 >= scrollHeight) {
           const newPage = page + 1;
-          console.log(newPage)
           setPage(newPage);
         }
       }

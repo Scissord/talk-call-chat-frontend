@@ -10,4 +10,5 @@ export type IColumn = {
   updated_at: Date | null;
   status: number;
   cards: ICard[];
+  page: number;
 };

@@ -13,7 +13,6 @@ export type { IAttachment } from './IAttachment';
 export type { IColumn } from './IColumn';
 export type { ICard } from './ICard';
 // REQUEST
-export type { IBoard } from './IBoard';
 export type { IGetQueryParams } from './IGetQueryParams';
 // EVENTS
 export type { IError } from './IError';

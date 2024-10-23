@@ -46,24 +46,27 @@ const css = {
 
 const Board: FC = memo(() => {
   const {
-    board,
+    columns,
+    cards,
+    columnsLoading,
+    cardsLoading,
     onDragEnd,
     onDragStart,
-    loading,
     search,
     setSearch,
     handleKeyDown,
     deleteCard,
-    getBoard,
-    toggleFixCard
+    toggleFixCard,
+    incrementPage,
+    getColumns
   } = useBoard();
 
-  if(loading) return <Loader className={css.loader}  />
+  if(columnsLoading) return <Loader className={css.loader}  />
 
   return (
     <>
       <section className={css.top_section}>
-        <div className={css.reload} onClick={() => getBoard()}>
+        <div className={css.reload} onClick={() => getColumns()}>
           <IconReload/>
         </div>
         <p className={css.label}>Воронка</p>
@@ -84,13 +87,15 @@ const Board: FC = memo(() => {
       <section className={css.bottom_section}>
         <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           <div className={css.columnWrapper}>
-            {Object.keys(board?.columns).map((columnId) => (
+            {columns?.map((column) => (
               <Column
-                key={columnId}
-                board={board}
-                columnId={columnId}
+                key={column.id}
+                column={column}
+                cards={cards}
                 deleteCard={deleteCard}
                 toggleFixCard={toggleFixCard}
+                incrementPage={incrementPage}
+                cardsLoading={cardsLoading}
               />
             ))}
           </div>

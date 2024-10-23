@@ -14,19 +14,22 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@hooks';
 import { RootState } from '@store/index';
 import { getUser } from '@store/reducers/authSlice';
-import { IBoard, ICard } from '@interfaces';
+import { ICard, IColumn } from '@interfaces';
 
 interface BoardContextType {
-  board: IBoard;
+  columns: IColumn[];
+  cards: { manager_id: string, cards: ICard[], total: number }[];
+  columnsLoading: boolean;
+  cardsLoading: boolean;
   onDragEnd: (result: DropResult) => void;
   onDragStart: (result: DragStart) => void,
-  loading: boolean;
   search: string;
   setSearch: (search: string) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   deleteCard: (card_id: string, manager_id: string) => void;
-  getBoard: () => void;
   toggleFixCard: (card_id: string) => void;
+  incrementPage: (columnId: string, managerId: string) => void;
+  getColumns: () => void;
 };
 
 const BoardContext = createContext<BoardContextType | undefined>(undefined);
@@ -37,35 +40,51 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
   const context = useViewContext();
   const user = useAppSelector((state: RootState) => getUser(state));
 
-  const [board, setBoard] = useState<IBoard>({
-    columns: {},
-    cards: {},
-  });
-
   const [search, setSearch] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const [columns, setColumns] = useState<IColumn[]>([])
+  const [columnsLoading, setColumnsLoading] = useState<boolean>(false);
+
+  const [cards, setCards] = useState<{ manager_id: string, cards: ICard[], total: number }[]>([]);
+  const [cardsLoading, setCardsLoading] = useState<boolean>(false);
+  const [pageForColumn, setPageForColumn] = useState<{ [key: string]: { page: number }}>({});
 
   useEffect(() => {
-    getBoard();
-  }, []);
+    getColumns();
+  }, [])
 
   useEffect(() => {
-    if (newCardSpot?.destination?.droppableId) {
-      const columns = {...board.columns}
-      const cards = {...board.cards};
+    if(columns.length > 0) {
+      getCards();
+    }
+  }, [columns])
 
-      const manager_id = columns[newCardSpot?.destination?.droppableId]?.manager_id
+  useEffect(() => {
+    if (newCardSpot?.source?.droppableId && newCardSpot?.destination?.droppableId) {
+      const newCards = [...cards]
+      const oldManagerId = columns.find((column) => +column.id === +newCardSpot?.source?.droppableId)?.manager_id;
+      const newManagerId = columns.find(column => +column.id === +newCardSpot?.destination?.droppableId)?.manager_id;
 
-      if(manager_id) {
-        cards[newCardSpot.customer_id].manager_id = manager_id;
+      if(oldManagerId && newManagerId) {
+        const oldCardGroup = newCards.find(cardGroup => +cardGroup.manager_id === +oldManagerId);
+        const newCardGroup = newCards.find(cardGroup => +cardGroup.manager_id === +newManagerId);
+
+        if (oldCardGroup && newCardGroup) {
+          oldCardGroup.total -= 1;
+          newCardGroup.total += 1;
+
+          const [movedCard] = oldCardGroup.cards.splice(newCardSpot?.source?.index, 1);
+
+          if (movedCard) {
+            movedCard.manager_id = newManagerId;
+            newCardGroup.cards.splice(newCardSpot?.destination?.index, 0, movedCard);
+          }
+        }
       }
 
-      setBoard({
-        ...board,
-        cards
-      });
+      setCards(newCards);
     }
-  }, [newCardSpot, board.columns]);
+  }, [newCardSpot, columns]);
 
   useEffect(() => {
     if (newMessage?.customer_id && newMessage?.text) {
@@ -73,33 +92,84 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [newMessage]);
 
+  const incrementPage = async (columnId: string, managerId: string) => {
+    const newPages = {...pageForColumn};
+    newPages[columnId].page += 1;
+    setPageForColumn(newPages);
+    await getMoreCards(columnId, managerId);
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const inputValue = (e.target as HTMLInputElement).value;
 
-      if (board?.cards) {
-        const card = Object.values(board?.cards).find(card => +card.order_id === +inputValue);
-        if(card) {
-          navigate("/chats", { state: { customer: card } });
-        } else {
+      if (cards) {
+        let orderFound = false;
+        for (const cardGroup of cards) {
+          const card = cardGroup.cards.find(card => +card.order_id === +inputValue);
+          if (card) {
+            orderFound = true; // Если заказ найден, устанавливаем флаг
+            navigate("/chats", { state: { customer: card } });
+            break;
+          }
+        }
+
+        if (!orderFound) {
           context?.notification.show('Заказ не найден!', 'error');
-        };
+        }
       } else {
-        context?.notification.show('Заказ не найден!', 'error');
-      };
+        context?.notification.show('На доске нет заказов!', 'error');
+      }
+
     };
   };
 
-  const getBoard = useCallback(async () => {
-    setLoading(true);
+  const getColumns = async () => {
+    setColumnsLoading(true);
     await axios({
       method: 'GET',
-      url: '/board',
+      url: '/board/columns',
     }).then((res) => {
-      setLoading(false);
-      setBoard(res.data);
+      const pages: { [key: string]: { page: number } } = {};
+      for(const column of res.data as IColumn[]) {
+        pages[column.id] = { page: 1 };
+      }
+      setPageForColumn(pages)
+      setColumns(res.data);
+      setColumnsLoading(false);
     });
-  }, []);
+  };
+
+  const getCards = async () => {
+    if (columns.length === 0) return;
+    setCardsLoading(true);
+    await axios({
+      method: 'POST',
+      url: '/board/cards',
+    }).then((res) => {
+      setCards(res.data);
+      setCardsLoading(false);
+    });
+  };
+
+  const getMoreCards = async (columnId: string, managerId: string) => {
+    await axios({
+      method: 'POST',
+      url: '/board/more-cards',
+      data: {
+        managerId,
+        page: pageForColumn[columnId].page
+      }
+    }).then((res) => {
+      const newCards = [...cards];
+      for(const cardGroup of cards) {
+        if(cardGroup.manager_id === managerId) {
+          cardGroup.cards = [...cardGroup.cards, ...res.data];
+        }
+      }
+      setCards(newCards);
+    });
+  };
 
   const deleteCard = useCallback(async (card_id: string) => {
     const confirm = window.confirm('Вы уверены?')
@@ -108,15 +178,13 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
       method: 'DELETE',
       url: `/cards/${card_id}`,
     }).then(() => {
-      const cards = {...board.cards};
-      delete cards[card_id];
-
-      setBoard({
-        ...board,
-        cards
-      });
+      const newCards = [...cards]
+      for (const cardGroup of newCards) {
+        cardGroup.cards = cardGroup.cards.filter(card => +card.id !== +card_id);
+      }
+      setCards(newCards);
     });
-  }, [board.cards]);
+  }, [cards]);
 
   const toggleFixCard = useCallback(async (card_id: string) => {
     const confirm = window.confirm('Вы уверены?')
@@ -126,15 +194,17 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
       method: 'PATCH',
       url: `/cards/${card_id}/toggle_fix`,
     }).then(() => {
-      const cards = {...board.cards};
-      cards[card_id].isfixed = !cards[card_id].isfixed;
+      const newCards = [...cards];
+      for(const cardGroup of newCards) {
+        const card = cardGroup.cards.find(card => +card.id === +card_id);
+        if(card) {
+          card.isfixed =!card.isfixed;
+        }
+      }
 
-      setBoard({
-        ...board,
-        cards
-      });
+      setCards(newCards);
     })
-  }, [board.cards]);
+  }, [cards]);
 
   const onDragStart = useCallback((result: DragStart) => {
     const { draggableId } = result;
@@ -177,53 +247,68 @@ export const BoardProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    const columns = {...board.columns}
-    const cards = {...board.cards};
-    const newManagerId = columns[destination.droppableId].manager_id;
-    cards[draggableId].manager_id = newManagerId;
+    const newCards = [...cards]
+    const oldManagerId = columns.find((column) => +column.id === +source.droppableId)?.manager_id;
+    const newManagerId = columns.find(column => +column.id === +destination.droppableId)?.manager_id;
 
-    setBoard({
-      ...board,
-      cards
-    });
+    if(oldManagerId && newManagerId) {
+      if(oldManagerId === newManagerId) return;
+      const oldCardGroup = newCards.find(cardGroup => +cardGroup.manager_id === +oldManagerId);
+      const newCardGroup = newCards.find(cardGroup => +cardGroup.manager_id === +newManagerId);
+
+      if (oldCardGroup && newCardGroup) {
+        oldCardGroup.total -= 1;
+        newCardGroup.total += 1;
+
+        const [movedCard] = oldCardGroup.cards.splice(source.index, 1);
+
+        if (movedCard) {
+          movedCard.manager_id = newManagerId;
+          newCardGroup.cards.splice(destination.index, 0, movedCard);
+        }
+      }
+    }
+
+    setCards(newCards);
 
     await axios.patch(`/cards/${draggableId}/move`, {
       manager_id: newManagerId
     });
 
-  }, [board, user, socket]);
+  }, [user, socket, cards, columns]);
 
   const handleRaiseCustomer = useCallback((customer_id: string, text: string) => {
-    const existingCard = (board.cards as { [key: string]: ICard })[customer_id];
-    const newCard = {
-      ...existingCard,
-      text,
-      counter: existingCard?.counter ? existingCard.counter + 1 : 1,
-      last_message_date: 'Новая дата',
-    };
+    const newCards = [...cards];
+    for(const cardGroup of newCards) {
+      const card = cardGroup.cards.find(card => +card.id === +customer_id);
 
-    setBoard((prevBoard) => ({
-      ...prevBoard,
-      cards: {
-        ...prevBoard.cards,
-        [customer_id]: newCard,
-      },
-    }));
-  }, [board]);
+      if(card) {
+        card.text = text;
+        card.counter = card?.counter ? card.counter + 1 : 1;
+
+        const date = new Date();
+        const hoursAndMinutes = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        card.last_message_date = hoursAndMinutes;
+      };
+    }
+  }, [cards]);
 
   return (
     <BoardContext.Provider
       value={{
-        board,
+        columns,
+        cards,
+        columnsLoading,
+        cardsLoading,
         onDragEnd,
         onDragStart,
-        loading,
         search,
         setSearch,
         handleKeyDown,
         deleteCard,
-        getBoard,
-        toggleFixCard
+        toggleFixCard,
+        incrementPage,
+        getColumns
       }}
     >
       {children}
