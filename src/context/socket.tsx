@@ -54,6 +54,7 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
       };
 
       ws.onmessage = (event) => {
+        console.log(event)
         const data = JSON.parse(event.data);
         // Если нам написали, то поднять в чате, и поднять в колонке
         if(data.type === "new_message") {
@@ -64,7 +65,8 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         };
         // Если он падает в кд, или пд, то добавить в начало колонки
         if(data.type === "up_customer") {
-          const info = JSON.parse(data.info);
+          const info = JSON.parse(data);
+          console.log(info)
           // here request
           axios({
             method: 'POST',
