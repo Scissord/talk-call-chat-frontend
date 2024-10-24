@@ -74,7 +74,9 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
             data: info
           }).then((res) => {
             console.log(res.data);
-            setUpCustomer(res.data);
+            if(res.data) {
+              setUpCustomer(res.data);
+            }
           })
         };
         if(data.type === "onDragStart") {
