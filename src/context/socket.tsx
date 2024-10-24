@@ -65,12 +65,12 @@ export const SocketContextProvider: FC<SocketProps> = ({ children }) => {
         };
         // Если он падает в кд, или пд, то добавить в начало колонки
         if(data.type === "up_customer") {
-          const info = JSON.parse(data);
+          const info = data;
           console.log(info)
           // here request
           axios({
             method: 'POST',
-            url: '/api/board/get_customer_info',
+            url: '/board/get_customer_info',
             data: info
           }).then((res) => {
             console.log(res.data);
