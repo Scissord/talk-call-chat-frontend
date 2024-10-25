@@ -8,4 +8,5 @@ export type IUser = {
     status: number;
     label: string;
   };
+  role_id: string;
 };

@@ -25,3 +25,7 @@ export { IconUser } from './IconUser';
 export { IconPhone } from './IconPhone';
 export { IconKey } from './IconKey';
 export { IconLock } from './IconLock';
+
+//admin
+export { IconAdidas } from './IconAdidas';
+export { IconPersonAdd } from './IconAddUser';

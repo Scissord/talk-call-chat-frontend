@@ -30,7 +30,7 @@ const AppRoutes: IRoute[] = [
     path: "/admin",
 		element: CW(AdminPage),
 		layout: "app",
-		title: "Чаты",
+		title: "Админ",
   },
 ];
 
