@@ -29,3 +29,7 @@ export { IconLock } from './IconLock';
 //admin
 export { IconAdidas } from './IconAdidas';
 export { IconPersonAdd } from './IconAddUser';
+export { IconClients } from './IconClients';
+export { IconMessages } from './IconMessages';
+export { IconProduct } from './IconProduct';
+export { IconGlasses } from './IconGlasses';
