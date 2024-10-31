@@ -12,7 +12,6 @@ type Card = {
 };
 
 const Cards: FC = () => {
-
   const [cards, setCards] = useState<Card[]>([]);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import axios from '@axios';
 
 type CreateUserProps = {
   fetchUsers: () => void;
-}
+};
 
 const AddUserModal: FC<CreateUserProps> = ({ fetchUsers }) => {
   const context = useViewContext();
@@ -23,6 +23,8 @@ const AddUserModal: FC<CreateUserProps> = ({ fetchUsers }) => {
     { role: "5", label: "РГ ПД" },
     { role: "6", label: "РГ КД" },
     // { role: "7", label: "Администратор" },
+    { role: "8", label: "Баер" },
+    { role: "9", label: "Вл" },
   ]);
 
   const [user, setUser] = useState({
@@ -35,14 +37,17 @@ const AddUserModal: FC<CreateUserProps> = ({ fetchUsers }) => {
   useEffect(() => {
     let filteredRoles = roles;
 
-    if (auth && +auth.role.id === 2) {
-      filteredRoles = roles.filter((r) => +r.role === 1);
-    }
+    // if (auth && +auth.role.id === 2) {
+    //   filteredRoles = roles.filter((r) => +r.role === 1);
+    // }
     if (auth && +auth.role.id === 5) {
       filteredRoles = roles.filter((r) => +r.role === 3);
     }
     if (auth && +auth.role.id === 6) {
       filteredRoles = roles.filter((r) => +r.role === 4);
+    }
+    if (auth && +auth.role.id === 10) {
+      filteredRoles = roles.filter((r) => +r.role === 9);
     }
 
     setRoles(filteredRoles);
