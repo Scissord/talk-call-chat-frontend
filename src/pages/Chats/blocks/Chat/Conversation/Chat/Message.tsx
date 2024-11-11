@@ -1,9 +1,11 @@
-import { FC, Fragment } from 'react';
+import { FC, Fragment, MouseEvent, useState } from 'react';
 import { Audio, Search } from '@ui';
 import { IMessage } from '@interfaces';
-import { useChats } from '@context';
+import { useChats, useViewContext } from '@context';
+import { IconCloudDownload } from '@icons';
 import Send from './Send';
 import ReactDOM from "react-dom";
+import axios from '@axios';
 import '../scroll.css';
 
 type MessageProps = {
@@ -21,7 +23,11 @@ const Message: FC<MessageProps> = (props) => {
     onContextMenu, onCloseMenu,
     replyMessage, menuPosition
   } = props;
+
+  const context = useViewContext();
   const { customers, search, setSearch, setPage } = useChats();
+
+  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
 
   const openGoogleMaps = (lat: string, lon: string) => {
     const url = `https://www.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
@@ -32,6 +38,47 @@ const Message: FC<MessageProps> = (props) => {
     setSearch(text)
     setPage(1);
   };
+
+  const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      closeModal();
+    }
+  };
+
+  const handleDownloadFile = async (file: any) => {
+    try {
+      const res = await axios({
+        method: 'POST',
+        url: '/download/file',
+        data: file,
+        responseType: 'blob'
+      });
+
+      // Create a blob from the response data
+      const blob = new Blob([res.data], { type: file.contentType });
+
+      // Create a download link
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = file.name;
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up the link
+      a.remove();
+      URL.revokeObjectURL(downloadUrl);
+
+      console.log('File downloaded successfully');
+
+    } catch (err) {
+      console.log(err);
+      context?.notification.show('Ошибка при скачке файлов', 'error');
+    };
+  };
+
+  const openModal = () => setIsImageModalOpen(true);
+  const closeModal = () => setIsImageModalOpen(false);
 
   const renderContextMenu = () => {
     return (
@@ -104,47 +151,104 @@ const Message: FC<MessageProps> = (props) => {
         <p>{message?.text}</p>
         {message?.attachments?.map((attachment) => (
           <Fragment key={attachment.id}>
-            {attachment?.contentType?.includes('image') && <img
-              src={attachment.link}
-              alt={attachment.link}
-              className='w-fit min-h-16 max-h-40 rounded-lg'
-            />}
-
-            {attachment.contentType === 'application/pdf' && <div
-              className="flex items-center gap-2"
-            >
-              <img className="w-8 h-8" src="assets/doc.png"/>
-              <a
-                href={attachment.link}
-                target="_blank"
-                className='hover:text-blue-500'
+            {/* КАРТЫНКИ */}
+            {attachment?.contentType?.includes('image') && <>
+              <img
+                src={attachment.link}
+                alt={attachment.link}
+                onClick={openModal}
+                className='w-fit min-h-16 max-h-40 rounded-lg cursor-pointer'
+              />
+              <div
+              onClick={() => handleDownloadFile(attachment)}
+              className={`
+                absolute text-[8px] bottom-0 cursor-pointer
+                ${!message.incoming && 'left-1 text-gray-400'}
+                ${message.incoming && 'right-1 text-gray-300'}
+              `}>
+                <IconCloudDownload/>
+              </div>
+            </>}
+            {/* НАЖАТЬ НА КАРТЫНКУ */}
+            {isImageModalOpen && (
+              <div
+                onClick={handleBackdropClick}
+                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
               >
-                Скачать
-              </a>
-            </div>}
-
-            {attachment?.contentType?.includes('audio') && <Audio
-              src={attachment.link}
-            />}
-
+                <div className="relative">
+                  <img
+                    src={attachment.link}
+                    alt={attachment.link}
+                    className="max-w-full max-h-screen rounded-lg"
+                  />
+                  <button
+                    onClick={closeModal}
+                    className="absolute top-0 right-3 text-white text-2xl"
+                  >
+                    &times;
+                  </button>
+                </div>
+              </div>
+            )}
+            {/* ПДФ */}
+            {attachment.contentType === 'application/pdf' && <>
+              <div
+                className="flex items-center gap-2"
+              >
+                <img className="w-8 h-8" src="assets/doc.png"/>
+                <a
+                  href={attachment.link}
+                  target="_blank"
+                  className='hover:text-blue-500'
+                >
+                  Скачать
+                </a>
+              </div>
+              <div
+              onClick={() => handleDownloadFile(attachment)}
+              className={`
+                absolute text-[8px] bottom-0 cursor-pointer
+                ${!message.incoming && 'left-1 text-gray-400'}
+                ${message.incoming && 'right-1 text-gray-300'}
+              `}>
+                <IconCloudDownload/>
+              </div>
+            </>}
+            {/* АУДИО */}
+            {attachment?.contentType?.includes('audio') && <>
+              <Audio
+                src={attachment.link}
+              />
+              <div
+              onClick={() => handleDownloadFile(attachment)}
+              className={`
+                absolute text-[8px] bottom-0 cursor-pointer
+                ${!message.incoming && 'left-1 text-gray-400'}
+                ${message.incoming && 'right-1 text-gray-300'}
+              `}>
+                <IconCloudDownload/>
+              </div>
+            </>}
+            {/* ГЕО */}
             {!attachment.contentType && <img
               src={`data:image/jpeg;base64,${attachment.thumb}`}
               alt={attachment.link}
               onClick={() => openGoogleMaps(attachment.lat, attachment.lon)}
               className='rounded-lg cursor-pointer'
             />}
-
-            {attachment?.contentType?.includes('video') && <video
-              src={attachment.link}
-              className='rounded-lg cursor-pointer'
-              controls
+            {/* ВИДЕО */}
+            {attachment?.contentType?.includes('video') &&
+              <video
+                src={attachment.link}
+                className='rounded-lg cursor-pointer'
+                controls
             />}
           </Fragment>
         ))}
         <div className={`
           absolute text-[8px] bottom-0
           ${message.incoming && 'left-1 text-gray-400'}
-          ${!message.incoming && 'right-1 text-gray-300'}
+          ${!message.incoming && 'right-1 text-gray-400'}
         `}>
           {message?.created_at}
         </div>

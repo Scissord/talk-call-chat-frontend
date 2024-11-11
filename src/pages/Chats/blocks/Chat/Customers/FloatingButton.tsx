@@ -1,6 +1,7 @@
 import { FC, useContext } from 'react'
 import { useChats, ViewContext } from '@context';
 import AddModal from './AddModal';
+import { IconSendPlus } from '@icons';
 
 const FloatingButton: FC = () => {
   const context = useContext(ViewContext);
@@ -18,7 +19,7 @@ const FloatingButton: FC = () => {
       onClick={() => handleAddConversation()}
       className='fixed bottom-3 right-3 bg-[#646dff] w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-xl text-white'
     >
-      +
+      <IconSendPlus/>
     </div>
   )
 }

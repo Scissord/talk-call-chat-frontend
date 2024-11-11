@@ -5,7 +5,6 @@ type TagsProps = {
 };
 
 const Tags: FC<TagsProps> = (props) => {
-
   return (
     <>
       <div className='flex items-center justify-between w-full'>

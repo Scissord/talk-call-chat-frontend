@@ -57,7 +57,7 @@ const AddModal: FC<Props> = ({ fetchCustomers }) => {
   };
 
   return (
-    <div className='flex flex-col gap-6 h-[30vh]'>
+    <div className='flex flex-col gap-6'>
       <div className='flex items-center gap-3'>
         <p className='w-32 font-semibold text-sm'>LeadVertext_Id:</p>
         <input

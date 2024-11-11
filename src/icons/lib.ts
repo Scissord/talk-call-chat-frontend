@@ -9,14 +9,6 @@ export { IconAdmin } from './IconAdmin';
 export { IconSun } from './IconSun';
 export { IconMoon } from './IconMoon';
 
-//app
-export { IconEdit } from './IconEdit';
-export { IconTrash } from './IconTrash';
-export { IconPlusCircle } from './IconPlusCircle';
-export { IconSearch } from './IconSearch';
-export { IconReload } from './IconReload';
-export { IconPin } from './IconPin';
-
 //auth
 export { IconExit } from './IconExit';
 
@@ -33,3 +25,13 @@ export { IconClients } from './IconClients';
 export { IconMessages } from './IconMessages';
 export { IconProduct } from './IconProduct';
 export { IconGlasses } from './IconGlasses';
+
+//app
+export { IconEdit } from './IconEdit';
+export { IconTrash } from './IconTrash';
+export { IconPlusCircle } from './IconPlusCircle';
+export { IconSearch } from './IconSearch';
+export { IconReload } from './IconReload';
+export { IconPin } from './IconPin';
+export { IconSendPlus } from './IconSendPlus';
+export { IconCloudDownload } from './IconCloudDownload';
