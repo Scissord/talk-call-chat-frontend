@@ -38,6 +38,10 @@ const ConversationInfo: FC = () => {
   }
 
   const handleSaveNewManager = async (customer_id: string) => {
+    if(!newManager) {
+      context?.notification.show('Выберите ответственного!', 'error');
+      return;
+    }
     const manager_name =  users.find((user) => +user.id === +newManager)?.name;
     await axios({
       method: 'PATCH',
