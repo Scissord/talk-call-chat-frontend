@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +12,7 @@
 * {
   padding: 0px;
   margin: 0px;
-  font-family: 'Helvetica Neue', sans-serif;;
+  font-family: "Montserrat", serif;
   @apply: transition-colors duration-300 ease-in-out;
 }
 

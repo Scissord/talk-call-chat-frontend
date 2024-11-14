@@ -5,10 +5,10 @@ import Certificates from './CustomerInfo/Certificates';
 // import Tags from './CustomerInfo/Tags';
 import Responsible from './CustomerInfo/Responsible';
 import axios from '@axios';
-import { IUser } from '@interfaces';
+import { ICustomer, IUser } from '@interfaces';
 
 const ConversationInfo: FC = () => {
-  const { customer, setCustomer, setFile, setMessage } = useChats();
+  const { customer, setCustomer, setFile, setMessage, fetchConversation } = useChats();
   const context = useViewContext();
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<IUser[] | []>([]);
@@ -31,14 +31,13 @@ const ConversationInfo: FC = () => {
     }).then((res) => {
       setUsers(res.data.users);
       setChats(res.data.chats)
-      console.log(res.data.chats);
     }).catch(() => {
       context?.notification.show('Ошибка при загрузке пользователей', 'error');
     });
   }
 
   const handleSaveNewManager = async (customer_id: string) => {
-    if(!newManager) {
+    if(newManager === 'disabled') {
       context?.notification.show('Выберите ответственного!', 'error');
       return;
     }
@@ -58,6 +57,11 @@ const ConversationInfo: FC = () => {
       context?.notification.show('Ошибка при смене ответственного', 'error');
     });
   };
+
+  // const handleOpenNewChat = async (customer: ICustomer, newCustomerId: string) => {
+  //   setCustomer(customer);
+  //   fetchConversation(newCustomerId);
+  // };
 
   return (
     <div className='h-full w-full sm:w-1/4 border-r border-l border-slate-300 px-4 overflow-y-auto'>
@@ -88,7 +92,7 @@ const ConversationInfo: FC = () => {
             <Responsible manager={customer?.manager_name ? customer.manager_name : "Нет"}/>
             <select
               value={newManager}
-              className='h-8 border border-black rounded pl-3 text-sm text-black'
+              className='h-8 border border-black dark:border-white rounded pl-3 text-sm text-black dark:text-white'
               onChange={(e) => setNewManager(e.target.value)}
             >
               {users?.map((user) => (
@@ -111,7 +115,17 @@ const ConversationInfo: FC = () => {
           <div className='flex flex-col gap-2 items-start border-t border-slate-300 w-full px-2 py-2 text-black'>
             <h1 className='font-bold text-xl dark:text-white'>Чаты</h1>
             {chats.length > 0 && chats.map((chat: any, index: number) => (
-              <div className='text-sm'>{index + 1}. {chat?.order_id}</div>
+              <div
+                key={chat?.order_id}
+                // onClick={() => handleOpenNewChat(customer, chat?.id)}
+                className='text-sm text-black dark:text-white'
+              >
+                {index + 1}.
+                {chat?.order_id}
+                {chat?.order_id === customer?.order_id && (
+                  <span className='text-xs ml-2 text-gray-400'>Текущий</span>
+                )}
+              </div>
             ))}
           </div>
         </div>

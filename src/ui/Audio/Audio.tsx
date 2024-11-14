@@ -1,4 +1,5 @@
 import { FC, useRef, useState } from 'react';
+import { IconPause, IconPlay } from '@icons';
 import styles from './Audio.module.scss';
 
 type AudioProps = {
@@ -48,16 +49,16 @@ export const Audio: FC<AudioProps> = ({ src }) => {
       {!isPlaying ? (
         <div
           onClick={togglePlayPause}
-          className='p-2 hover bg-[#0086FF] cursor-pointer rounded-md'
+          className='p-2 bg-[#0086FF] cursor-pointer rounded-full hover:opacity-50'
         >
-          {">"}
+          <IconPlay/>
         </div>
       ) : (
         <div
           onClick={togglePlayPause}
-          className='p-2 hover bg-[#0086FF] cursor-pointer rounded-md'
+          className='p-2 bg-[#0086FF] cursor-pointer rounded-full hover:opacity-50'
         >
-          {"||"}
+          <IconPause/>
         </div>
       )}
 

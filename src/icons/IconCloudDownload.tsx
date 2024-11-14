@@ -2,7 +2,7 @@ export function IconCloudDownload() {
   return (
     <svg
       viewBox="0 0 1024 1024"
-      fill="#9ca3af"
+      fill="black"
       height="1.5em"
       width="1.5em"
     >

@@ -139,16 +139,16 @@ const Message: FC<MessageProps> = (props) => {
       </div>
       <div
         className={`
-          overflow-hidden inline-block relative min-w-[10px] max-w-[50%]
-          ${message.incoming && 'rounded-r-xl rounded-tl-xl bg-gray-100 text-black px-3 py-3'}
-          ${!message.incoming && 'rounded-l-xl rounded-tr-xl bg-[#646dff] text-white px-3 py-3'}
+          overflow-hidden inline-block relative min-w-[90px] max-w-[50%]
+          ${message.incoming && 'rounded-r-md rounded-tl-md bg-gray-100 text-black px-2 py-2'}
+          ${!message.incoming && 'rounded-l-md rounded-tr-md bg-[#646dff] text-white px-2 py-2'}
         `}
         onContextMenu={onContextMenu}
       >
         {message?.quoted_message && (
           <p className='bg-slate-100 px-2 py-1 border-b border-black'>{message?.quoted_message}</p>
         )}
-        <p>{message?.text}</p>
+        <p className='text-sm'>{message?.text}</p>
         {message?.attachments?.map((attachment) => (
           <Fragment key={attachment.id}>
             {/* КАРТЫНКИ */}
@@ -195,7 +195,6 @@ const Message: FC<MessageProps> = (props) => {
               <div
                 className="flex items-center gap-2"
               >
-                <img className="w-8 h-8" src="assets/doc.png"/>
                 <a
                   href={attachment.link}
                   target="_blank"
@@ -246,9 +245,9 @@ const Message: FC<MessageProps> = (props) => {
           </Fragment>
         ))}
         <div className={`
-          absolute text-[8px] bottom-0
-          ${message.incoming && 'left-1 text-gray-400'}
-          ${!message.incoming && 'right-1 text-gray-400'}
+          absolute text-[7px] bottom-0
+          ${message.incoming && 'left-0 text-black'}
+          ${!message.incoming && 'right-0 text-white'}
         `}>
           {message?.created_at}
         </div>

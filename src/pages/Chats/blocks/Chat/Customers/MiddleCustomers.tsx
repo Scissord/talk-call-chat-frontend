@@ -12,7 +12,6 @@ const MiddleCustomers: FC = () => {
     setPage,
     fetchConversation,
     setFile,
-    // isCustomersLoading
   } = useChats();
 
   const containerRef = useRef<HTMLDivElement>(null);

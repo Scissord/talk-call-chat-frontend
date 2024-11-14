@@ -64,24 +64,34 @@ const Chat: FC = () => {
   };
 
   return (
-    <div className={`
-      w-full h-full flex flex-col gap-3 px-3 py-6
-      ${activeMessageId !== "" ? "overflow-hidden" : "scroll"}
-    `}>
-      {conversation?.length > 0 && conversation?.map((message) => (
-        <Message
-          key={message.id}
-          message={message}
-          isActive={+activeMessageId === +message?.id}
-          onContextMenu={(event) => handleContextMenu(event, message.id)}
-          onCloseMenu={onCloseMenu}
-          replyMessage={replyMessage}
-          menuPosition={menuPosition}
-        />
-      ))}
-      <div ref={messagesEndRef} />
+    <div
+      className={`
+        relative w-full h-full bg-blue-100
+        overflow-hidden
+        dark:bg-[url("/pics/dark-chat-bg.png")]
+        bg-[url("/pics/light-chat-bg.png")]
+      `}
+    >
+      <div className={`
+        w-full h-full flex flex-col gap-3 px-3 py-6
+        ${activeMessageId !== "" ? "overflow-hidden" : "scroll"}
+      `}>
+        <div className="absolute inset-0 bg-black opacity-50 pointer-events-none z-0"></div>
+        {conversation?.length > 0 && conversation?.map((message) => (
+          <Message
+            key={message.id}
+            message={message}
+            isActive={+activeMessageId === +message?.id}
+            onContextMenu={(event) => handleContextMenu(event, message.id)}
+            onCloseMenu={onCloseMenu}
+            replyMessage={replyMessage}
+            menuPosition={menuPosition}
+          />
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Chat;

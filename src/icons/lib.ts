@@ -35,3 +35,6 @@ export { IconReload } from './IconReload';
 export { IconPin } from './IconPin';
 export { IconSendPlus } from './IconSendPlus';
 export { IconCloudDownload } from './IconCloudDownload';
+export { IconSync } from './IconSync';
+export { IconPlay } from './IconPlay';
+export { IconPause } from './IconPause';
