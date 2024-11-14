@@ -246,8 +246,8 @@ const Message: FC<MessageProps> = (props) => {
         ))}
         <div className={`
           absolute text-[7px] bottom-0
-          ${message.incoming && 'left-0 text-black'}
-          ${!message.incoming && 'right-0 text-white'}
+          ${message.incoming && 'left-1 text-black'}
+          ${!message.incoming && 'right-1 text-white'}
         `}>
           {message?.created_at}
         </div>
