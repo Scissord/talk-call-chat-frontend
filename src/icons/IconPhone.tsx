@@ -1,9 +1,4 @@
-import { useAppSelector } from '@hooks';
-import { selectTheme } from '@store/reducers/themeSlice';
-
 export function IconPhone(props: any) {
-  const theme = useAppSelector(selectTheme);
-
   return (
     <svg
       viewBox="0 0 16 16"
