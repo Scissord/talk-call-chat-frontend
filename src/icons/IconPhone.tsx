@@ -7,7 +7,7 @@ export function IconPhone(props: any) {
   return (
     <svg
       viewBox="0 0 16 16"
-      fill={theme === 'dark' ? 'white' : '#000'}
+      fill="black"
       height="1.4em"
       width="1.4em"
       cursor="pointer"
