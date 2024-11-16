@@ -166,7 +166,7 @@ const Message: FC<MessageProps> = (props) => {
                 ${!message.incoming && 'left-1 text-gray-400'}
                 ${message.incoming && 'right-1 text-gray-300'}
               `}>
-                <IconCloudDownload/>
+                <IconCloudDownload color="black"/>
               </div>
             </>}
             {/* НАЖАТЬ НА КАРТЫНКУ */}
@@ -210,7 +210,7 @@ const Message: FC<MessageProps> = (props) => {
                 ${!message.incoming && 'left-1 text-gray-400'}
                 ${message.incoming && 'right-1 text-gray-300'}
               `}>
-                <IconCloudDownload/>
+                <IconCloudDownload color="black"/>
               </div>
             </>}
             {/* АУДИО */}
@@ -225,7 +225,7 @@ const Message: FC<MessageProps> = (props) => {
                 ${!message.incoming && 'left-1 text-gray-400'}
                 ${message.incoming && 'right-1 text-gray-300'}
               `}>
-                <IconCloudDownload/>
+                <IconCloudDownload color={!message.incoming ? "white" : "black"}/>
               </div>
             </>}
             {/* ГЕО */}

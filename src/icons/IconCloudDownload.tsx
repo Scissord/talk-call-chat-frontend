@@ -1,8 +1,14 @@
-export function IconCloudDownload() {
+import { FC } from "react";
+
+type IIconCloudDownloadProps = {
+  color: string;
+};
+
+export const IconCloudDownload: FC<IIconCloudDownloadProps> = ({ color }) => {
   return (
     <svg
       viewBox="0 0 1024 1024"
-      fill={"black"}
+      fill={color}
       height="1.5em"
       width="1.5em"
     >
