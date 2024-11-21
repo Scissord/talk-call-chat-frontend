@@ -163,10 +163,10 @@ const Message: FC<MessageProps> = (props) => {
               onClick={() => handleDownloadFile(attachment)}
               className={`
                 absolute text-[8px] bottom-0 cursor-pointer
-                ${!message.incoming && 'left-1 text-gray-400'}
                 ${message.incoming && 'right-1 text-gray-300'}
+                ${!message.incoming && 'left-1 text-gray-400'}
               `}>
-                <IconCloudDownload color="black"/>
+                <IconCloudDownload color={message.incoming ? "black" : "white"}/>
               </div>
             </>}
             {/* НАЖАТЬ НА КАРТЫНКУ */}
@@ -210,7 +210,7 @@ const Message: FC<MessageProps> = (props) => {
                 ${!message.incoming && 'left-1 text-gray-400'}
                 ${message.incoming && 'right-1 text-gray-300'}
               `}>
-                <IconCloudDownload color="black"/>
+                <IconCloudDownload color={message.incoming ? "black" : "white"}/>
               </div>
             </>}
             {/* АУДИО */}
@@ -225,7 +225,7 @@ const Message: FC<MessageProps> = (props) => {
                 ${!message.incoming && 'left-1 text-gray-400'}
                 ${message.incoming && 'right-1 text-gray-300'}
               `}>
-                <IconCloudDownload color={!message.incoming ? "white" : "black"}/>
+                <IconCloudDownload color={message.incoming ? "black" : "white"}/>
               </div>
             </>}
             {/* ГЕО */}
