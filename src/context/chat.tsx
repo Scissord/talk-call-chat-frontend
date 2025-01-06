@@ -37,6 +37,7 @@ interface ChatContextType {
   handleSendMessage: () => Promise<void>;
   isCustomersLoading: boolean;
   handleSyncChats: (customer_id: string | undefined) => Promise<void>;
+  handleSendCertificate: (customer_id: string, product: string, type: string) => Promise<void>; 
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -173,6 +174,20 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       .catch(() => context?.notification.show('Ошибка при загрузке чата', 'error'));
   };
 
+  const handleSendCertificate = async (customer_id: string, product: string, type: string) => {
+    await axios({
+      method: 'POST',
+      url: `/messages/template`,
+      data: {
+        customer_id, product, type
+      },
+    })
+      .then((res) => {
+        // logic to update chat;
+      })
+      .catch(() => context?.notification.show('Ошибка при загрузке чата', 'error'));
+  };
+
   const validateSendMessage = () => {
     if (file === null && message.length === 0 && rAudio === null) {
       context?.notification.show('Пустое сообщение', 'error');
@@ -208,7 +223,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         fetchConversation,
         handleSendMessage,
         isCustomersLoading,
-        handleSyncChats
+        handleSyncChats,
+        handleSendCertificate
       }}
     >
       {children}
