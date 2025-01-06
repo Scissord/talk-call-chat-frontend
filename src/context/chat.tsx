@@ -183,7 +183,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       },
     })
       .then((res) => {
-        // logic to update chat;
+        setConversation((prevConversation) => [...prevConversation, res.data.message]);
       })
       .catch(() => context?.notification.show('Ошибка при загрузке чата', 'error'));
   };
