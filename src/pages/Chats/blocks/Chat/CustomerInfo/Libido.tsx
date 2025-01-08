@@ -22,13 +22,13 @@ const Libido: FC<LibidoProps> = (props) => {
 
   const items = [
     { id: 'cert', label: '5.1 Сертификат', i: 1 },
-    { id: 'audio', label: '5.2 Аудио отзыв', i: 1 },
-    { id: 'image', label: '5.3 Фото отзыв 1', i: 1 },
-    { id: 'image', label: '5.3 Фото отзыв 2', i: 2 },
-    { id: 'image', label: '5.3 Фото отзыв 3', i: 3 },
-    { id: 'image', label: '5.3 Фото отзыв 4', i: 4 },
-    { id: 'image', label: '5.3 Фото отзыв 5', i: 5 },
-    { id: 'image', label: '5.3 Фото отзыв 6', i: 6 },
+    { id: 'audio', label: '5.2 Аудио отзыв +потенция / противосполение', i: 1 },
+    { id: 'image', label: '5.3 Фото отзыв +4см', i: 1 },
+    { id: 'image', label: '5.3 Фото отзыв +потенция', i: 2 },
+    { id: 'image', label: '5.3 Фото отзыв улучшение половых желез', i: 3 },
+    { id: 'image', label: '5.3 Фото отзыв бурная ночь', i: 4 },
+    { id: 'image', label: '5.3 Фото отзыв фото полового органа', i: 5 },
+    { id: 'image', label: '5.3 Фото отзыв положительный эффект', i: 6 },
     { id: 'pic', label: '5.4 Фото продукта', i: 1 },
   ];
 

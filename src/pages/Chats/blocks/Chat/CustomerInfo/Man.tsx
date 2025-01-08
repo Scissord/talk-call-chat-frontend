@@ -22,8 +22,8 @@ const Man: FC<ManProps> = (props) => {
 
   const items = [
     { id: 'cert', label: '6.1 Сертификат', i: 1 },
-    { id: 'audio', label: '6.2 Аудио отзыв', i: 1 },
-    { id: 'image', label: '6.3 Фото отзыв', i: 1 },
+    { id: 'audio', label: '6.2 Аудио отзыв результаты есть', i: 1 },
+    { id: 'image', label: '6.3 Фото отзыв мочеиспускание', i: 1 },
     { id: 'pic', label: '6.4 Фото продукта', i: 1 },
   ];
 

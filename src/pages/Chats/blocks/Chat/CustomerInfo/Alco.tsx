@@ -22,8 +22,8 @@ const Alco: FC<AlcoProps> = (props) => {
 
   const items = [
     { id: 'cert', label: '1.1 Сертификат', i: 1 },
-    { id: 'image', label: '1.2 Фото отзыв 1', i: 1 },
-    { id: 'image', label: '1.2 Фото отзыв 2', i: 2 },
+    { id: 'image', label: '1.2 Фото отзыв против алкоголя', i: 1 },
+    { id: 'image', label: '1.2 Фото отзыв жена не боится мужа', i: 2 },
     { id: 'pic', label: '1.3 Фото продукта', i: 1 },
   ];
 

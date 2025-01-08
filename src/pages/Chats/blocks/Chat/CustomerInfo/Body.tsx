@@ -22,11 +22,11 @@ const Body: FC<BodyProps> = (props) => {
 
   const items = [
     { id: 'cert', label: '2.1 Сертификат', i: 1 },
-    { id: 'audio', label: '2.2 Аудио отзыв', i: 1 },
-    { id: 'image', label: '2.3 Фото отзыв 1', i: 1 },
-    { id: 'image', label: '2.3 Фото отзыв 2', i: 2 },
-    { id: 'image', label: '2.3 Фото отзыв 3', i: 3 },
-    { id: 'image', label: '2.3 Фото отзыв 4', i: 4 },
+    { id: 'audio', label: '2.2 Аудио отзыв после родов', i: 1 },
+    { id: 'image', label: '2.3 Фото отзыв до/после похудения', i: 1 },
+    { id: 'image', label: '2.3 Фото отзыв больше не переедает', i: 2 },
+    { id: 'image', label: '2.3 Фото отзыв чувствую облегчение', i: 3 },
+    { id: 'image', label: '2.3 Фото отзыв 97 -> 80 кг', i: 4 },
     { id: 'pic', label: '2.4 Фото продукта', i: 1 },
   ];
 

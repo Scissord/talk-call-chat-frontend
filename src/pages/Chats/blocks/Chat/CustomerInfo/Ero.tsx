@@ -22,12 +22,12 @@ const Ero: FC<EroProps> = (props) => {
 
   const items = [
     { id: 'cert', label: '3.1 Сертификат', i: 1 },
-    { id: 'image', label: '3.2 Фото отзыв 1', i: 1 },
-    { id: 'image', label: '3.2 Фото отзыв 2', i: 2 },
-    { id: 'image', label: '3.2 Фото отзыв 3', i: 3 },
-    { id: 'image', label: '3.2 Фото отзыв 4', i: 4 },
-    { id: 'image', label: '3.2 Фото отзыв 5', i: 5 },
-    { id: 'image', label: '3.2 Фото отзыв 6', i: 6 },
+    { id: 'image', label: '3.2 Фото отзыв +4см', i: 1 },
+    { id: 'image', label: '3.2 Фото отзыв +потенция', i: 2 },
+    { id: 'image', label: '3.2 Фото отзыв улучшение половых желез', i: 3 },
+    { id: 'image', label: '3.2 Фото отзыв бурная ночь', i: 4 },
+    { id: 'image', label: '3.2 Фото отзыв фото полового органа', i: 5 },
+    { id: 'image', label: '3.2 Фото отзыв положительный эффект', i: 6 },
     { id: 'pic', label: '3.3 Фото продукта', i: 1 },
   ];
 
