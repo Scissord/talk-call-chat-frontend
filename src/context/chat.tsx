@@ -37,7 +37,7 @@ interface ChatContextType {
   handleSendMessage: () => Promise<void>;
   isCustomersLoading: boolean;
   handleSyncChats: (customer_id: string | undefined) => Promise<void>;
-  handleSendCertificate: (customer_id: string, product: string, type: string) => Promise<void>; 
+  handleSendCertificate: (customer_id: string, product: string, type: string, i: number) => Promise<void>; 
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -68,7 +68,17 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       setCustomer(localCustomer);
       fetchConversation(localCustomer.id);
     };
-  }, [localCustomer])
+  }, [localCustomer]);
+
+  useEffect(() => {
+    if (customer?.id) {
+      const intervalId = setInterval(() => {
+        handleSyncChats(customer.id);
+      }, 10000);
+  
+      return () => clearInterval(intervalId);
+    }
+  }, [customer?.id]);
 
   const fetchCustomers = async () => {
     setIsCustomersLoading(true);
@@ -168,18 +178,17 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       .then((res) => {
         if(res.data.messages.length > 0) {
           setConversation(res.data.messages);
-          context?.notification.show('Чат синхронизирован!', 'success');
         };
       })
       .catch(() => context?.notification.show('Ошибка при загрузке чата', 'error'));
   };
 
-  const handleSendCertificate = async (customer_id: string, product: string, type: string) => {
+  const handleSendCertificate = async (customer_id: string, product: string, type: string, i: number) => {
     await axios({
       method: 'POST',
       url: `/messages/template`,
       data: {
-        customer_id, product, type
+        customer_id, product, type, i
       },
     })
       .then((res) => {
