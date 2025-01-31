@@ -5,6 +5,7 @@ import Ero from './Ero';
 import Flex from './Flex';
 import Libido from './Libido';
 import Man from './Man';
+import Femiston from './Femiston';
 
 type CertificatesProps = {
   customer_id: string;
@@ -34,11 +35,12 @@ const Templates: FC<CertificatesProps> = (props) => {
       <Flex customer_id={customer_id} handleSendCertificate={handleSendCertificate}/>
       <Libido customer_id={customer_id} handleSendCertificate={handleSendCertificate}/>
       <Man customer_id={customer_id} handleSendCertificate={handleSendCertificate}/>
+      <Femiston customer_id={customer_id} handleSendCertificate={handleSendCertificate}/>
       <p
         className={css.p}
-        onClick={() => handleSendCertificate(customer_id, 'halyk', 'qr', 1)} 
+        onClick={() => handleSendCertificate(customer_id, 'halyk', 'qr', 1)}
       >
-        7. Халык QR
+        8. Халык QR
       </p>
     </>
   );
