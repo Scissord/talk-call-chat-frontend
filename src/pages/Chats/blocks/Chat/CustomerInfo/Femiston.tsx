@@ -24,8 +24,10 @@ const Femiston: FC<FemistonProps> = (props) => {
     { id: 'cert', label: '7.1 Сертификат', i: 1 },
     { id: 'image', label: '7.2 Фото отзыв', i: 1 },
     { id: 'image', label: '7.2 Фото отзыв 2', i: 2 },
+    { id: 'image', label: '7.2 Фото отзыв 3', i: 3 },
     { id: 'audio', label: '7.3 Аудио отзыв', i: 1 },
     { id: 'audio', label: '7.3 Аудио отзыв 2', i: 2 },
+    { id: 'audio', label: '7.3 Аудио отзыв 3', i: 3 },
   ];
 
   return (
