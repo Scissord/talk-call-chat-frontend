@@ -1,7 +1,6 @@
 import { useChats, useViewContext } from '@context';
 import { FC, useEffect, useState } from 'react'
 import Templates from './CustomerInfo/Templates';
-// import Tags from './CustomerInfo/Tags';
 import Responsible from './CustomerInfo/Responsible';
 import axios from '@axios';
 import { IUser } from '@interfaces';
@@ -11,7 +10,7 @@ const ConversationInfo: FC = () => {
   const context = useViewContext();
   const [users, setUsers] = useState<IUser[] | []>([]);
   const [newManager, setNewManager] = useState<string>('disabled');
-  const [chats, setChats] = useState<any>([]);
+  const [chats, setChats] = useState<[]>([]);
 
   useEffect(() => {
     if(customer && customer.id) {
@@ -55,11 +54,6 @@ const ConversationInfo: FC = () => {
       context?.notification.show('Ошибка при смене ответственного', 'error');
     });
   };
-
-  // const handleOpenNewChat = async (customer: ICustomer, newCustomerId: string) => {
-  //   setCustomer(customer);
-  //   fetchConversation(newCustomerId);
-  // };
 
   return (
     <div className='h-full w-full sm:w-1/4 border-r border-l border-slate-300 px-4 overflow-y-auto'>

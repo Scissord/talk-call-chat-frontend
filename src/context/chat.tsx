@@ -37,7 +37,7 @@ interface ChatContextType {
   handleSendMessage: () => Promise<void>;
   isCustomersLoading: boolean;
   handleSyncChats: (customer_id: string | undefined) => Promise<void>;
-  handleSendCertificate: (customer_id: string, product: string, type: string, i: number) => Promise<void>; 
+  handleSendCertificate: (customer_id: string, product: string, type: string, i: number) => Promise<void>;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -74,8 +74,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     if (customer?.id) {
       const intervalId = setInterval(() => {
         handleSyncChats(customer.id);
-      }, 10000);
-  
+      }, 20000);
+
       return () => clearInterval(intervalId);
     }
   }, [customer?.id]);

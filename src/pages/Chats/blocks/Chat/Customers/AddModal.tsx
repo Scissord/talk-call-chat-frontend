@@ -75,7 +75,7 @@ const AddModal: FC<Props> = ({ fetchCustomers }) => {
         />
       </div>
       <div className='flex items-center gap-3'>
-        <p className='w-32 font-semibold text-sm'>Номер:</p>
+        <p className='w-32 font-semibold text-sm'>ДОП Номер:</p>
         <input
           type="text"
           value={phone}
